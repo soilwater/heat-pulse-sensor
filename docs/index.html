@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Heat pulse · Sensor twin</title>
+  <link rel="stylesheet" href="sensor.css">
+  <script>
+    // Theme before first paint: saved choice, else dark. Storage may be unavailable (private mode).
+    (function(){var t='dark';try{t=localStorage.getItem('hp-theme')||t;}catch(e){}document.documentElement.dataset.theme=t==='light'?'light':'dark';})();
+  </script>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="identity">
+      <svg class="mark" viewBox="0 0 28 28" aria-hidden="true"><rect x="5" y="2.5" width="18" height="7" rx="1.6"/><path d="M8.5 9.5v11M14 9.5v16M19.5 9.5v11"/></svg>
+      <div><h1>Heat pulse sensor</h1><p>HP-SDI12-NANO r2 <span>·</span> Digital twin <span>·</span> 12 V · 17 × 3.3 Ω</p></div>
+    </div>
+    <div class="header-meta">
+      <button id="themeToggle" class="theme-toggle" aria-pressed="true" title="Switch between dark and light theme"><span aria-hidden="true" class="theme-icon"></span><span class="theme-text">Dark</span></button>
+      <button id="modelInfo" class="info-button" aria-label="About the simulation" title="About the simulation">i</button>
+    </div>
+  </header>
+
+  <!-- Control row: same columns as the dashboard below. Setup sits above the sensor, the run panel above the chart. -->
+  <div class="control-row">
+  <section class="panel setup-panel" aria-label="Soil and parts">
+    <button id="soilButton" class="soil-card" aria-haspopup="dialog" title="Select the soil the sensor is in">
+      <span class="soil-card-text">
+        <span class="soil-button-label">Soil</span>
+        <span id="soilName" class="soil-button-name">—</span>
+        <span class="soil-card-sub"><span id="soilDetail"></span><span id="soilProps" class="soil-button-props"></span></span>
+      </span>
+      <span class="soil-button-action">Change</span>
+    </button>
+    <button id="partsButton" class="parts-card" aria-haspopup="dialog" title="All parts: designators, function, manufacturer and part numbers">
+      <span class="soil-button-label">Parts</span><span class="parts-card-name">Parts list</span><span id="partsSummary" class="soil-card-sub"></span>
+    </button>
+  </section>
+  <section class="experiment" aria-label="Measurement controls">
+    <form id="timingForm" class="timing" novalidate>
+      <div class="timing-field" data-phase="baseline"><label for="baselineS">Background sensing</label><div class="number-field"><input id="baselineS" type="number" min="1" max="60" step="1" value="10" inputmode="numeric" required><span>s</span></div></div>
+      <div class="timing-field" data-phase="pulse"><label for="pulseS">Heating</label><div class="number-field"><input id="pulseS" type="number" min="8" max="15" step="1" value="15" inputmode="numeric" required><span>s</span></div></div>
+      <div class="timing-field" data-phase="cooldown"><label for="cooldownS">Cooling sensing</label><div class="number-field"><input id="cooldownS" type="number" min="1" max="600" step="1" value="90" inputmode="numeric" required><span>s</span></div></div>
+      <div class="timing-field" data-phase="pulse"><label for="dutyPct">Heater duty</label><div class="number-field"><input id="dutyPct" type="number" min="0" max="100" step="1" value="85" inputmode="numeric" required><span>%</span></div></div>
+    </form>
+    <div class="run-controls">
+      <button id="speed" class="speed-button" title="Change playback speed" aria-label="Playback speed: 4 times">4×</button>
+      <button id="restart" class="reset-button" title="Reset measurement" aria-label="Reset measurement">↺</button>
+      <button id="start" class="start-button"><span aria-hidden="true">▶</span> Run measurement</button>
+    </div>
+    <p id="inputError" class="input-error" role="alert" hidden></p>
+    <div class="timeline">
+      <span id="phase" class="phase" data-state="idle"><i></i> Ready</span>
+      <input id="time" type="range" min="0" max="115" step="0.01" value="0" aria-label="Measurement time">
+      <output id="clock">0.0 <span>/ 115 s</span></output>
+    </div>
+  </section>
+  </div>
+
+  <main class="dashboard">
+    <section class="panel sensor-panel" aria-label="Sensor layout">
+      <div class="panel-heading sensor-heading"><h2>Sensor</h2>
+        <div class="board-tabs" role="tablist" aria-label="PCB view">
+          <button id="view-components" role="tab" aria-selected="true" aria-controls="sensor-view" data-board-view="components">Parts</button>
+          <button id="view-top" role="tab" aria-selected="false" aria-controls="sensor-view" data-board-view="top" tabindex="-1" title="Top copper · F.Cu">Top</button>
+          <button id="view-inner1" role="tab" aria-selected="false" aria-controls="sensor-view" data-board-view="inner1" tabindex="-1" title="Inner copper 1 · ground plane">In1</button>
+          <button id="view-inner2" role="tab" aria-selected="false" aria-controls="sensor-view" data-board-view="inner2" tabindex="-1" title="Inner copper 2 · +5 V plane">In2</button>
+          <button id="view-bottom" role="tab" aria-selected="false" aria-controls="sensor-view" data-board-view="bottom" tabindex="-1" title="Bottom copper · B.Cu">Bot</button>
+        </div>
+        <div class="board-tools" role="group" aria-label="Sensor zoom"><button id="zoomOut" aria-label="Zoom out" title="Zoom out" disabled>−</button><output id="zoomLevel" aria-live="polite">100%</output><button id="zoomIn" aria-label="Zoom in" title="Zoom in">+</button><button id="zoomFit" title="Fit the whole sensor">Fit</button></div></div>
+      <p id="layerNote" class="layer-note" hidden></p>
+      <div id="sensor-view" role="tabpanel" aria-labelledby="view-components" class="sensor-canvas"><svg id="board" viewBox="-29 -24 76 140" aria-label="Vertical PCB layout. Scroll to zoom, drag to pan, or select a component for details."></svg>
+        <div class="sensor-footer">
+          <button class="thermal-legend" data-component="thermal" aria-label="About the soil temperature colormap">
+            <span class="thermal-legend-title">Soil temperature rise <span>°C · log scale</span></span>
+            <span class="thermal-colorbar"></span>
+            <span class="thermal-ticks"><span style="left:0">0</span><span style="left:24%">0.1</span><span style="left:52%">0.5</span><span style="left:80%">2</span><span style="left:100%">5+</span></span>
+          </button>
+          <div class="board-legend"><span class="legend-current">Heater current</span><span class="legend-logic">Logic power</span><span class="legend-signal">Signals</span></div>
+        </div>
+      </div>
+      <p id="boardStatus" class="board-status">Electronics powered · run to show current flow</p>
+    </section>
+
+    <div class="readouts">
+      <section class="panel chart-panel" aria-label="Temperature rise">
+        <div class="panel-heading"><h2>Temperature rise</h2>
+          <span class="chart-key"><span><i class="th1"></i>TH1 · TH3 side needles</span><span><i class="th2"></i>TH2 tip</span></span></div>
+        <p id="chartHint" class="chart-hint"></p>
+        <svg id="temperatureChart" viewBox="0 0 560 158" role="img" aria-label="Simulated temperature rise over the measurement cycle"></svg>
+      </section>
+
+      <section class="panel readings-panel" aria-label="Live readings">
+        <div class="panel-heading"><h2>Readings</h2><span class="live-label"><i></i> Live · PWM average</span></div>
+        <div class="readings-grid">
+          <table class="readings">
+            <thead><tr><th scope="col">Temperature</th><th scope="col">Now</th><th scope="col">Rise</th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><button data-component="TH1">TH1 <small>left needle</small></button></th><td id="temp-TH1">22.000 °C</td><td id="rise-TH1">+0.000</td></tr>
+              <tr><th scope="row"><button data-component="TH3">TH3 <small>right needle</small></button></th><td id="temp-TH3">22.000 °C</td><td id="rise-TH3">+0.000</td></tr>
+              <tr><th scope="row"><button data-component="TH2">TH2 <small>heater tip</small></button></th><td id="temp-TH2">22.000 °C</td><td id="rise-TH2">+0.000</td></tr>
+              <tr><th scope="row"><button data-component="thermal">Soil <small>beside heater</small></button></th><td id="tempHeatedZone">22.00 °C</td><td id="rise-heatedZone">+0.00</td></tr>
+            </tbody>
+            <tbody><tr class="section-head"><th scope="col">Sensor estimate</th><th scope="col">Sensor</th><th scope="col">Soil</th></tr></tbody>
+            <tbody id="estimateRows">
+              <tr><th scope="row"><button data-component="estimate">Conductivity <small>λ W/(m·K)</small></button></th><td id="estLambda">—</td><td id="estLambdaRef">—</td></tr>
+              <tr><th scope="row"><button data-component="estimate">Heat capacity <small>C MJ/(m³·K)</small></button></th><td id="estC">—</td><td id="estCRef">—</td></tr>
+              <tr><th scope="row"><button data-component="estimate">Water content <small>θ m³/m³</small></button></th><td id="estTheta">—</td><td id="estThetaRef">—</td></tr>
+              <tr class="estimate-status"><td colspan="3" id="estStatus">Available when cooling ends.</td></tr>
+            </tbody>
+          </table>
+          <table class="readings">
+            <thead><tr><th scope="col">Power</th><th scope="col">Now</th><th scope="col"></th></tr></thead>
+            <tbody>
+              <tr><th scope="row"><button data-component="wiring">Battery <small>12 V input</small></button></th><td id="batteryPower">0.120 W</td><td id="batteryCurrent">10.0 mA</td></tr>
+              <tr><th scope="row"><button data-component="RH1">Heater <small>RH1–RH17</small></button></th><td id="power-heaters">0.000 W</td><td id="eachHeater">0.0 mW each</td></tr>
+              <tr><th scope="row"><button data-component="RH1">Heater energy</button></th><td id="heatEnergy">0.00 J</td><td></td></tr>
+              <tr><th scope="row"><button data-component="U3">Regulator <small>U3</small></button></th><td id="power-regulator">—</td><td></td></tr>
+              <tr><th scope="row"><button data-component="logic">Logic <small>MCU, monitor</small></button></th><td id="power-logic">—</td><td></td></tr>
+              <tr><th scope="row"><button data-component="diodes">Diodes <small>D1 + D7</small></button></th><td id="power-diodes">—</td><td></td></tr>
+              <tr><th scope="row"><button data-component="R5">Shunt <small>R5</small></button></th><td id="power-shunt">—</td><td></td></tr>
+              <tr><th scope="row"><button data-component="Q1">Switch <small>Q1</small></button></th><td id="power-switch">—</td><td></td></tr>
+              <tr><th scope="row"><button data-component="wiring">Cable &amp; copper</button></th><td id="power-wiring">—</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer>Scroll over the sensor to zoom · drag to pan · click a part or a reading for details. <button id="modelNotes">Model assumptions</button></footer>
+</div>
+
+<dialog id="componentDialog" aria-labelledby="dialogTitle">
+  <div class="dialog-header"><span id="dialogRef" class="ref-badge"></span><button id="closeDialog" class="close-button" aria-label="Close details">×</button></div>
+  <h2 id="dialogTitle"></h2>
+  <p id="dialogPart" class="dialog-part"></p>
+  <p id="dialogDescription"></p>
+  <div id="dialogReadings" class="dialog-readings"></div>
+  <div id="dialogExtra"></div>
+</dialog>
+
+<dialog id="partsDialog" class="wide-dialog" aria-labelledby="partsTitle">
+  <div class="dialog-header"><h2 id="partsTitle">Parts list</h2><button class="close-button" data-close aria-label="Close parts list">×</button></div>
+  <p id="partsNote" class="dialog-part"></p>
+  <div class="parts-scroll"><table id="partsTable" class="parts-table"></table></div>
+</dialog>
+
+<dialog id="soilDialog" class="wide-dialog soil-panel" aria-labelledby="soilTitle">
+  <div class="dialog-header"><h2 id="soilTitle">Select soil</h2><button class="close-button" data-close aria-label="Close soil selection">×</button></div>
+  <p class="soil-intro">One dot per Kansas Mesonet core. Pick a core, then a water state: the twin runs on that reading's measured conductivity and heat capacity.</p>
+  <div class="soil-body">
+    <div class="soil-pick">
+      <div class="soil-filters">
+        <label>Texture<select id="soilTexture"></select></label>
+        <label>Core<select id="soilSample"></select></label>
+      </div>
+      <div class="soil-triangle">
+        <svg id="soilTriangle" role="img" aria-label="USDA texture triangle with one dot per Kansas Mesonet core. Click a dot to use that soil, or choose a core from the list."></svg>
+        <div id="soilTip" class="soil-tip" hidden></div>
+      </div>
+      <div class="soil-legend"><label>Color by<select id="soilColor"></select></label><span id="soilLegend" class="soil-ramp-box"></span></div>
+    </div>
+    <div class="soil-detail">
+      <div id="soilStates" class="soil-states" role="group" aria-label="Water state"></div>
+      <p id="soilFlag" class="soil-flag" role="note" hidden></p>
+      <dl id="soilFacts" class="soil-facts"></dl>
+      <p id="soilNote" class="soil-note" hidden></p>
+      <figure id="soilCurveBox" class="soil-kd2" hidden>
+        <figcaption><span>KD2 Pro reading of this sample</span><span class="soil-key"><i class="key-meas"></i>Measured <i class="key-model"></i>Twin</span></figcaption>
+        <svg id="soilCurve" role="img" aria-label="Measured KD2 Pro temperature rise for the selected sample, with the twin's prediction for the KD2 probe"></svg>
+        <p id="soilCurveNote" class="soil-curve-note" aria-live="polite"></p>
+      </figure>
+    </div>
+  </div>
+  <div class="dialog-actions"><button class="start-button" data-close>Done</button></div>
+</dialog>
+
+<script src="engine.js"></script>
+<script src="kansas-soil-data.js"></script>
+<script src="board-data.js"></script>
+<script src="sensor-model.js"></script>
+<script src="sensor-components.js"></script>
+<script src="sensor-routes.js"></script>
+<script src="sensor-annotations.js"></script>
+<script src="sensor-heatmap.js"></script>
+<script src="sensor-board.js"></script>
+<script src="sensor-soil.js"></script>
+<script src="sensor-ui.js"></script>
+</body>
+</html>

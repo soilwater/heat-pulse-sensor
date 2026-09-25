@@ -1,0 +1,17 @@
+(footprint "R_0603_Vishay_HP"
+  (version 20250108)
+  (generator "pcbnew")
+  (layer "F.Cu")
+  (descr "Vishay CRCW0603-HP recommended reflow lands; datasheet 20043: G=0.75, X=1.00, Y=0.75, Z=2.25 mm. 0.10 mm courtyard clearance. Body max 1.7 x 0.95 x 0.55 mm.")
+  (tags "0603 Vishay CRCW high power")
+  (property "Reference" "REF**" (at 0 -1.2 0) (layer "F.SilkS") (effects (font (size 0.7 0.7) (thickness 0.1))))
+  (property "Value" "R_0603_Vishay_HP" (at 0 1.2 0) (layer "F.Fab") (effects (font (size 0.7 0.7) (thickness 0.1))))
+  (attr smd)
+  (fp_rect (start -0.8 -0.425) (end 0.8 0.425) (stroke (width 0.05) (type solid)) (fill none) (layer "F.Fab"))
+  (fp_rect (start -1.225 -0.6) (end 1.225 0.6) (stroke (width 0.05) (type solid)) (fill none) (layer "F.CrtYd"))
+  (pad "1" smd rect (at -0.75 0) (size 0.75 1.0) (layers "F.Cu" "F.Mask" "F.Paste"))
+  (pad "2" smd rect (at 0.75 0) (size 0.75 1.0) (layers "F.Cu" "F.Mask" "F.Paste"))
+  (embedded_fonts no)
+  (model "${KICAD10_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_0603_1608Metric.step"
+    (offset (xyz 0 0 0)) (scale (xyz 1 1 1)) (rotate (xyz 0 0 0)))
+)

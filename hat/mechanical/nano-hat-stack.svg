@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="1050" viewBox="0 0 1480 1050" role="img" aria-labelledby="title description">
+  <title id="title">Compact Nano R4 and heat-pulse HAT assembly</title>
+  <desc id="description">Both populated faces point inward across a 4 millimeter gap. Two Samtec HTSW-115-07-T-S male strips are soldered to both boards. Sixty solder joints in total; outside solid pin ends are trimmed to at most half a millimeter. The nominal potted board and header budget is 9.44 millimeters, increasing to 9.74 millimeters with separate flat bare wire terminations. The target body thickness is 10.5 millimeters; the actual cable exit needs a separate fit check and possible local mold relief.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M0 0 L8 4 L0 8 Z" fill="#435565"/></marker>
+    <style>
+      text{font-family:Arial,Helvetica,sans-serif;fill:#182e3f} .title{font-size:30px;font-weight:700} .subtitle{font-size:18px;fill:#526776} .section{font-size:20px;font-weight:700} .label{font-size:17px} .small{font-size:15px;fill:#526776} .strong{font-size:18px;font-weight:700} .dim{fill:none;stroke:#435565;stroke-width:1.5;marker-start:url(#arrow);marker-end:url(#arrow)} .ext{stroke:#96a5ae;stroke-width:1;fill:none} .lead{stroke:#526776;stroke-width:1.5;fill:none} .pcb{fill:#b8d8cb;stroke:#287a62;stroke-width:1.5} .part{fill:#344955;stroke:#20333e;stroke-width:1.3} .shell{fill:#e4e9ed;stroke:#6e818e;stroke-width:1.5} .pin{fill:#dfb95f;stroke:#98752c;stroke-width:1} .joint{fill:#aeb9c0;stroke:#677b88;stroke-width:1} .panel{fill:#fff;stroke:#d8e1e6;stroke-width:1}
+    </style>
+  </defs>
+  <rect width="1480" height="1050" fill="#f4f7f9"/>
+  <text x="48" y="54" class="title">Compact Nano R4 + heat-pulse HAT</text>
+  <text x="48" y="85" class="subtitle">Face-inward, permanently soldered stack · final interconnect: 2 × Samtec HTSW-115-07-T-S</text>
+
+  <rect x="32" y="110" width="1416" height="405" rx="12" class="panel"/>
+  <text x="56" y="144" class="section">Side cross-section</text>
+  <text x="56" y="170" class="small">Board and gap dimensions are proportional. Component shapes and wire positions are illustrative; header detail below.</text>
+
+  <!-- Scale 20 SVG units/mm. PCB x = 250 ... 1113.6 (43.18 mm). -->
+  <!-- Nominal solid stack including exterior solder: y = 210 ... 358.736. -->
+  <!-- Nominal cover adds 20 units per face; target mold adds tolerance. -->
+  <rect x="207.76" y="179.368" width="1068" height="210" rx="12" fill="#f1eee7" stroke="#9e927a" stroke-width="1.5" stroke-dasharray="8 5"/>
+  <text x="540" y="203" class="small">Epoxy envelope · 10.5 mm thickness target</text>
+  <rect x="250" y="220" width="863.6" height="32.736" class="pcb"/>
+  <text x="625" y="243" class="strong">Nano R4 · 1.637 mm PCB</text>
+  <rect x="227.76" y="252.736" width="136" height="63.4" rx="3" class="shell"/>
+  <rect x="221.76" y="267" width="8" height="35" rx="3" fill="#627785"/>
+  <text x="242" y="290" class="small">USB-C</text>
+  <rect x="447" y="252.736" width="58" height="40.1" rx="3" class="part"/>
+  <rect x="667" y="252.736" width="244" height="33.4" rx="3" class="part"/>
+  <text x="760" y="275" style="font-size:15px;fill:#fff">MCU</text>
+  <rect x="1006.44" y="252.736" width="99" height="59.5" rx="3" class="shell"/>
+  <text x="1024" y="287" class="small">Qwiic</text>
+  <rect x="520" y="305.736" width="65" height="27" rx="2" class="part"/>
+  <rect x="629" y="310.736" width="36" height="22" rx="2" class="part"/>
+  <rect x="750" y="309.736" width="85" height="23" rx="2" class="part"/>
+  <rect x="944" y="312.736" width="35" height="20" rx="2" class="part"/>
+  <rect x="250" y="332.736" width="863.6" height="16" class="pcb"/>
+  <text x="655" y="373" class="strong">HAT · 0.800 mm PCB</text>
+  <path d="M770 351 L770 357" class="lead"/>
+  <path d="M1120 341 L1223 341" stroke="#287a62" stroke-width="3" fill="none"/>
+  <text x="1130" y="328" class="small">Needles →</text>
+
+  <!-- Wire routing is a projected concept: three terminals are distributed across PCB width. -->
+  <path d="M65 341 L177 341 Q192 341 203 352 L317 352 Q337 352 337 349" fill="none" stroke="#e47b2b" stroke-width="4"/>
+  <path d="M65 355 L177 355 Q192 355 203 357 L357 357 Q376 357 376 349" fill="none" stroke="#8c55b5" stroke-width="4"/>
+  <path d="M65 369 L177 369 Q192 369 203 362 L397 362 Q416 362 416 349" fill="none" stroke="#4c5862" stroke-width="4"/>
+  <text x="65" y="242" class="label">Same cable end</text>
+  <path d="M178 248 L190 248 L224 278" class="lead"/>
+  <text x="65" y="405" class="small">12 V · SDI-12 · GND</text>
+  <text x="65" y="425" class="small">Side-by-side wire exit.</text>
+
+  <path d="M1130 252.736 L1208 252.736 M1130 332.736 L1208 332.736" class="ext"/>
+  <path d="M1190 252.736 L1190 332.736" class="dim"/>
+  <text x="1205" y="286" class="strong">4.00 mm</text>
+  <text x="1205" y="307" class="small">face-to-face</text>
+  <path d="M1280 179.368 L1350 179.368 M1280 389.368 L1350 389.368" class="ext"/>
+  <path d="M1330 179.368 L1330 389.368" class="dim"/>
+  <text x="1360" y="257" class="strong" transform="rotate(90 1360 257)">~10.5 mm mold</text>
+  <path d="M250 401 L250 457 M1113.6 401 L1113.6 457" class="ext"/>
+  <path d="M250 445 L1113.6 445" class="dim"/>
+  <text x="572" y="471" class="label">43.18 mm body PCB · width 17.78 mm</text>
+  <text x="350" y="494" class="small">Separate bare wire lanes under HAT: ≤0.80 mm projection. Insulation begins beyond PCB; cable exit may need local relief.</text>
+
+  <rect x="32" y="531" width="1416" height="432" rx="12" class="panel"/>
+  <text x="56" y="566" class="section">Header detail · one pin through both boards</text>
+  <text x="56" y="592" class="small">The 2.54 mm insulator sits on the HAT. A removable fixture sets the full 4.00 mm gap.</text>
+
+  <!-- Detail uses the same 20 units/mm scale; translated from the main section. -->
+  <rect x="245" y="640" width="190" height="32.736" class="pcb"/>
+  <rect x="245" y="752.736" width="190" height="16" class="pcb"/>
+  <rect x="311.1" y="701.936" width="50.8" height="50.8" rx="2" fill="#253b48"/>
+  <rect x="330.15" y="630" width="12.7" height="148.736" class="pin"/>
+  <path d="M322 640 L330 633 L343 633 L351 640 Z" class="joint"/>
+  <path d="M322 768.736 L330 775.736 L343 775.736 L351 768.736 Z" class="joint"/>
+  <path d="M330.15 630 L342.85 630 M330.15 778.736 L342.85 778.736" stroke="#d04b3d" stroke-width="3"/>
+  <text x="89" y="661" class="strong">Nano PCB</text>
+  <text x="89" y="766" class="strong">HAT PCB</text>
+  <path d="M430 701.936 L479 701.936 M430 752.736 L479 752.736" class="ext"/>
+  <path d="M463 701.936 L463 752.736" class="dim"/>
+  <text x="478" y="733" class="small">2.54 mm</text>
+  <path d="M300 672.736 L218 672.736 M300 752.736 L218 752.736" class="ext"/>
+  <path d="M226 672.736 L226 752.736" class="dim"/>
+  <text x="125" y="718" class="strong">4.00 mm</text>
+
+  <path d="M343 630 L535 630" class="lead"/>
+  <text x="555" y="634" class="label">Long post toward Nano; solder on its outer face.</text>
+  <path d="M336 689 L535 662" class="lead"/>
+  <text x="555" y="669" class="label">0.635 mm square solid pin · 2.54 mm pin pitch.</text>
+  <path d="M362 726 L535 707" class="lead"/>
+  <text x="555" y="712" class="label">HTSW LCP insulator stays inside the gap.</text>
+  <path d="M351 775.736 L535 755" class="lead"/>
+  <text x="555" y="760" class="label">Short tail through HAT; solder on its outer face.</text>
+  <path d="M343 778.736 L520 795" class="lead"/>
+  <text x="555" y="799" class="strong">Trim each outside solid tail to ≤0.50 mm.</text>
+  <text x="555" y="822" class="small">Keep solder within the same 0.50 mm exterior allowance.</text>
+
+  <rect x="72" y="847" width="1335" height="87" rx="8" fill="#edf4f7"/>
+  <text x="94" y="875" class="strong">2 rows × 15 pins × 2 boards = 60 solder joints</text>
+  <text x="94" y="901" class="label">Potted board/header budget: 9.437 mm · with ≤0.80 mm flat wire terminations: 9.737 mm nominal</text>
+  <text x="94" y="923" class="small">10.5 mm body target. No insulated bundle under the PCB. Cable strain relief is outside the verified component-clearance model.</text>
+
+  <text x="48" y="992" class="label">Program and test before encapsulation. Keep resin out of USB/Qwiic cavities; the finished head does not provide an exposed USB port.</text>
+  <text x="48" y="1019" class="small">Dimensions: official Arduino ABX00142 STEP model and Samtec TSW/HTSW catalog. See ASSEMBLY.md for sources and assembly limits.</text>
+</svg>

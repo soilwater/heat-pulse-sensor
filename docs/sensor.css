@@ -1,0 +1,313 @@
+:root{font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:14px;line-height:1.45;color:#263b35;background:#f5f7f5;--green:#257663;--muted:#809087;--ink:#203a31;--border:#e0e7e1;--orange:#d59040;--flow-heater:#ff9d00;--flow-power:#ffe600;--flow-signal:#ff4de3}
+*{box-sizing:border-box}body{margin:0}button,input{font:inherit;color:inherit}button{cursor:pointer}button:disabled,input:disabled{cursor:not-allowed;opacity:.45}button{touch-action:manipulation}button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible,[role=button]:focus-visible{outline:2px solid #409582;outline-offset:4px}h1,h2,p{margin:0}h1{font-size:20px;line-height:1.25;letter-spacing:-.5px;font-weight:650}h2{font-size:14px;font-weight:650}button,input{border-radius:6px}button{border:0;background:none}input[type=number]{width:100%;min-width:0;background:white;border:0;outline-offset:1px}input[type=range]{accent-color:var(--green);cursor:pointer}.app{max-width:1370px;margin:auto;padding:0 34px}.header{height:94px;display:flex;align-items:center;justify-content:space-between}.identity{display:flex;gap:14px;align-items:center}.identity p{font-size:11px;color:var(--muted);margin-top:4px}.identity p span{margin:0 5px}.mark{width:28px;height:31px;stroke:var(--green);fill:#f5f7f5;stroke-width:1.4}.header-meta{display:flex;align-items:center;gap:22px;color:#6b7f73;font-size:12px}.header-meta>span{display:flex;align-items:center;gap:10px}.header-meta i{width:3px;height:3px;background:#adbbb1;border-radius:50%}.info-button{border:1px solid #ccd9d0;width:23px;height:23px;border-radius:50%;color:#718679;font-family:Georgia,serif;font-style:italic;font-weight:700}.info-button:hover{background:#e8efe9}.experiment{display:flex;gap:24px;align-items:center;flex-wrap:wrap;background:white;border:1px solid var(--border);border-radius:11px;padding:19px 22px 14px;margin-bottom:20px}.timing{display:grid;grid-template-columns:repeat(4,minmax(105px,1fr));gap:26px;flex:1;max-width:640px}.timing-field{position:relative}.timing-field label{display:block;font-size:11px;color:#697d71;margin-bottom:6px}.number-field{display:flex;border:1px solid var(--border);border-radius:6px;align-items:center;background:#fcfdfb;transition:border-color .2s;max-width:170px}.number-field input{background:none;padding:7px 10px;font-size:17px;font-weight:500;font-variant-numeric:tabular-nums}.number-field>span{font-size:12px;color:var(--muted);padding-right:12px}.number-field:focus-within{border-color:var(--green)}.timing-field.active .number-field{border-color:#8ebdaa;background:#f5faf7}.timing-field.active[data-phase=pulse] .number-field{border-color:#ddb06b;background:#fffbf3}.timing-field.active label{color:var(--green)}.timing-field.active[data-phase=pulse] label{color:#a8702c}.run-controls{display:flex;align-items:center;gap:9px;margin-left:auto;padding-top:17px}.start-button{background:var(--green);color:white;padding:11px 17px;font-size:12px;font-weight:600;min-width:158px}.start-button:hover{background:#1a6755}.start-button span{font-size:10px;margin-right:5px}.reset-button{font-size:24px;width:35px;height:38px;line-height:1;color:#647e6e}.reset-button:hover,.speed-button:hover{background:#f0f5ef}.speed-button{min-width:35px;padding:8px 5px;font-size:12px;color:#6a8172}.timeline{display:flex;flex:0 0 100%;gap:18px;align-items:center;margin-top:0}.timeline input{height:14px;flex:1;min-width:40px;margin:0}.timeline output{min-width:95px;text-align:right;font-size:12px;font-variant-numeric:tabular-nums}.timeline output span{color:var(--muted)}.phase{min-width:137px;font-size:11px;font-weight:550;color:#6f8275;display:flex;gap:7px;align-items:center}.phase i{display:block;width:6px;height:6px;border-radius:50%;background:#b6c4b9}.phase[data-state=baseline],.phase[data-state=cooldown]{color:var(--green)}.phase[data-state=baseline] i,.phase[data-state=cooldown] i{background:var(--green)}.phase[data-state=pulse]{color:#b77b31}.phase[data-state=pulse] i{background:#d49140;box-shadow:0 0 0 3px #fcf0dd}.dashboard{display:grid;grid-template-columns:minmax(290px,.78fr) minmax(0,1.6fr);gap:20px;align-items:stretch}.panel{background:white;border:1px solid var(--border);border-radius:11px;min-width:0}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.quiet{font-size:10px;color:var(--muted)}.sensor-panel{padding:21px 20px 15px;display:flex;flex-direction:column;min-height:680px;overflow:hidden}.sensor-canvas{flex:1;min-height:570px;display:flex;justify-content:center;align-items:center;margin:9px -15px 0;background:radial-gradient(ellipse at center,#f3f7f0 0%,#fff 65%)}#board{display:block;width:100%;height:100%;min-height:570px;max-height:700px;overflow:visible}.board-legend{display:flex;gap:22px;align-items:center;justify-content:center;font-size:10px;color:#87958b;margin:0 0 7px}.board-legend span{display:flex;gap:6px;align-items:center}.board-legend span:before{content:'';width:13px;height:2px;background:var(--flow-heater);box-shadow:0 0 0 1px #504e4540}.board-legend .legend-logic:before{background:var(--flow-power)}.board-status{text-align:center;font-size:10px;color:#7c8c80;min-height:15px}.board-outline{fill:#265d45;stroke:#184a33;stroke-width:.18}.copper{opacity:.28}.pad{fill:#b3b8a4}.part{cursor:pointer}.part-body{fill:#293c33;stroke:#92a58e;stroke-width:.07}.ntc-part .part-body{fill:#625f52}.part-outline{fill:none;stroke:transparent;stroke-width:.19;pointer-events:none}.part.active .part-outline{stroke:var(--flow-power)}.ntc-part.active .part-outline,#part-Q2.active .part-outline{stroke:var(--flow-signal)}.heater-part.active .part-outline{stroke:var(--flow-heater);stroke-width:.27}.part:hover .part-outline,.part:focus-visible .part-outline,.part.selected .part-outline{stroke:white;stroke-width:.36}.part-label{fill:#eef6df;text-anchor:middle;dominant-baseline:central;font-family:Arial,sans-serif;pointer-events:none}.flow{fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0;pointer-events:none;stroke-width:.33}.flow.on{opacity:.94}.flow.heater{stroke:var(--flow-heater);stroke-dasharray:1.15 .95;stroke-width:.52;animation:flow 1.1s linear infinite}.flow.logic{stroke:var(--flow-power);stroke-dasharray:1 .7;animation:flow 1.5s linear infinite}.flow.signal{stroke:var(--flow-signal);stroke-dasharray:.6 .8;stroke-width:.25;animation:flow 1.4s linear infinite}.flow.sense{stroke:var(--flow-signal);stroke-width:.2;stroke-dasharray:.4 .5}.paused .flow{animation-play-state:paused}.board-tag{cursor:pointer}.tag-line{fill:none;stroke:#acbcb0;stroke-width:.11;pointer-events:none}.tag-label{fill:#687f6c;font-size:1.68px;font-weight:500}.board-tag:hover .tag-label,.board-tag:focus-visible .tag-label{fill:#206149}.board-tag:hover .tag-line{stroke:#43775c}.readouts{display:flex;flex-direction:column;gap:18px}.temperatures{padding:21px 23px 12px}.thermistors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:20px 0 22px}.thermistor{padding:0 13px;text-align:left;border-radius:0;border-right:1px solid #e9eee7;min-width:0}.thermistor:first-child{padding-left:0}.thermistor:last-child{border:0;padding-right:0}.thermistor:hover strong{color:var(--green)}.sensor-name{display:block;font-size:10px;font-weight:650;white-space:nowrap}.sensor-name>span{display:block;font-weight:400;color:var(--muted);margin:2px 0 8px;padding-left:11px}.sensor-name i{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:6px;vertical-align:1px}.th1{background:#297964}.th2{background:#d9923c}.th3{background:#578bbb}.th4{background:#a1ada5}.thermistor strong{display:block;font-size:clamp(20px,2.1vw,29px);font-weight:500;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1.2;transition:color .15s}.thermistor strong span{font-size:16px;color:#8b9b8e;font-weight:400}.thermistor small{display:block;font-size:9px;color:#8a9b8d;margin-top:5px;white-space:nowrap}.chart-heading{display:flex;justify-content:space-between;gap:15px;color:#7d9081;font-size:10px;margin-top:2px}#temperatureChart{width:100%;display:block;margin-top:5px;overflow:visible}.axis-label{font-size:10px;fill:#99a79b}.plot-phase{font-size:9px;fill:#a5b09f}.power-panel{padding:21px 23px 12px;flex:1}.live-label{font-size:10px;color:#8b9d8d;display:flex;gap:5px;align-items:center}.live-label i{width:4px;height:4px;background:#76a68b;border-radius:50%}.power-metrics{display:grid;grid-template-columns:repeat(3,1fr);padding:17px 0 18px;border-bottom:1px solid var(--border)}.power-metrics>div{border-right:1px solid #e9eee7;padding:0 20px}.power-metrics>div:first-child{padding-left:0}.power-metrics>div:last-child{border:0;padding-right:0}.power-metrics>div>span{font-size:10px;color:#7f9183;display:block;margin-bottom:3px}.power-metrics strong{font-weight:500;font-size:26px;letter-spacing:-.5px;font-variant-numeric:tabular-nums}.power-metrics small{font-size:11px;font-weight:400;color:#8da18e;letter-spacing:0}.power-metrics p{font-size:9px;color:#91a091;margin-top:2px}.power-table{margin-top:4px}.power-row{display:flex;align-items:center;justify-content:space-between;width:100%;border-radius:4px;text-align:left;gap:15px;padding:6px 0;font-size:11px;min-height:30px}.power-row:not(.power-labels):hover{background:#f6f9f3}.power-row small{font-size:9px;color:#91a092;margin-left:9px}.power-row strong{font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}.power-labels{font-size:9px;color:#9aa79a;min-height:25px;padding-top:10px;padding-bottom:5px}footer{display:flex;justify-content:center;align-items:center;gap:6px;color:#99a699;font-size:9px;padding:16px 0 21px}footer button{padding:0;border-bottom:1px solid #c5d0c3;border-radius:0;font-size:9px;color:#7b8e7c}.input-error{font-size:11px;color:#a34d38;background:#fff6ef;border-radius:4px;padding:8px 12px;flex:0 0 100%;margin-top:-5px}dialog{width:min(490px,calc(100vw - 36px));border:1px solid #d9e2d6;border-radius:13px;padding:25px 28px 27px;box-shadow:0 22px 100px #13311e33;color:var(--ink);max-height:85vh;overflow:auto}dialog::backdrop{background:#18322466;backdrop-filter:blur(3px)}.dialog-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.ref-badge{font-size:11px;letter-spacing:.6px;font-weight:650;background:#eaf2e8;padding:5px 10px;border-radius:5px;color:#4b7b5a}.close-button{font-size:25px;color:#8a9d8b;line-height:1;width:27px;height:27px}.close-button:hover{background:#f0f4ed}dialog h2{font-size:21px;font-weight:600;letter-spacing:-.5px}.dialog-part{font-size:11px;color:#8b9d8b;margin:6px 0 17px}#dialogDescription{font-size:13px;line-height:1.7;color:#657b67}.dialog-readings{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;margin-top:22px}.dialog-reading{border-top:1px solid #e5ece2;padding-top:10px}.dialog-reading span{display:block;font-size:10px;color:#91a38e;margin-bottom:3px}.dialog-reading strong{font-size:16px;font-weight:500;word-break:break-word}#dialogExtra{font-size:11px;line-height:1.65;color:#80977e;margin-top:20px}#dialogExtra p{margin-top:9px}#dialogExtra summary{cursor:pointer;color:#597754}#dialogExtra ul{padding-left:18px;margin:0}#dialogExtra li{margin-bottom:8px}#dialogExtra a{color:var(--green)}@keyframes flow{to{stroke-dashoffset:-8.4}}
+/* Keep the working readings together at typical desktop heights. */
+.board-tools{display:flex;align-items:center;gap:5px;color:#738878}.board-tools button{width:25px;height:25px;border:1px solid #e0e7de;background:#fff;font-size:16px;line-height:1;padding:0}.board-tools button:hover{background:#eef4ed;border-color:#b6caba}.board-tools #zoomFit{width:auto;padding:0 8px;margin-left:3px;font-size:10px}.board-tools output{min-width:38px;text-align:center;font-size:10px;font-variant-numeric:tabular-nums}.sensor-canvas{position:relative;overflow:hidden}#board{overflow:hidden;user-select:none}#board.zoomed{cursor:grab}#board.is-panning,#board.is-panning *{cursor:grabbing!important}.board-legend{gap:15px}.board-legend .legend-signal:before{background:var(--flow-signal)}
+/* Suppress browser SVG focus rings; use a thin rectangular border on the part itself. */
+.part:focus,.part:focus-visible,.board-tag:focus,.board-tag:focus-visible{outline:none!important;filter:none}.part-outline{fill:none!important;stroke-width:1px;vector-effect:non-scaling-stroke;rx:0;ry:0}.heater-part.active .part-outline{stroke-width:1.1px}.part:hover .part-outline,.part:focus .part-outline,.part:focus-visible .part-outline,.part.selected .part-outline{fill:none!important;stroke:#f5d48a;stroke-width:1.6px;filter:none}.board-tag.selected .tag-label{fill:#2d6b4c;font-weight:650}
+.flow.logic{--route-color:var(--flow-power)}.flow.signal,.flow.sense{--route-color:var(--flow-signal)}.route-segment{stroke:var(--route-color);stroke-width:var(--trace-width)}.route-via{fill:var(--route-color);stroke:none}.flow.activity-only{stroke-dasharray:none;animation:trace-activity 1.25s ease-in-out infinite}.flow.activity-only .route-segment{stroke-dasharray:none}@keyframes trace-activity{0%,100%{stroke-opacity:.5;fill-opacity:.5}50%{stroke-opacity:1;fill-opacity:1}}
+.route-segment.undirected{stroke-dasharray:none}
+.paused .flow{animation-play-state:paused}
+body{min-width:1024px}
+.board-tabs{display:flex;flex-wrap:nowrap;gap:2px;padding:3px;background:#f2f5f1;border:1px solid #e5ebe2;border-radius:7px;margin:12px 0 0}.board-tabs button{flex:1;min-width:0;padding:6px 4px;font-size:10px;color:#7b8a7b;border-radius:4px;white-space:nowrap}.board-tabs button[aria-selected=true]{background:#fff;color:#274c3c;box-shadow:0 1px 3px #243d3115;font-weight:600}.board-tabs button:hover{color:#274c3c}.layer-note{font-size:9px;text-align:center;color:#849284;margin-top:7px;pointer-events:none}
+#board[data-view=components] .copper-detail{display:none}
+#board:not([data-view=components]) .part,#board:not([data-view=components]) .component-only,#board:not([data-view=components]) .connector-wires{display:none}
+#board[data-view=top] [data-copper-layers]:not([data-copper-layers~=top]),#board[data-view=inner1] [data-copper-layers]:not([data-copper-layers~=inner1]),#board[data-view=inner2] [data-copper-layers]:not([data-copper-layers~=inner2]),#board[data-view=bottom] [data-copper-layers]:not([data-copper-layers~=bottom]){display:none}
+#board[data-view=components] [data-copper-layers]:not([data-copper-layers~=top]):not([data-copper-layers~=bottom]){display:none}
+#board:not([data-view=components]) .board-outline{fill:#213c31}#board:not([data-view=components]) .copper{opacity:.8}
+.copper-zone{fill:#9d9980;fill-opacity:.24;stroke:none}.copper-zone.energized{fill:var(--copper-active);fill-opacity:.36}
+.copper-pad{cursor:pointer;outline:none!important}.copper-pad-shape{fill:#b6ac92;stroke:none}.copper-pad.energized .copper-pad-shape{fill:var(--copper-active)}.copper-pad:hover .copper-pad-shape,.copper-pad:focus .copper-pad-shape,.copper-pad.selected .copper-pad-shape{stroke:#f5d48a;stroke-width:1px;vector-effect:non-scaling-stroke}.copper-drill{fill:#edf2ed;stroke:none}
+.flow.heater{--route-color:var(--flow-heater)}
+.part:focus-visible,.board-tag:focus-visible{outline:none}.board-tag:focus-visible .tag-line{stroke:#43775c;stroke-width:.3}
+.header{height:68px}.experiment{padding-top:13px;padding-bottom:10px;row-gap:12px;margin-bottom:17px}.number-field input{padding-top:5px;padding-bottom:5px}.sensor-panel{min-height:650px}.sensor-canvas{min-height:475px}#board{min-height:475px;max-height:525px}.temperatures{padding-top:18px;padding-bottom:10px}.thermistors{margin-top:12px;margin-bottom:12px}.thermistor strong{font-size:27px}.sensor-name>span{margin-bottom:6px}.power-panel{padding-top:18px}.power-metrics{padding-top:10px;padding-bottom:10px}.power-row{padding:3px 0;min-height:23px}.power-labels{min-height:23px}.readouts{gap:16px}footer{padding-top:9px;padding-bottom:10px}
+@media(min-width:1550px){.app{max-width:1450px}.header{height:86px}.sensor-panel{min-height:700px}.sensor-canvas,#board{min-height:525px;max-height:585px}}
+@media(max-width:1100px){.app{padding:0 22px}.experiment{gap:16px;padding:17px 18px 13px}.timing{gap:16px;max-width:515px}.run-controls{gap:5px}.start-button{min-width:140px;padding:11px}.dashboard{grid-template-columns:minmax(250px,.72fr) minmax(0,1.5fr);gap:16px}.sensor-panel{padding:19px 16px 14px}.temperatures,.power-panel{padding:19px 17px 11px}.thermistor{padding:0 9px}.thermistor strong{font-size:22px}.power-metrics>div{padding:0 13px}.power-metrics strong{font-size:23px}.power-row small{margin-left:5px;font-size:8px}.quiet{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+/* Fixed soil-temperature scale, distinct from the copper-activity legend. */
+.thermal-legend{display:block;width:100%;padding:8px 11px 6px;margin:0 0 11px;border:1px solid #ede5ed;border-radius:7px;background:#fff;text-align:left;cursor:pointer}
+.thermal-legend:hover{background:#fcf8fc}.thermal-legend-title{display:flex;justify-content:space-between;font-size:10px;color:#644d68;margin-bottom:7px}.thermal-legend-title>span{color:#928395;font-size:9px}
+.thermal-colorbar{display:block;height:6px;border-radius:3px;background:linear-gradient(90deg,#f6ebf7,#ae56c2 25%,#e13f6b 50%,#fc7339 75%,#ffd364)}
+.thermal-ticks{position:relative;display:block;height:17px;margin-top:3px;color:#8c7c90;font-size:9px;font-variant-numeric:tabular-nums}.thermal-ticks span{position:absolute;transform:translateX(-50%)}.thermal-ticks span:first-child{transform:none}.thermal-ticks span:last-child{transform:translateX(-100%)}
+.heated-zone-reading{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;width:100%;padding:10px 12px;margin-bottom:13px;background:#fcf6f8;border:1px solid #f0e1e8;border-radius:7px;color:#7c4164;font-size:11px}
+.heated-zone-reading:hover{background:#f8edf3}.heated-zone-reading>span>small{display:block;color:#9b7f90;font-size:9px;margin-top:3px}.heated-zone-reading i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e13f6b;margin-right:6px}.heated-zone-reading strong{font-size:22px;font-weight:550;font-variant-numeric:tabular-nums;white-space:nowrap}.heated-zone-reading strong small{font-size:11px;font-weight:400}
+/* Keep the new thermal readout and all power rows in a desktop-height viewport. */
+.heated-zone-reading{padding:6px 11px;margin-bottom:9px}.heated-zone-reading strong{font-size:21px}
+.thermistors{margin-top:10px;margin-bottom:10px}.sensor-canvas,#board{min-height:430px;max-height:465px}
+.thermal-legend{padding-top:5px;padding-bottom:3px;margin-bottom:8px}.thermal-legend-title{margin-bottom:4px}.thermal-ticks{height:14px}
+/* Keep the complete panels inside a 900 px desktop without reducing text. */
+.experiment{margin-bottom:14px}.readouts{gap:14px}
+@media(min-height:1000px){.sensor-canvas,#board{min-height:475px;max-height:525px}}
+/* ===== Twin control layout (supersedes the sizing rules above) ===== */
+:root{--mono:ui-monospace,"Cascadia Mono",Consolas,"SFMono-Regular",monospace;--line:#e3e9e3;--label:#6f8377}
+.app{max-width:1600px}
+.header{height:64px}.identity p{font-size:11px}
+.header-meta{gap:10px}
+.soil-button{display:flex;align-items:center;gap:10px;border:1px solid var(--border);background:white;padding:6px 8px 6px 12px;font-size:12px;border-radius:8px;max-width:560px;min-width:0}
+.soil-button:hover{border-color:#9ec3b1;background:#f7fbf8}
+.soil-button-label{font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--label)}
+.soil-button-name{font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.soil-button-props{font-family:var(--mono);font-size:11px;color:#5d7266;white-space:nowrap}
+.soil-button-action{font-size:11px;color:white;background:var(--green);padding:4px 9px;border-radius:5px}
+.tool-button{border:1px solid var(--border);background:white;padding:7px 12px;font-size:12px;color:#44604f;border-radius:8px}.tool-button:hover{background:#f0f5ef}
+.experiment{padding:12px 18px 10px;margin-bottom:14px;row-gap:10px}
+.dashboard{grid-template-columns:minmax(400px,.62fr) minmax(560px,1fr);gap:16px;align-items:stretch}
+/* Sensor drawing fills the viewport height. */
+.sensor-panel{padding:16px 16px 12px;min-height:0;height:max(640px,calc(100vh - 222px))}
+.sensor-canvas{flex:1;min-height:0;max-height:none;margin:8px -8px 0;background:#fbfcfa;border:1px solid #edf1ec;border-radius:6px}
+#board{min-height:0;max-height:none;height:100%}
+.grid-minor{stroke:#eef2ee;stroke-width:.06;fill:none}.grid-major{stroke:#e0e7e1;stroke-width:.1;fill:none}
+.tag-label{font-family:var(--mono);font-size:2.4px;font-weight:700;fill:#24523e}
+.tag-role{font-family:"Segoe UI",Arial,sans-serif;font-size:1.95px;fill:#6c8173}
+.board-tag:hover .tag-role{fill:#206149}
+.tag-line{stroke:#9fb2a4;stroke-width:.12}
+.dim-text{font-family:var(--mono)}
+.title-block text{font-family:var(--mono);fill:#4f6557}.tb-title{font-size:1.65px;font-weight:700}.tb-meta{font-size:1.25px;fill:#7a8c7f}
+.sensor-heading{gap:10px}.sensor-heading .board-tabs{margin:0;flex:0 1 auto}.sensor-heading .board-tabs button{padding:4px 9px}
+/* Legends float in the empty upper-left corner of the drawing (above the callouts). */
+.sensor-canvas{position:relative}
+.sensor-footer{position:absolute;left:8px;top:8px;width:196px;background:#ffffffe8;border:1px solid #e3e9e3;border-radius:6px;padding:7px 9px 6px;pointer-events:auto}
+.sensor-footer .thermal-legend{margin:0;padding:0;border:0;background:none}.sensor-footer .thermal-legend:hover{background:none}
+.sensor-footer .board-legend{margin:6px 0 0;justify-content:flex-start;gap:10px;flex-wrap:wrap}
+.board-status{margin-top:6px}
+/* Right column: chart, then one live readings table. */
+.readouts{gap:16px;min-width:0}
+.chart-panel{padding:16px 18px 10px}
+.chart-key{display:flex;gap:14px;font-size:10px;color:var(--label)}.chart-key i{display:inline-block;width:12px;height:3px;border-radius:2px;margin-right:5px;vertical-align:2px}
+.chart-hint{font-size:10px;color:#8a9b8d;margin-top:3px}
+#temperatureChart{margin-top:4px}
+.readings-panel{padding:16px 18px 12px;flex:1}
+.readings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:4px}
+.readings{width:100%;border-collapse:collapse;font-size:12px;align-self:start}
+.readings thead th,.readings .section-head th{font-size:9.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--label);font-weight:600;text-align:right;padding:12px 0 5px;border-bottom:1px solid #cdd8cf}
+.readings thead th:first-child,.readings .section-head th:first-child{text-align:left}.readings .section-head th{padding-top:16px}.readings tbody tr.section-head:hover{background:none}
+.readings tbody th{text-align:left;font-weight:400;padding:0}
+.readings tbody th button{display:block;width:100%;text-align:left;padding:5px 0;border-radius:3px;color:var(--ink);font-size:12px;white-space:nowrap}
+.readings tbody th button:hover{color:var(--green)}
+.readings tbody th small{color:#90a092;font-size:10.5px;margin-left:5px}
+.readings td{text-align:right;font-family:var(--mono);font-size:12px;color:var(--ink);padding:5px 0 5px 10px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.readings td:last-child{color:#6b7f71}
+.readings td small{font-size:10.5px;color:#a8702c;margin-left:4px}
+.readings tbody tr{border-bottom:1px solid #f0f3ef}
+.readings tbody tr:hover{background:#f8faf7}
+.estimate-status td{font-family:inherit;text-align:left;font-size:10px;color:#8a9b8d;white-space:normal;padding-top:7px}
+.readings tbody tr.estimate-status:hover{background:none}
+/* Dialogs */
+.wide-dialog{width:min(1140px,calc(100vw - 40px));max-height:90vh;padding:22px 26px 22px}
+.wide-dialog .dialog-header{margin-bottom:6px}
+.dialog-actions{display:flex;justify-content:flex-end;margin-top:14px}.dialog-actions .start-button{min-width:110px}
+.parts-scroll{max-height:68vh;overflow:auto;border:1px solid var(--line);border-radius:6px;margin-top:10px}
+.parts-table{width:100%;border-collapse:collapse;font-size:11.5px}
+.parts-table th{position:sticky;top:0;background:#f4f7f3;text-align:left;font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--label);padding:8px 10px;border-bottom:1px solid #d7e0d8;z-index:1}
+.parts-table td{padding:7px 10px;border-bottom:1px solid #eef2ee;vertical-align:top;color:#3c5446}
+.parts-table tr:hover td{background:#f8fbf7}
+.parts-table td.mono{font-family:var(--mono);font-size:11px;white-space:nowrap}
+.parts-table td.desc{color:#6b7f71;min-width:240px}
+.parts-table button{font-family:var(--mono);font-weight:700;color:var(--green);padding:0;text-align:left;white-space:nowrap}
+.parts-table button:hover{text-decoration:underline}
+/* Select soil dialog */
+.soil-intro{font-size:12px;line-height:1.5;color:#6f8377;margin-bottom:12px}
+.soil-body{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:start}
+.soil-pick,.soil-detail{display:flex;flex-direction:column;gap:12px;min-width:0}
+.soil-filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:10px}
+.soil-filters label{display:flex;flex-direction:column;gap:4px;font-size:10px;color:#697d71;min-width:0}
+.soil-panel select{font:inherit;font-size:12px;color:var(--ink);border:1px solid var(--border);border-radius:6px;background:#fcfdfb;padding:6px 8px;min-width:0;width:100%;cursor:pointer}
+.soil-panel select:focus-visible{outline:2px solid #409582;outline-offset:1px}
+.soil-triangle{position:relative}
+#soilTriangle{display:block;width:100%;max-height:440px;margin:0 auto;touch-action:manipulation}
+.tri-grid line{stroke:#eef2ee;stroke-width:.7}.tri-class{fill:transparent;stroke:#d6dfd8;stroke-width:.8}.tri-class.on{fill:#eef6f1;stroke:#8ebdaa;stroke-width:1.2}
+.tri-edge{fill:none;stroke:#a9b8ad;stroke-width:1}.tri-label text{font-size:8px;fill:#a2afa5;text-anchor:middle;pointer-events:none}
+.tri-axis text{font-size:7.5px;fill:#a2afa5}.tri-title{font-size:8.5px;fill:#7d9081}
+.tri-dot{stroke:#fff;stroke-width:1.1;transition:opacity .15s}.tri-dot.muted{opacity:.12}
+.tri-ring{fill:none;stroke:#203a31;stroke-width:1.8;pointer-events:none}
+.soil-tip{position:absolute;z-index:3;pointer-events:none;background:#fff;border:1px solid #d9e2d6;border-radius:7px;box-shadow:0 6px 24px #13311e22;padding:7px 9px;font-size:10.5px;line-height:1.45;color:#5d7266;max-width:280px}
+.soil-tip strong{display:block;color:var(--ink);font-weight:600}.soil-tip span{display:block}
+.soil-legend{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:10px;color:#7d9081}
+.soil-legend label{display:flex;align-items:center;gap:6px;white-space:nowrap}.soil-legend select{width:auto;padding:3px 6px;font-size:11px}
+.soil-ramp-box{display:flex;align-items:center;gap:6px;min-width:0}
+.soil-ramp{display:flex;align-items:center;gap:6px;font-family:var(--mono)}.soil-ramp b{font-weight:500}.soil-ramp i{display:block;width:96px;height:6px;border-radius:3px}
+.soil-states{display:flex;flex-wrap:wrap;gap:6px}
+.soil-states button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:11.5px;color:#5d7266;background:#fcfdfb}
+.soil-states button b{font-weight:400;font-size:10.5px;color:#8a9b8d;font-family:var(--mono)}
+.soil-states button:hover{background:#f0f5ef}.soil-states button[aria-pressed=true]{border-color:var(--green);background:#eaf2e8;color:var(--green);font-weight:600}
+.soil-states button[aria-pressed=true] b{color:#4b7b5a}
+.soil-states button i{font-style:normal;display:inline-block;width:13px;height:13px;line-height:13px;text-align:center;border-radius:50%;background:#fbe9d2;color:#a8702c;font-size:9px;font-weight:700}
+.soil-flag{font-size:10.5px;line-height:1.5;color:#8a5a1f;background:#fff7ea;border-radius:5px;padding:6px 9px}
+.soil-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px 16px;margin:0}
+.soil-facts div{border-top:1px solid #edf1ec;padding-top:5px;min-width:0}.soil-facts dt{font-size:9.5px;color:#91a38e}
+.soil-facts dd{margin:1px 0 0;font-size:12.5px;color:var(--ink);font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.soil-note{font-size:10px;color:#91a092}
+.soil-kd2{margin:2px 0 0;border-top:1px solid var(--border);padding-top:10px}
+.soil-kd2 figcaption{display:flex;justify-content:space-between;gap:10px;font-size:10.5px;color:#697d71}
+.soil-key{display:flex;align-items:center;gap:5px;color:#8a9b8d}.soil-key i{display:inline-block;margin-left:6px}
+.key-meas{width:5px;height:5px;border-radius:50%;background:#3d5247}.key-model{width:12px;height:2px;background:#d9923c}
+#soilCurve{display:block;width:100%;margin-top:4px}
+.kd2-heat{fill:#fdf2e3}.kd2-grid{stroke:#eef2ee}.kd2-axis{font-size:8px;fill:#99a79b}
+.kd2-meas circle{fill:#3d5247}.kd2-model{fill:none;stroke:#d9923c;stroke-width:1.6;stroke-linejoin:round}.kd2-cursor{stroke:#607964;stroke-dasharray:2 3}
+.soil-curve-note{font-size:10.5px;color:#7d9081;font-family:var(--mono);min-height:15px}
+@media(max-width:1100px){
+  .dashboard{grid-template-columns:minmax(360px,1fr) minmax(0,1.1fr)}
+  .readings-grid{grid-template-columns:1fr;gap:4px}
+  .soil-button-props{display:none}
+}
+@media(max-width:860px){.soil-body{grid-template-columns:1fr}}
+.sensor-footer{top:6px;padding:5px 8px 4px}.sensor-footer .thermal-legend-title{margin-bottom:3px}.sensor-footer .thermal-ticks{height:12px;margin-top:2px}.sensor-footer .board-legend{margin-top:3px;gap:3px 9px;font-size:9px}
+.sensor-footer{width:172px}
+/* Control row: shares the dashboard's columns. Soil + parts above the sensor, run panel above the chart. */
+.control-row{display:grid;grid-template-columns:minmax(400px,.62fr) minmax(560px,1fr);gap:16px;margin-bottom:14px;align-items:stretch}
+.control-row .experiment{margin:0;min-width:0}
+.control-row .timing{grid-template-columns:repeat(4,minmax(78px,1fr));gap:14px;max-width:none}
+.control-row .number-field{max-width:none}
+.control-row .run-controls{padding-top:17px}
+.setup-panel{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:12px;min-width:0}
+.soil-card,.parts-card{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:8px;background:#fcfdfb;padding:10px 12px;text-align:left;min-width:0}
+.soil-card:hover,.parts-card:hover{border-color:#9ec3b1;background:#f5faf7}
+.soil-card-text{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.soil-card .soil-button-name,.parts-card-name{font-size:15px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.soil-card-sub{display:flex;gap:10px;font-size:11px;color:#6f8377;white-space:nowrap;overflow:hidden;min-width:0}
+.soil-card-sub .soil-button-props{font-size:11px}
+.parts-card{flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;min-width:132px}
+.parts-card-name{font-size:14px}
+@media(max-width:1100px){.control-row{grid-template-columns:minmax(360px,1fr) minmax(0,1.1fr)}.control-row .timing{gap:10px}}
+.soil-card-sub{flex-wrap:wrap;row-gap:0;white-space:normal}.soil-card-sub>span{white-space:nowrap}
+/* ===== Theme toggle ===== */
+.theme-toggle{display:flex;align-items:center;gap:7px;border:1px solid var(--border);background:transparent;padding:5px 11px 5px 9px;border-radius:14px;font-size:11px;color:#5d7266}
+.theme-toggle:hover{background:#f0f5ef}
+.theme-icon{width:12px;height:12px;border-radius:50%;background:#e2b340;box-shadow:0 0 0 2px #f6e3b0}
+.mark rect{fill:#eef5ef;stroke:var(--green);stroke-width:1.4}.mark path{fill:none;stroke:var(--green);stroke-width:1.6;stroke-linecap:round}.mark circle{fill:#d9923c;stroke:none}
+
+/* ===== Dark theme: dark surfaces, white text, light panel edges, neon signals =====
+   Every rule is prefixed with :root[data-theme=dark] so it outranks the light rules above. */
+:root[data-theme=dark]{
+  color-scheme:dark;
+  --bg:#070b0e;--panel:#0e151a;--raised:#131c22;--well:#0a1014;
+  --edge:rgba(196,236,226,.16);--edge-strong:rgba(196,236,226,.32);
+  --text:#eef6f3;--soft:#bfd0cb;--muted:#8aa19c;--faint:#5b716e;
+  --neon-mint:#2ff5b9;--neon-amber:#ffb224;--neon-blue:#4cc6ff;--neon-pink:#ff4de3;--neon-red:#ff5d6c;
+  --green:#2ff5b9;--ink:#eef6f3;--muted:#8aa19c;--border:rgba(196,236,226,.16);--line:rgba(196,236,226,.12);--label:#8aa19c;
+  color:var(--text);background:var(--bg)}
+:root[data-theme=dark] body{background:var(--bg);color:var(--text)}
+:root[data-theme=dark] :focus-visible{outline-color:var(--neon-mint)}
+/* Surfaces */
+:root[data-theme=dark] :is(.panel,.experiment,.setup-panel){background:var(--panel);border-color:var(--edge)}
+:root[data-theme=dark] :is(.soil-card,.parts-card,.number-field,.soil-panel select,.board-tools button,.soil-states button){background:var(--well);border-color:var(--edge)}
+:root[data-theme=dark] :is(.soil-card,.parts-card):hover{background:#0f1c1b;border-color:rgba(47,245,185,.55)}
+:root[data-theme=dark] input[type=number]{background:transparent;color:var(--text)}
+:root[data-theme=dark] :is(h1,h2,.soil-button-name,.parts-card-name){color:var(--text)}
+:root[data-theme=dark] :is(.identity p,.header-meta,.timing-field label,.phase,.board-status,.chart-hint,.live-label,.board-legend,.layer-note,footer,.soil-card-sub,.soil-button-label,.soil-intro,.soil-filters label,.soil-legend,.soil-note,.soil-key,.soil-kd2 figcaption,.board-tools,.dialog-part,#dialogExtra,.estimate-status td,.chart-key){color:var(--muted)}
+:root[data-theme=dark] .soil-button-props,:root[data-theme=dark] .soil-card-sub .soil-button-props{color:var(--soft)}
+:root[data-theme=dark] .soil-button-action{background:var(--neon-mint);color:#03140e;font-weight:600}
+:root[data-theme=dark] .mark rect{fill:#0f1c1b}.mark{background:none}
+:root[data-theme=dark] .theme-toggle{color:var(--soft);border-color:var(--edge)}
+:root[data-theme=dark] .theme-toggle:hover{background:var(--raised)}
+:root[data-theme=dark] .theme-icon{background:transparent;box-shadow:inset -4px -2px 0 0 #cfe3ff}
+:root[data-theme=dark] :is(.info-button,.close-button){color:var(--soft);border-color:var(--edge)}
+:root[data-theme=dark] :is(.info-button,.close-button,.reset-button,.speed-button,.tool-button,.board-tools button):hover{background:var(--raised)}
+:root[data-theme=dark] :is(.reset-button,.speed-button){color:var(--soft)}
+:root[data-theme=dark] .start-button{background:var(--neon-mint);color:#03140e;box-shadow:0 0 18px rgba(47,245,185,.28)}
+:root[data-theme=dark] .start-button:hover{background:#7dffd7}
+:root[data-theme=dark] input[type=range]{accent-color:var(--neon-mint)}
+:root[data-theme=dark] .timing-field.active .number-field{border-color:var(--neon-mint);background:#0c1d19;box-shadow:0 0 0 1px rgba(47,245,185,.25)}
+:root[data-theme=dark] .timing-field.active label{color:var(--neon-mint)}
+:root[data-theme=dark] .timing-field.active[data-phase=pulse] .number-field{border-color:var(--neon-amber);background:#1d160a;box-shadow:0 0 0 1px rgba(255,178,36,.25)}
+:root[data-theme=dark] .timing-field.active[data-phase=pulse] label{color:var(--neon-amber)}
+:root[data-theme=dark] .phase i{background:var(--faint)}
+:root[data-theme=dark] :is(.phase[data-state=baseline],.phase[data-state=cooldown]){color:var(--neon-mint)}
+:root[data-theme=dark] :is(.phase[data-state=baseline],.phase[data-state=cooldown]) i{background:var(--neon-mint);box-shadow:0 0 8px var(--neon-mint)}
+:root[data-theme=dark] .phase[data-state=pulse]{color:var(--neon-amber)}
+:root[data-theme=dark] .phase[data-state=pulse] i{background:var(--neon-amber);box-shadow:0 0 8px var(--neon-amber)}
+:root[data-theme=dark] .timeline output span{color:var(--muted)}
+:root[data-theme=dark] .input-error{background:#2a1214;color:#ff9aa3}
+:root[data-theme=dark] .live-label i{background:var(--neon-mint);box-shadow:0 0 6px var(--neon-mint)}
+:root[data-theme=dark] footer button{color:var(--soft);border-color:var(--edge)}
+/* Sensor drawing: dark drafting sheet */
+:root[data-theme=dark] .sensor-canvas{background:#081013;border-color:var(--edge)}
+:root[data-theme=dark] .grid-minor{stroke:#101d21}:root[data-theme=dark] .grid-major{stroke:#17292d}
+:root[data-theme=dark] .board-tabs{background:var(--well);border-color:var(--edge)}
+:root[data-theme=dark] .board-tabs button{color:var(--muted)}
+:root[data-theme=dark] .board-tabs button[aria-selected=true]{background:var(--raised);color:var(--text);box-shadow:inset 0 -2px 0 var(--neon-mint)}
+:root[data-theme=dark] .board-tabs button:hover{color:var(--text)}
+:root[data-theme=dark] .board-outline{fill:#11412f;stroke:#2ba878}
+:root[data-theme=dark] #board:not([data-view=components]) .board-outline{fill:#0d2a21}
+:root[data-theme=dark] .tag-line{stroke:#46605a}
+:root[data-theme=dark] .tag-label{fill:#e9f5f1}
+:root[data-theme=dark] .tag-role{fill:#8aa19c}
+:root[data-theme=dark] :is(.board-tag:hover,.board-tag:focus-visible,.board-tag.selected) .tag-label{fill:var(--neon-mint)}
+:root[data-theme=dark] .board-tag:hover .tag-line{stroke:var(--neon-mint)}
+:root[data-theme=dark] .board-tag:hover .tag-role{fill:var(--soft)}
+:root[data-theme=dark] .pcb-dimensions{stroke:#4f6863}
+:root[data-theme=dark] :is(.dim-text){fill:var(--soft)}
+:root[data-theme=dark] :is(.dim-note,.wire-role){fill:var(--muted)}
+:root[data-theme=dark] .context-title{fill:var(--soft)}
+:root[data-theme=dark] .wire-label.wire-power{fill:#ff6b6b}:root[data-theme=dark] .external-wire.wire-power{stroke:#ff6b6b}
+:root[data-theme=dark] .wire-label.wire-signal{fill:var(--neon-blue)}:root[data-theme=dark] .external-wire.wire-signal{stroke:var(--neon-blue)}
+:root[data-theme=dark] .wire-label.wire-ground{fill:#b9c6c3}:root[data-theme=dark] .external-wire.wire-ground{stroke:#8e9c99}
+:root[data-theme=dark] .title-block rect{fill:#0c1519;stroke:#46605a}
+:root[data-theme=dark] .title-block line{stroke:#2a3b3d}
+:root[data-theme=dark] .title-block text{fill:var(--soft)}:root[data-theme=dark] .tb-meta{fill:var(--muted)}
+:root[data-theme=dark] .sensor-footer{background:rgba(10,16,20,.9);border-color:var(--edge)}
+:root[data-theme=dark] .thermal-legend-title{color:var(--soft)}
+:root[data-theme=dark] :is(.thermal-legend-title>span,.thermal-ticks){color:var(--muted)}
+:root[data-theme=dark] .thermal-colorbar{background:linear-gradient(90deg,#461870,#ae56c2 25%,#f53f78 50%,#ff7d32 75%,#ffe26e)}
+:root[data-theme=dark] .flow.on{filter:drop-shadow(0 0 .35px currentColor)}
+/* Chart: neon traces on a dark plot */
+:root[data-theme=dark] .th1{background:var(--neon-mint)}:root[data-theme=dark] .th2{background:var(--neon-amber)}:root[data-theme=dark] .th3{background:var(--neon-blue)}
+:root[data-theme=dark] .phase-bg{fill:#0b1216}:root[data-theme=dark] .phase-bg.phase-heating{fill:#241a0b}
+:root[data-theme=dark] .chart-grid{stroke:#1a272c}
+:root[data-theme=dark] :is(.axis-label,.plot-phase){fill:var(--muted)}
+:root[data-theme=dark] .trace-tempL{stroke:var(--neon-mint);filter:drop-shadow(0 0 3px rgba(47,245,185,.55))}
+:root[data-theme=dark] .trace-tempR{stroke:var(--neon-blue)}
+:root[data-theme=dark] .trace-tempTip{stroke:var(--neon-amber);filter:drop-shadow(0 0 3px rgba(255,178,36,.5))}
+:root[data-theme=dark] .chart-cursor{stroke:var(--soft)}
+/* Readings table */
+:root[data-theme=dark] :is(.readings thead th,.readings .section-head th){color:var(--muted);border-bottom-color:var(--edge-strong)}
+:root[data-theme=dark] .readings tbody tr{border-bottom-color:rgba(196,236,226,.07)}
+:root[data-theme=dark] .readings tbody tr:hover{background:rgba(196,236,226,.04)}
+:root[data-theme=dark] .readings tbody th button{color:var(--text)}
+:root[data-theme=dark] .readings tbody th button:hover{color:var(--neon-mint)}
+:root[data-theme=dark] .readings tbody th small{color:var(--faint)}
+:root[data-theme=dark] .readings td{color:var(--text)}
+:root[data-theme=dark] .readings td:last-child{color:var(--soft)}
+:root[data-theme=dark] .readings td small{color:var(--neon-amber)}
+/* Dialogs */
+:root[data-theme=dark] dialog{background:var(--panel);color:var(--text);border-color:var(--edge-strong);box-shadow:0 22px 100px rgba(0,0,0,.6)}
+:root[data-theme=dark] dialog::backdrop{background:rgba(2,6,8,.72)}
+:root[data-theme=dark] #dialogDescription{color:var(--soft)}
+:root[data-theme=dark] .ref-badge{background:rgba(47,245,185,.12);color:var(--neon-mint)}
+:root[data-theme=dark] .dialog-reading{border-top-color:var(--edge)}
+:root[data-theme=dark] .dialog-reading span{color:var(--muted)}
+:root[data-theme=dark] #dialogExtra :is(summary,a){color:var(--neon-mint)}
+:root[data-theme=dark] .parts-scroll{border-color:var(--edge)}
+:root[data-theme=dark] .parts-table th{background:var(--raised);color:var(--muted);border-bottom-color:var(--edge-strong)}
+:root[data-theme=dark] .parts-table td{color:var(--soft);border-bottom-color:rgba(196,236,226,.07)}
+:root[data-theme=dark] .parts-table td.desc{color:var(--muted)}
+:root[data-theme=dark] .parts-table tr:hover td{background:rgba(196,236,226,.04)}
+:root[data-theme=dark] .parts-table button{color:var(--neon-mint)}
+/* Select soil */
+:root[data-theme=dark] .soil-panel select{color:var(--text)}
+:root[data-theme=dark] .tri-grid line{stroke:#15242a}
+:root[data-theme=dark] .tri-class{stroke:#2a3d41}
+:root[data-theme=dark] .tri-class.on{fill:rgba(47,245,185,.07);stroke:var(--neon-mint)}
+:root[data-theme=dark] .tri-edge{stroke:#5b716e}
+:root[data-theme=dark] :is(.tri-label text,.tri-axis text){fill:var(--faint)}
+:root[data-theme=dark] .tri-title{fill:var(--muted)}
+:root[data-theme=dark] .tri-dot{stroke:var(--panel)}
+:root[data-theme=dark] .tri-ring{stroke:var(--neon-mint);filter:drop-shadow(0 0 3px rgba(47,245,185,.8))}
+:root[data-theme=dark] .soil-tip{background:var(--raised);border-color:var(--edge-strong);color:var(--soft);box-shadow:0 8px 28px rgba(0,0,0,.5)}
+:root[data-theme=dark] .soil-tip strong{color:var(--text)}
+:root[data-theme=dark] .soil-states button{color:var(--soft)}
+:root[data-theme=dark] .soil-states button b{color:var(--muted)}
+:root[data-theme=dark] .soil-states button:hover{background:var(--raised)}
+:root[data-theme=dark] .soil-states button[aria-pressed=true]{border-color:var(--neon-mint);background:rgba(47,245,185,.1);color:var(--neon-mint)}
+:root[data-theme=dark] .soil-states button[aria-pressed=true] b{color:var(--soft)}
+:root[data-theme=dark] .soil-states button i{background:rgba(255,178,36,.18);color:var(--neon-amber)}
+:root[data-theme=dark] .soil-flag{background:rgba(255,178,36,.1);color:#ffcf7a}
+:root[data-theme=dark] .soil-facts div{border-top-color:var(--edge)}
+:root[data-theme=dark] .soil-facts dt{color:var(--muted)}
+:root[data-theme=dark] .soil-facts dd{color:var(--text)}
+:root[data-theme=dark] .soil-kd2{border-top-color:var(--edge)}
+:root[data-theme=dark] .kd2-heat{fill:#241a0b}
+:root[data-theme=dark] .kd2-grid{stroke:#1a272c}
+:root[data-theme=dark] .kd2-axis{fill:var(--muted)}
+:root[data-theme=dark] .kd2-meas circle,:root[data-theme=dark] .key-meas{fill:#e9f5f1;background:#e9f5f1}
+:root[data-theme=dark] .kd2-model{stroke:var(--neon-amber)}:root[data-theme=dark] .key-model{background:var(--neon-amber)}
+:root[data-theme=dark] .kd2-cursor{stroke:var(--soft)}
+:root[data-theme=dark] .soil-curve-note{color:var(--muted)}

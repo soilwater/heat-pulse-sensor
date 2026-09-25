@@ -1,0 +1,215 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-09-23T05:27:01",
+    "ignored_checks": [
+        {
+            "description": "Footprint has no courtyard defined",
+            "key": "missing_courtyard"
+        },
+        {
+            "description": "Track endpoint not centered on via",
+            "key": "track_not_centered_on_via"
+        },
+        {
+            "description": "Tuning profile track geometries",
+            "key": "tuning_profile_track_geometries"
+        },
+        {
+            "description": "Footprint doesn't match symbol's footprint filters",
+            "key": "footprint_filters_mismatch"
+        },
+        {
+            "description": "Footprint component type doesn't match footprint pads",
+            "key": "footprint_type_mismatch"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+    ],
+    "kicad_version": "10.0.6",
+    "schematic_parity": [],
+    "source": "hp_sensor_routed.kicad_pcb",
+    "unconnected_items": [
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Zone 'GND fill' [GND] on F.Cu, priority 0",
+                    "pos": {
+                        "x": 100.3,
+                        "y": 71.41
+                    },
+                    "uuid": "285c5d95-7f30-4dd6-a86d-8ba68392231f"
+                },
+                {
+                    "description": "Zone 'GND plane' [GND] on B.Cu, priority 0",
+                    "pos": {
+                        "x": 100.3,
+                        "y": 71.41
+                    },
+                    "uuid": "362ef18d-75a0-4ad6-bff3-72caa37d436a"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Zone 'GND fill' [GND] on F.Cu, priority 0",
+                    "pos": {
+                        "x": 100.3,
+                        "y": 71.41
+                    },
+                    "uuid": "285c5d95-7f30-4dd6-a86d-8ba68392231f"
+                },
+                {
+                    "description": "Zone 'GND fill' [GND] on F.Cu, priority 0",
+                    "pos": {
+                        "x": 100.3,
+                        "y": 71.41
+                    },
+                    "uuid": "285c5d95-7f30-4dd6-a86d-8ba68392231f"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Zone 'GND fill' [GND] on F.Cu, priority 0",
+                    "pos": {
+                        "x": 100.3,
+                        "y": 71.41
+                    },
+                    "uuid": "285c5d95-7f30-4dd6-a86d-8ba68392231f"
+                },
+                {
+                    "description": "Zone 'GND fill' [GND] on F.Cu, priority 0",
+                    "pos": {
+                        "x": 100.3,
+                        "y": 71.41
+                    },
+                    "uuid": "285c5d95-7f30-4dd6-a86d-8ba68392231f"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [VIN_P] on F.Cu, length 0.0125 mm",
+                    "pos": {
+                        "x": 105.6375,
+                        "y": 78.5
+                    },
+                    "uuid": "a4824624-9e8a-450f-8fa9-cff624a983c8"
+                },
+                {
+                    "description": "Track [VIN_P] on F.Cu, length 0.0500 mm",
+                    "pos": {
+                        "x": 106.05,
+                        "y": 74.75
+                    },
+                    "uuid": "041c1424-78e2-4667-a756-91255d99d3e5"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [VIN_P] on F.Cu, length 0.0125 mm",
+                    "pos": {
+                        "x": 105.6375,
+                        "y": 78.5
+                    },
+                    "uuid": "a4824624-9e8a-450f-8fa9-cff624a983c8"
+                },
+                {
+                    "description": "Track [VIN_P] on F.Cu, length 0.0250 mm",
+                    "pos": {
+                        "x": 108.35,
+                        "y": 85.0
+                    },
+                    "uuid": "9d12ed11-7b14-4c4b-adc3-941a727bb982"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [VIN_P] on F.Cu, length 0.0250 mm",
+                    "pos": {
+                        "x": 108.35,
+                        "y": 85.0
+                    },
+                    "uuid": "9d12ed11-7b14-4c4b-adc3-941a727bb982"
+                },
+                {
+                    "description": "Track [VIN_P] on F.Cu, length 1.2750 mm",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 84.5
+                    },
+                    "uuid": "5731e98c-347b-415c-97c9-c8b9bc83018f"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [VIN_P] on F.Cu, length 1.2750 mm",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 84.5
+                    },
+                    "uuid": "5731e98c-347b-415c-97c9-c8b9bc83018f"
+                },
+                {
+                    "description": "Track [VIN_P] on F.Cu, length 0.0375 mm",
+                    "pos": {
+                        "x": 136.75,
+                        "y": 84.0875
+                    },
+                    "uuid": "fe892699-acb2-4614-ba76-a73ac393d289"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        }
+    ],
+    "violations": [
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [VIN_P] on F.Cu, length 1.2750 mm",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 84.5
+                    },
+                    "uuid": "5731e98c-347b-415c-97c9-c8b9bc83018f"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        }
+    ]
+}

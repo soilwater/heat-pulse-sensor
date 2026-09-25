@@ -1,0 +1,23 @@
+HP-HAT r4 released 2026-09-25 01:07 by release.py; supersedes the former r3 package.
+ERC 0 | DRC 0 violations, 0 unconnected | schematic parity OK | physical Kelvin OK (3 sense pins) | exterior solder openings clear of via holes | four-layer stackup verified | BOM/CPL/ZIP consistency OK
+43.18 x 17.78 mm body; 99.86 x 17.78 mm overall; 0.8 mm four-layer PCB.
+30 face-down Nano contact positions/nets verified; conservative opposing-component envelope check passed at 4.00 mm face spacing with 0.40 mm minimum clearance after stated allowances.
+Factory assembly excludes J1/J3/J4 and the separately fitted Nano/two HTSW-115-07-T-S strips soldered through both boards.
+This validates the electronic layout and manufacturing data; assembled connector fit, height, firmware and potting remain physical verification items.
+
+SHA-256
+ca2832545b940aec2ecae9560ec3da0cb9658cb26b9eb6653fd97ea11e95f624  hp_hat_routed.kicad_pcb
+d61e00c2c91f28578dde34fa32bf455f502a7d5825be8eb0026fd7284af2bb92  hp_hat.kicad_sch
+9f8194ac283e186cf6a57ae41c52d9e4d294257aefb8e24b180eea4dc2fa38e1  netlist.json
+bc06bc505d26fd5af2b85d81facd911ddf605f4ad62637c21ff92516a344aca8  hp_hat_routed.kicad_pro
+cc9d62fde056b9006d752a7a7dfcb572c4861d3be868b0902ca6facb660df4ba  erc.rpt
+1bdd4a8714f022d943c3edaac95aee9d85f970cae12a810136ff420939f2dfb0  drc_routed.rpt
+cdd75efc7cd68d769d3fca4503ed7629a89bcded669ab7fbb7e880a1444dc788  nano-r4-envelope.json
+187bc12431fc8658551e7ee8e9242ed210261f3f895a5f9d5687e3a63a105b78  check_assembly.py
+7fad5edd3a593ba7b53e6cd9c51a93668b93f4c01cbfb3e33b18a63ee556b6cf  ASSEMBLY.md
+c88481f9fe9596c3f9aeb64054fa5e94c68ffeedbd710e052798a723071c959a  HP-HAT_BOM.csv
+4afe4c702bd60a6a3251bb06cabcf9babfe9f090f0f8c144a276db2c32c6049f  HP-HAT_CPL.csv
+f98fd152b5919b1cfa180411d054c61db48b30b478288b8a76aa53aed1f14973  HP-HAT_gerbers.zip
+86567cb88976a92c9e90e3abffa17a4dc61a29338c14757848fd4e12cefbd5ed  HP-HAT_schematic.pdf
+c4742e93b8c1bd202a3da12a28471f5c232ac7f214e99e811b2c0ce8aca71218  render_bottom.png
+ac96ffb8b4cca984929e9b0d1da3fee62af158feb95dbf6d83e2dba92f49c1a3  render_top.png

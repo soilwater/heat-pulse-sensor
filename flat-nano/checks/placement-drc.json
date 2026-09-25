@@ -1,0 +1,3034 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-09-23T05:22:36",
+    "ignored_checks": [
+        {
+            "description": "Footprint has no courtyard defined",
+            "key": "missing_courtyard"
+        },
+        {
+            "description": "Track endpoint not centered on via",
+            "key": "track_not_centered_on_via"
+        },
+        {
+            "description": "Tuning profile track geometries",
+            "key": "tuning_profile_track_geometries"
+        },
+        {
+            "description": "Footprint doesn't match symbol's footprint filters",
+            "key": "footprint_filters_mismatch"
+        },
+        {
+            "description": "Footprint component type doesn't match footprint pads",
+            "key": "footprint_type_mismatch"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+    ],
+    "kicad_version": "10.0.6",
+    "schematic_parity": [],
+    "source": "hp_sensor.kicad_pcb",
+    "unconnected_items": [
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "PTH pad 2 [+5V] of J5",
+                    "pos": {
+                        "x": 106.29,
+                        "y": 72.5
+                    },
+                    "uuid": "2d113219-745a-430e-86ce-3f8ca5d8a790"
+                },
+                {
+                    "description": "Pad 1 [+5V] of D7 on F.Cu",
+                    "pos": {
+                        "x": 107.35,
+                        "y": 82.5
+                    },
+                    "uuid": "0543df53-2e1b-4de5-95f8-211b7b5d6d5e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [+5V] of D7 on F.Cu",
+                    "pos": {
+                        "x": 107.35,
+                        "y": 82.5
+                    },
+                    "uuid": "0543df53-2e1b-4de5-95f8-211b7b5d6d5e"
+                },
+                {
+                    "description": "Pad 1 [+5V] of C7 on F.Cu",
+                    "pos": {
+                        "x": 114.9,
+                        "y": 82.48
+                    },
+                    "uuid": "70d9ab3c-a1a6-4516-84e0-816cc2927df2"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [+5V] of C7 on F.Cu",
+                    "pos": {
+                        "x": 114.9,
+                        "y": 82.48
+                    },
+                    "uuid": "70d9ab3c-a1a6-4516-84e0-816cc2927df2"
+                },
+                {
+                    "description": "Pad 11 [+5V] of U1 on F.Cu",
+                    "pos": {
+                        "x": 116.825,
+                        "y": 81.25
+                    },
+                    "uuid": "eff7636f-8d1a-4c0f-b1c8-fb50bcfd27f9"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 4 [+5V] of U1 on F.Cu",
+                    "pos": {
+                        "x": 116.825,
+                        "y": 77.75
+                    },
+                    "uuid": "c27b38d0-8616-4ecb-abcf-39f6c2ef0843"
+                },
+                {
+                    "description": "Pad 11 [+5V] of U1 on F.Cu",
+                    "pos": {
+                        "x": 116.825,
+                        "y": 81.25
+                    },
+                    "uuid": "eff7636f-8d1a-4c0f-b1c8-fb50bcfd27f9"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 4 [+5V] of U1 on F.Cu",
+                    "pos": {
+                        "x": 116.825,
+                        "y": 77.75
+                    },
+                    "uuid": "c27b38d0-8616-4ecb-abcf-39f6c2ef0843"
+                },
+                {
+                    "description": "Pad 56 [+5V] of U1 on F.Cu",
+                    "pos": {
+                        "x": 122.75,
+                        "y": 74.325
+                    },
+                    "uuid": "adffdcdf-4cec-4ba5-96aa-23923d8496da"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 21 [+5V] of U1 on F.Cu",
+                    "pos": {
+                        "x": 120.75,
+                        "y": 85.675
+                    },
+                    "uuid": "c0c96bce-9d19-464c-942a-02f3819dc6ab"
+                },
+                {
+                    "description": "Pad 1 [+5V] of R1 on F.Cu",
+                    "pos": {
+                        "x": 122.49,
+                        "y": 88.0
+                    },
+                    "uuid": "a28c0f1a-c230-4dc1-addb-5b9e1cc8ae3f"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 21 [+5V] of U1 on F.Cu",
+                    "pos": {
+                        "x": 120.75,
+                        "y": 85.675
+                    },
+                    "uuid": "c0c96bce-9d19-464c-942a-02f3819dc6ab"
+                },
+                {
+                    "description": "Pad 11 [+5V] of U1 on F.Cu",
+                    "pos": {
+                        "x": 116.825,
+                        "y": 81.25
+                    },
+                    "uuid": "eff7636f-8d1a-4c0f-b1c8-fb50bcfd27f9"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [+5V] of R1 on F.Cu",
+                    "pos": {
+                        "x": 122.49,
+                        "y": 88.0
+                    },
+                    "uuid": "a28c0f1a-c230-4dc1-addb-5b9e1cc8ae3f"
+                },
+                {
+                    "description": "Pad 1 [+5V] of R14 on F.Cu",
+                    "pos": {
+                        "x": 124.49,
+                        "y": 88.0
+                    },
+                    "uuid": "8d9f5f41-5844-4a12-8ac8-4da8f20468eb"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 56 [+5V] of U1 on F.Cu",
+                    "pos": {
+                        "x": 122.75,
+                        "y": 74.325
+                    },
+                    "uuid": "adffdcdf-4cec-4ba5-96aa-23923d8496da"
+                },
+                {
+                    "description": "Pad 1 [+5V] of C9 on F.Cu",
+                    "pos": {
+                        "x": 122.02,
+                        "y": 72.0
+                    },
+                    "uuid": "da91c2a3-b66d-4eff-b215-839222b57799"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [+5V] of R14 on F.Cu",
+                    "pos": {
+                        "x": 124.49,
+                        "y": 88.0
+                    },
+                    "uuid": "8d9f5f41-5844-4a12-8ac8-4da8f20468eb"
+                },
+                {
+                    "description": "Pad 1 [+5V] of R2 on F.Cu",
+                    "pos": {
+                        "x": 126.49,
+                        "y": 88.0
+                    },
+                    "uuid": "4cb37229-dae4-488b-b698-dcb2e9417396"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [+5V] of R2 on F.Cu",
+                    "pos": {
+                        "x": 126.49,
+                        "y": 88.0
+                    },
+                    "uuid": "4cb37229-dae4-488b-b698-dcb2e9417396"
+                },
+                {
+                    "description": "Pad 1 [+5V] of R6 on F.Cu",
+                    "pos": {
+                        "x": 129.74,
+                        "y": 88.0
+                    },
+                    "uuid": "6ddfe03b-2cf8-4659-b560-ad805b4d18a6"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [+5V] of R6 on F.Cu",
+                    "pos": {
+                        "x": 129.74,
+                        "y": 88.0
+                    },
+                    "uuid": "6ddfe03b-2cf8-4659-b560-ad805b4d18a6"
+                },
+                {
+                    "description": "Pad 1 [+5V] of R7 on F.Cu",
+                    "pos": {
+                        "x": 131.99,
+                        "y": 88.0
+                    },
+                    "uuid": "eb95476b-e508-43c2-aaad-6a6bc5c2b6f1"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [+5V] of C8 on F.Cu",
+                    "pos": {
+                        "x": 130.5,
+                        "y": 80.98
+                    },
+                    "uuid": "a9392abd-4325-4374-9ca7-d0c7427163ce"
+                },
+                {
+                    "description": "Pad 39 [+5V] of U1 on F.Cu",
+                    "pos": {
+                        "x": 128.175,
+                        "y": 80.75
+                    },
+                    "uuid": "7f3d093c-0380-4f8f-9a0c-b37519c214f1"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [+5V] of R7 on F.Cu",
+                    "pos": {
+                        "x": 131.99,
+                        "y": 88.0
+                    },
+                    "uuid": "eb95476b-e508-43c2-aaad-6a6bc5c2b6f1"
+                },
+                {
+                    "description": "Pad 1 [+5V] of C12 on F.Cu",
+                    "pos": {
+                        "x": 134.27,
+                        "y": 88.0
+                    },
+                    "uuid": "643ee9d5-e3d8-4c58-a3f6-154baf9e4b05"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 6 [+5V] of U4 on F.Cu",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 86.5
+                    },
+                    "uuid": "b8fbb391-5f1a-4bc5-ac94-ae862900293f"
+                },
+                {
+                    "description": "Pad 1 [+5V] of C12 on F.Cu",
+                    "pos": {
+                        "x": 134.27,
+                        "y": 88.0
+                    },
+                    "uuid": "643ee9d5-e3d8-4c58-a3f6-154baf9e4b05"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [+5V] of D5 on F.Cu",
+                    "pos": {
+                        "x": 136.1,
+                        "y": 80.25
+                    },
+                    "uuid": "fe958b24-afeb-4c6b-964f-3ea1f75be31d"
+                },
+                {
+                    "description": "Pad 1 [+5V] of C17 on F.Cu",
+                    "pos": {
+                        "x": 137.05,
+                        "y": 78.0
+                    },
+                    "uuid": "622c923e-b0d9-416c-8ac2-5c22494c5b7e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [+5V] of D5 on F.Cu",
+                    "pos": {
+                        "x": 136.1,
+                        "y": 80.25
+                    },
+                    "uuid": "fe958b24-afeb-4c6b-964f-3ea1f75be31d"
+                },
+                {
+                    "description": "Pad 1 [+5V] of C8 on F.Cu",
+                    "pos": {
+                        "x": 130.5,
+                        "y": 80.98
+                    },
+                    "uuid": "a9392abd-4325-4374-9ca7-d0c7427163ce"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [+5V] of D5 on F.Cu",
+                    "pos": {
+                        "x": 136.1,
+                        "y": 80.25
+                    },
+                    "uuid": "fe958b24-afeb-4c6b-964f-3ea1f75be31d"
+                },
+                {
+                    "description": "Pad 6 [+5V] of U4 on F.Cu",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 86.5
+                    },
+                    "uuid": "b8fbb391-5f1a-4bc5-ac94-ae862900293f"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [+5V] of C17 on F.Cu",
+                    "pos": {
+                        "x": 137.05,
+                        "y": 78.0
+                    },
+                    "uuid": "622c923e-b0d9-416c-8ac2-5c22494c5b7e"
+                },
+                {
+                    "description": "Pad 1 [+5V] of R11 on F.Cu",
+                    "pos": {
+                        "x": 136.99,
+                        "y": 72.25
+                    },
+                    "uuid": "35163897-93e5-4698-9643-7808afc97cd5"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 4 [A4_SDA] of U4 on F.Cu",
+                    "pos": {
+                        "x": 130.4,
+                        "y": 86.0
+                    },
+                    "uuid": "15287ed9-27c0-4530-bf3c-058b81139493"
+                },
+                {
+                    "description": "Pad 47 [A4_SDA] of U1 on F.Cu",
+                    "pos": {
+                        "x": 128.175,
+                        "y": 76.75
+                    },
+                    "uuid": "7103f78c-7705-4f01-bae1-5a5612d15606"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [A4_SDA] of R6 on F.Cu",
+                    "pos": {
+                        "x": 130.76,
+                        "y": 88.0
+                    },
+                    "uuid": "4cd2e1fa-d8b0-469e-9c65-e04d8ac2fa67"
+                },
+                {
+                    "description": "Pad 4 [A4_SDA] of U4 on F.Cu",
+                    "pos": {
+                        "x": 130.4,
+                        "y": 86.0
+                    },
+                    "uuid": "15287ed9-27c0-4530-bf3c-058b81139493"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [VCL] of C10 on F.Cu",
+                    "pos": {
+                        "x": 114.6,
+                        "y": 78.175
+                    },
+                    "uuid": "ac53e3d7-aa26-4d6a-9fb2-f689354ae357"
+                },
+                {
+                    "description": "Pad 5 [VCL] of U1 on F.Cu",
+                    "pos": {
+                        "x": 116.825,
+                        "y": 78.25
+                    },
+                    "uuid": "aaee15b8-c134-41a1-8a1e-fe9ad7c3a556"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [XCIN] of C5 on F.Cu",
+                    "pos": {
+                        "x": 112.5,
+                        "y": 78.28
+                    },
+                    "uuid": "73a3ffe4-266a-4cfb-9c7c-396d00425636"
+                },
+                {
+                    "description": "Pad 1 [XCIN] of Y1 on F.Cu",
+                    "pos": {
+                        "x": 113.225,
+                        "y": 79.65
+                    },
+                    "uuid": "d7ee01f2-753a-4d8b-9590-4d3787f1a3fb"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [XCIN] of Y1 on F.Cu",
+                    "pos": {
+                        "x": 113.225,
+                        "y": 79.65
+                    },
+                    "uuid": "d7ee01f2-753a-4d8b-9590-4d3787f1a3fb"
+                },
+                {
+                    "description": "Pad 6 [XCIN] of U1 on F.Cu",
+                    "pos": {
+                        "x": 116.825,
+                        "y": 78.75
+                    },
+                    "uuid": "8cd335ef-152f-43ba-ae57-873d2eb5e521"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [XCOUT] of Y1 on F.Cu",
+                    "pos": {
+                        "x": 113.225,
+                        "y": 82.15
+                    },
+                    "uuid": "4d0bb48b-4b54-4456-a0bd-b8a3f25927b1"
+                },
+                {
+                    "description": "Pad 1 [XCOUT] of C6 on F.Cu",
+                    "pos": {
+                        "x": 112.5,
+                        "y": 84.48
+                    },
+                    "uuid": "057172a9-f4a1-479c-9c9f-69e89e50cdc6"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 7 [XCOUT] of U1 on F.Cu",
+                    "pos": {
+                        "x": 116.825,
+                        "y": 79.25
+                    },
+                    "uuid": "1321ab16-5a59-410c-902e-f961833ecc0e"
+                },
+                {
+                    "description": "Pad 2 [XCOUT] of Y1 on F.Cu",
+                    "pos": {
+                        "x": 113.225,
+                        "y": 82.15
+                    },
+                    "uuid": "4d0bb48b-4b54-4456-a0bd-b8a3f25927b1"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "PTH pad 1 [GND] of J5",
+                    "pos": {
+                        "x": 103.75,
+                        "y": 72.5
+                    },
+                    "uuid": "c44144f5-77d3-444c-b799-18ee2d79f2a9"
+                },
+                {
+                    "description": "Pad 2 [GND] of C4 on F.Cu",
+                    "pos": {
+                        "x": 102.23,
+                        "y": 73.75
+                    },
+                    "uuid": "38f0abc7-a56a-4266-a263-ea0ba054a473"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of D4 on F.Cu",
+                    "pos": {
+                        "x": 105.5,
+                        "y": 81.7
+                    },
+                    "uuid": "4f34593f-2655-4d75-a230-e72430d0e275"
+                },
+                {
+                    "description": "PTH pad 3 [GND] of J1",
+                    "pos": {
+                        "x": 102.0,
+                        "y": 84.0
+                    },
+                    "uuid": "c52d9a97-b0b5-4101-b63e-1cb451dea86e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [GND] of U3 on F.Cu",
+                    "pos": {
+                        "x": 105.55,
+                        "y": 77.0
+                    },
+                    "uuid": "d89ab1ff-9276-4eab-93b1-5a07fe5d0b77"
+                },
+                {
+                    "description": "Pad 2 [GND] of C1 on F.Cu",
+                    "pos": {
+                        "x": 107.95,
+                        "y": 74.75
+                    },
+                    "uuid": "d05b8466-5834-42ef-99df-ff6fc79211c2"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [GND] of U3 on F.Cu",
+                    "pos": {
+                        "x": 105.55,
+                        "y": 77.0
+                    },
+                    "uuid": "d89ab1ff-9276-4eab-93b1-5a07fe5d0b77"
+                },
+                {
+                    "description": "Pad 2 [GND] of C4 on F.Cu",
+                    "pos": {
+                        "x": 102.23,
+                        "y": 73.75
+                    },
+                    "uuid": "38f0abc7-a56a-4266-a263-ea0ba054a473"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [GND] of U3 on F.Cu",
+                    "pos": {
+                        "x": 105.55,
+                        "y": 77.0
+                    },
+                    "uuid": "d89ab1ff-9276-4eab-93b1-5a07fe5d0b77"
+                },
+                {
+                    "description": "Pad 2 [GND] of D4 on F.Cu",
+                    "pos": {
+                        "x": 105.5,
+                        "y": 81.7
+                    },
+                    "uuid": "4f34593f-2655-4d75-a230-e72430d0e275"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C1 on F.Cu",
+                    "pos": {
+                        "x": 107.95,
+                        "y": 74.75
+                    },
+                    "uuid": "d05b8466-5834-42ef-99df-ff6fc79211c2"
+                },
+                {
+                    "description": "Pad 2 [GND] of C2 on F.Cu",
+                    "pos": {
+                        "x": 111.0,
+                        "y": 76.8
+                    },
+                    "uuid": "82d3fb81-1879-4a30-a358-8d4e278a61d7"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of D2 on F.Cu",
+                    "pos": {
+                        "x": 112.4,
+                        "y": 74.75
+                    },
+                    "uuid": "4e9f652c-0c29-41d6-a716-e80ca904bc5c"
+                },
+                {
+                    "description": "Pad 2 [GND] of R4 on F.Cu",
+                    "pos": {
+                        "x": 114.76,
+                        "y": 75.25
+                    },
+                    "uuid": "0f3df246-6c42-42ed-baae-36608c73ab23"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C5 on F.Cu",
+                    "pos": {
+                        "x": 112.5,
+                        "y": 77.32
+                    },
+                    "uuid": "6e63716e-6763-4f17-9292-ccccd749b48d"
+                },
+                {
+                    "description": "Pad 2 [GND] of C2 on F.Cu",
+                    "pos": {
+                        "x": 111.0,
+                        "y": 76.8
+                    },
+                    "uuid": "82d3fb81-1879-4a30-a358-8d4e278a61d7"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C5 on F.Cu",
+                    "pos": {
+                        "x": 112.5,
+                        "y": 77.32
+                    },
+                    "uuid": "6e63716e-6763-4f17-9292-ccccd749b48d"
+                },
+                {
+                    "description": "Pad 2 [GND] of C10 on F.Cu",
+                    "pos": {
+                        "x": 114.6,
+                        "y": 76.625
+                    },
+                    "uuid": "3689f176-1c64-4b84-8454-3576b18da307"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C6 on F.Cu",
+                    "pos": {
+                        "x": 112.5,
+                        "y": 83.52
+                    },
+                    "uuid": "fdd51ea8-1b36-4ee8-a755-94f61cdbb94e"
+                },
+                {
+                    "description": "Pad 2 [GND] of R16 on F.Cu",
+                    "pos": {
+                        "x": 113.81,
+                        "y": 85.5
+                    },
+                    "uuid": "ae366518-2da0-4f6a-b456-110171f69f3d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of R16 on F.Cu",
+                    "pos": {
+                        "x": 113.81,
+                        "y": 85.5
+                    },
+                    "uuid": "ae366518-2da0-4f6a-b456-110171f69f3d"
+                },
+                {
+                    "description": "PTH pad 4 [GND] of J2",
+                    "pos": {
+                        "x": 111.37,
+                        "y": 87.5
+                    },
+                    "uuid": "4f27f072-fd19-4f26-8268-92d2c2182322"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of R4 on F.Cu",
+                    "pos": {
+                        "x": 114.76,
+                        "y": 75.25
+                    },
+                    "uuid": "0f3df246-6c42-42ed-baae-36608c73ab23"
+                },
+                {
+                    "description": "Pad 2 [GND] of C10 on F.Cu",
+                    "pos": {
+                        "x": 114.6,
+                        "y": 76.625
+                    },
+                    "uuid": "3689f176-1c64-4b84-8454-3576b18da307"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of R4 on F.Cu",
+                    "pos": {
+                        "x": 114.76,
+                        "y": 75.25
+                    },
+                    "uuid": "0f3df246-6c42-42ed-baae-36608c73ab23"
+                },
+                {
+                    "description": "Pad 58 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 121.75,
+                        "y": 74.325
+                    },
+                    "uuid": "c742f004-ba09-44c1-80b9-0c36dd29482e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C7 on F.Cu",
+                    "pos": {
+                        "x": 114.9,
+                        "y": 81.52
+                    },
+                    "uuid": "ba44caca-9de8-4b9e-a78e-512a638a48cb"
+                },
+                {
+                    "description": "Pad 8 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 116.825,
+                        "y": 79.75
+                    },
+                    "uuid": "50df64ae-99c0-47ee-b945-b40630aeb709"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C7 on F.Cu",
+                    "pos": {
+                        "x": 114.9,
+                        "y": 81.52
+                    },
+                    "uuid": "ba44caca-9de8-4b9e-a78e-512a638a48cb"
+                },
+                {
+                    "description": "Pad 2 [GND] of C6 on F.Cu",
+                    "pos": {
+                        "x": 112.5,
+                        "y": 83.52
+                    },
+                    "uuid": "fdd51ea8-1b36-4ee8-a755-94f61cdbb94e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C11 on F.Cu",
+                    "pos": {
+                        "x": 115.5,
+                        "y": 87.145
+                    },
+                    "uuid": "29f67677-8db1-433b-a8c0-dc6b3a96908c"
+                },
+                {
+                    "description": "Pad 2 [GND] of R16 on F.Cu",
+                    "pos": {
+                        "x": 113.81,
+                        "y": 85.5
+                    },
+                    "uuid": "ae366518-2da0-4f6a-b456-110171f69f3d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 8 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 116.825,
+                        "y": 79.75
+                    },
+                    "uuid": "50df64ae-99c0-47ee-b945-b40630aeb709"
+                },
+                {
+                    "description": "Pad 2 [GND] of C10 on F.Cu",
+                    "pos": {
+                        "x": 114.6,
+                        "y": 76.625
+                    },
+                    "uuid": "3689f176-1c64-4b84-8454-3576b18da307"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 17 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 118.75,
+                        "y": 85.675
+                    },
+                    "uuid": "bd9cdf5b-4956-444b-b41e-99700d372c75"
+                },
+                {
+                    "description": "Pad 2 [GND] of C16 on F.Cu",
+                    "pos": {
+                        "x": 121.025,
+                        "y": 88.0
+                    },
+                    "uuid": "5564c464-7cf6-40b4-8db0-e8f082c02aee"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 17 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 118.75,
+                        "y": 85.675
+                    },
+                    "uuid": "bd9cdf5b-4956-444b-b41e-99700d372c75"
+                },
+                {
+                    "description": "Pad 2 [GND] of C11 on F.Cu",
+                    "pos": {
+                        "x": 115.5,
+                        "y": 87.145
+                    },
+                    "uuid": "29f67677-8db1-433b-a8c0-dc6b3a96908c"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 57 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 122.25,
+                        "y": 74.325
+                    },
+                    "uuid": "7a1e1610-856b-464f-8f6d-4895b655ec5d"
+                },
+                {
+                    "description": "Pad 58 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 121.75,
+                        "y": 74.325
+                    },
+                    "uuid": "c742f004-ba09-44c1-80b9-0c36dd29482e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 57 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 122.25,
+                        "y": 74.325
+                    },
+                    "uuid": "7a1e1610-856b-464f-8f6d-4895b655ec5d"
+                },
+                {
+                    "description": "Pad 2 [GND] of C9 on F.Cu",
+                    "pos": {
+                        "x": 122.98,
+                        "y": 72.0
+                    },
+                    "uuid": "69c8d322-a072-494f-8dc4-c0841057b1eb"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 40 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 128.175,
+                        "y": 80.25
+                    },
+                    "uuid": "47c7202b-c985-45f3-b2e9-1f90f89cabfc"
+                },
+                {
+                    "description": "Pad 2 [GND] of C8 on F.Cu",
+                    "pos": {
+                        "x": 130.5,
+                        "y": 80.02
+                    },
+                    "uuid": "bfd63e71-2fb3-4731-acb7-441e1988f4df"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 40 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 128.175,
+                        "y": 80.25
+                    },
+                    "uuid": "47c7202b-c985-45f3-b2e9-1f90f89cabfc"
+                },
+                {
+                    "description": "Pad 57 [GND] of U1 on F.Cu",
+                    "pos": {
+                        "x": 122.25,
+                        "y": 74.325
+                    },
+                    "uuid": "7a1e1610-856b-464f-8f6d-4895b655ec5d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [GND] of U4 on F.Cu",
+                    "pos": {
+                        "x": 130.4,
+                        "y": 84.5
+                    },
+                    "uuid": "905242ea-0988-430d-b56a-69d65e6544b8"
+                },
+                {
+                    "description": "Pad 2 [GND] of C8 on F.Cu",
+                    "pos": {
+                        "x": 130.5,
+                        "y": 80.02
+                    },
+                    "uuid": "bfd63e71-2fb3-4731-acb7-441e1988f4df"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of U4 on F.Cu",
+                    "pos": {
+                        "x": 130.4,
+                        "y": 85.0
+                    },
+                    "uuid": "57f3da3f-4d79-4ef8-a652-0767a33b3bda"
+                },
+                {
+                    "description": "Pad 1 [GND] of U4 on F.Cu",
+                    "pos": {
+                        "x": 130.4,
+                        "y": 84.5
+                    },
+                    "uuid": "905242ea-0988-430d-b56a-69d65e6544b8"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of U4 on F.Cu",
+                    "pos": {
+                        "x": 130.4,
+                        "y": 85.0
+                    },
+                    "uuid": "57f3da3f-4d79-4ef8-a652-0767a33b3bda"
+                },
+                {
+                    "description": "Pad 7 [GND] of U4 on F.Cu",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 86.0
+                    },
+                    "uuid": "551d6c22-2d4a-44e7-92c1-d82e2deb986d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 7 [GND] of U4 on F.Cu",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 86.0
+                    },
+                    "uuid": "551d6c22-2d4a-44e7-92c1-d82e2deb986d"
+                },
+                {
+                    "description": "Pad 2 [GND] of Q1 on F.Cu",
+                    "pos": {
+                        "x": 139.5625,
+                        "y": 84.15
+                    },
+                    "uuid": "b1f75180-b57c-4352-8865-a42e9a691354"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C21 on F.Cu",
+                    "pos": {
+                        "x": 134.73,
+                        "y": 72.25
+                    },
+                    "uuid": "5e563ac4-7628-4c7f-9954-635ef2d3a111"
+                },
+                {
+                    "description": "Pad 2 [GND] of C22 on F.Cu",
+                    "pos": {
+                        "x": 134.73,
+                        "y": 74.25
+                    },
+                    "uuid": "01c0c319-023a-4002-afc6-75329a17ad70"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C22 on F.Cu",
+                    "pos": {
+                        "x": 134.73,
+                        "y": 74.25
+                    },
+                    "uuid": "01c0c319-023a-4002-afc6-75329a17ad70"
+                },
+                {
+                    "description": "Pad 2 [GND] of C23 on F.Cu",
+                    "pos": {
+                        "x": 134.73,
+                        "y": 76.25
+                    },
+                    "uuid": "d0ee547a-8526-442b-8a10-4da37aae5a34"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C23 on F.Cu",
+                    "pos": {
+                        "x": 134.73,
+                        "y": 76.25
+                    },
+                    "uuid": "d0ee547a-8526-442b-8a10-4da37aae5a34"
+                },
+                {
+                    "description": "Pad 2 [GND] of C24 on F.Cu",
+                    "pos": {
+                        "x": 134.73,
+                        "y": 78.25
+                    },
+                    "uuid": "2ba5c621-46a1-498f-a98d-6581c623a9b0"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C24 on F.Cu",
+                    "pos": {
+                        "x": 134.73,
+                        "y": 78.25
+                    },
+                    "uuid": "2ba5c621-46a1-498f-a98d-6581c623a9b0"
+                },
+                {
+                    "description": "Pad 2 [GND] of C8 on F.Cu",
+                    "pos": {
+                        "x": 130.5,
+                        "y": 80.02
+                    },
+                    "uuid": "bfd63e71-2fb3-4731-acb7-441e1988f4df"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C12 on F.Cu",
+                    "pos": {
+                        "x": 135.23,
+                        "y": 88.0
+                    },
+                    "uuid": "c127b0e8-370c-441b-a799-4ecb13338a95"
+                },
+                {
+                    "description": "Pad 7 [GND] of U4 on F.Cu",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 86.0
+                    },
+                    "uuid": "551d6c22-2d4a-44e7-92c1-d82e2deb986d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C13 on F.Cu",
+                    "pos": {
+                        "x": 137.98,
+                        "y": 74.25
+                    },
+                    "uuid": "00a62195-bceb-49b8-9d9d-c0e23b8e6b33"
+                },
+                {
+                    "description": "Pad 2 [GND] of Q2 on F.Cu",
+                    "pos": {
+                        "x": 140.0625,
+                        "y": 74.95
+                    },
+                    "uuid": "45d00728-eb53-485a-9198-e65c43fec790"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C13 on F.Cu",
+                    "pos": {
+                        "x": 137.98,
+                        "y": 74.25
+                    },
+                    "uuid": "00a62195-bceb-49b8-9d9d-c0e23b8e6b33"
+                },
+                {
+                    "description": "Pad 2 [GND] of C22 on F.Cu",
+                    "pos": {
+                        "x": 134.73,
+                        "y": 74.25
+                    },
+                    "uuid": "01c0c319-023a-4002-afc6-75329a17ad70"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of C17 on F.Cu",
+                    "pos": {
+                        "x": 138.95,
+                        "y": 78.0
+                    },
+                    "uuid": "83e98bb2-3f7b-4566-8956-c79fe5af420b"
+                },
+                {
+                    "description": "Pad 2 [GND] of R17 on F.Cu",
+                    "pos": {
+                        "x": 141.51,
+                        "y": 77.8
+                    },
+                    "uuid": "e69e57db-2fb5-4ebf-adb4-a6b9593b980d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of Q1 on F.Cu",
+                    "pos": {
+                        "x": 139.5625,
+                        "y": 84.15
+                    },
+                    "uuid": "b1f75180-b57c-4352-8865-a42e9a691354"
+                },
+                {
+                    "description": "Pad 2 [GND] of R10 on F.Cu",
+                    "pos": {
+                        "x": 142.51,
+                        "y": 86.0
+                    },
+                    "uuid": "4de31f9e-73e2-4884-a282-d79543d07add"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [GND] of R17 on F.Cu",
+                    "pos": {
+                        "x": 141.51,
+                        "y": 77.8
+                    },
+                    "uuid": "e69e57db-2fb5-4ebf-adb4-a6b9593b980d"
+                },
+                {
+                    "description": "Pad 2 [GND] of Q2 on F.Cu",
+                    "pos": {
+                        "x": 140.0625,
+                        "y": 74.95
+                    },
+                    "uuid": "45d00728-eb53-485a-9198-e65c43fec790"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [VBUS_SENSE] of R15 on F.Cu",
+                    "pos": {
+                        "x": 114.9,
+                        "y": 84.09
+                    },
+                    "uuid": "314632af-0739-4d55-9aaa-ce459419d728"
+                },
+                {
+                    "description": "Pad 1 [VBUS_SENSE] of R16 on F.Cu",
+                    "pos": {
+                        "x": 112.79,
+                        "y": 85.5
+                    },
+                    "uuid": "add31ea4-a2f9-44a0-b6c0-954dfbf4f966"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 16 [VBUS_SENSE] of U1 on F.Cu",
+                    "pos": {
+                        "x": 116.825,
+                        "y": 83.75
+                    },
+                    "uuid": "81d6cf06-bf17-44ba-8a6c-a2f385e4fd0c"
+                },
+                {
+                    "description": "Pad 2 [VBUS_SENSE] of R15 on F.Cu",
+                    "pos": {
+                        "x": 114.9,
+                        "y": 84.09
+                    },
+                    "uuid": "314632af-0739-4d55-9aaa-ce459419d728"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "PTH pad 2 [USB_DM] of J2",
+                    "pos": {
+                        "x": 106.29,
+                        "y": 87.5
+                    },
+                    "uuid": "cdbe9d39-11a3-47ab-8b71-1473ec273532"
+                },
+                {
+                    "description": "Pad 18 [USB_DM] of U1 on F.Cu",
+                    "pos": {
+                        "x": 119.25,
+                        "y": 85.675
+                    },
+                    "uuid": "50505d0f-7605-4f97-82da-71eea599a925"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "PTH pad 3 [USB_DP] of J2",
+                    "pos": {
+                        "x": 108.83,
+                        "y": 87.5
+                    },
+                    "uuid": "8ff14922-6743-4cdb-9e73-3118907f5989"
+                },
+                {
+                    "description": "Pad 19 [USB_DP] of U1 on F.Cu",
+                    "pos": {
+                        "x": 119.75,
+                        "y": 85.675
+                    },
+                    "uuid": "9db5d711-d9d7-4916-9b72-cb56681bb106"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [VCC_USB] of C16 on F.Cu",
+                    "pos": {
+                        "x": 119.475,
+                        "y": 88.0
+                    },
+                    "uuid": "db32ee93-b116-43ab-83dc-d7352c975cd2"
+                },
+                {
+                    "description": "Pad 20 [VCC_USB] of U1 on F.Cu",
+                    "pos": {
+                        "x": 120.25,
+                        "y": 85.675
+                    },
+                    "uuid": "e37557b4-908b-4298-98d3-d2c62fc1a310"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "PTH pad 5 [RESET] of J5",
+                    "pos": {
+                        "x": 113.91,
+                        "y": 72.5
+                    },
+                    "uuid": "de031880-0027-4bef-9f67-f4b8d8d505e5"
+                },
+                {
+                    "description": "Pad 1 [RESET] of C11 on F.Cu",
+                    "pos": {
+                        "x": 115.5,
+                        "y": 88.105
+                    },
+                    "uuid": "a10da83a-70a1-480a-a0e5-5333e2e286fb"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 25 [RESET] of U1 on F.Cu",
+                    "pos": {
+                        "x": 122.75,
+                        "y": 85.675
+                    },
+                    "uuid": "10170883-0e9a-48bc-9386-c542957b88f2"
+                },
+                {
+                    "description": "Pad 1 [RESET] of C11 on F.Cu",
+                    "pos": {
+                        "x": 115.5,
+                        "y": 88.105
+                    },
+                    "uuid": "a10da83a-70a1-480a-a0e5-5333e2e286fb"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [RESET] of R1 on F.Cu",
+                    "pos": {
+                        "x": 123.51,
+                        "y": 88.0
+                    },
+                    "uuid": "ad7f53c6-9baa-497a-9c50-153ceecf384f"
+                },
+                {
+                    "description": "Pad 25 [RESET] of U1 on F.Cu",
+                    "pos": {
+                        "x": 122.75,
+                        "y": 85.675
+                    },
+                    "uuid": "10170883-0e9a-48bc-9386-c542957b88f2"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 26 [MD] of U1 on F.Cu",
+                    "pos": {
+                        "x": 123.25,
+                        "y": 85.675
+                    },
+                    "uuid": "d2ca3bab-f9e5-4fef-940f-bcc528d2101d"
+                },
+                {
+                    "description": "PTH pad 5 [MD] of J2",
+                    "pos": {
+                        "x": 113.91,
+                        "y": 87.5
+                    },
+                    "uuid": "3da49d7d-7146-4428-9838-fc4ec88353a7"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [MD] of R2 on F.Cu",
+                    "pos": {
+                        "x": 127.51,
+                        "y": 88.0
+                    },
+                    "uuid": "b1861fe1-22f8-4edb-ae9d-0ee1276e0cf5"
+                },
+                {
+                    "description": "Pad 26 [MD] of U1 on F.Cu",
+                    "pos": {
+                        "x": 123.25,
+                        "y": 85.675
+                    },
+                    "uuid": "d2ca3bab-f9e5-4fef-940f-bcc528d2101d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 27 [NMI] of U1 on F.Cu",
+                    "pos": {
+                        "x": 123.75,
+                        "y": 85.675
+                    },
+                    "uuid": "86e9b558-9026-4848-a45b-260af6e5f497"
+                },
+                {
+                    "description": "Pad 2 [NMI] of R14 on F.Cu",
+                    "pos": {
+                        "x": 125.51,
+                        "y": 88.0
+                    },
+                    "uuid": "4a392f1a-02c1-43b5-9e38-0cf6be95c102"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 29 [D9_HEAT] of U1 on F.Cu",
+                    "pos": {
+                        "x": 124.75,
+                        "y": 85.675
+                    },
+                    "uuid": "bdd4dfe2-9470-43e4-a51c-3f84425a3782"
+                },
+                {
+                    "description": "Pad 1 [D9_HEAT] of R9 on F.Cu",
+                    "pos": {
+                        "x": 139.49,
+                        "y": 86.0
+                    },
+                    "uuid": "02094622-8296-4e92-8e94-9bbf78511c58"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "PTH pad 4 [SWCLK] of J5",
+                    "pos": {
+                        "x": 111.37,
+                        "y": 72.5
+                    },
+                    "uuid": "b1f884df-c5b8-42a6-a1b1-df198a6a69fe"
+                },
+                {
+                    "description": "Pad 32 [SWCLK] of U1 on F.Cu",
+                    "pos": {
+                        "x": 126.25,
+                        "y": 85.675
+                    },
+                    "uuid": "e5d94203-2f53-411a-af8d-022d695f400d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "PTH pad 3 [SWDIO] of J5",
+                    "pos": {
+                        "x": 108.83,
+                        "y": 72.5
+                    },
+                    "uuid": "be76cb63-d7ec-4d08-9d27-9c440efb2bfa"
+                },
+                {
+                    "description": "Pad 33 [SWDIO] of U1 on F.Cu",
+                    "pos": {
+                        "x": 128.175,
+                        "y": 83.75
+                    },
+                    "uuid": "46cfdd73-115b-43cb-b06f-0864a780e65a"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [D2_SDI12] of R3 on F.Cu",
+                    "pos": {
+                        "x": 106.825,
+                        "y": 85.25
+                    },
+                    "uuid": "f5fcc448-528b-4938-8ece-04e63e974d3b"
+                },
+                {
+                    "description": "Pad 43 [D2_SDI12] of U1 on F.Cu",
+                    "pos": {
+                        "x": 128.175,
+                        "y": 78.75
+                    },
+                    "uuid": "761c871f-bc18-4e45-a05c-b20ae0996a70"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 45 [D4_EXC] of U1 on F.Cu",
+                    "pos": {
+                        "x": 128.175,
+                        "y": 77.75
+                    },
+                    "uuid": "8da092ab-cbc2-4bda-b2a9-4c0b9f0c28f8"
+                },
+                {
+                    "description": "Pad 1 [D4_EXC] of R12 on F.Cu",
+                    "pos": {
+                        "x": 140.49,
+                        "y": 76.6
+                    },
+                    "uuid": "eca49942-fe83-4dd9-9f8a-ab07be539a6d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 48 [A5_SCL] of U1 on F.Cu",
+                    "pos": {
+                        "x": 128.175,
+                        "y": 76.25
+                    },
+                    "uuid": "25e568e2-7988-4897-a994-208b413c5161"
+                },
+                {
+                    "description": "Pad 5 [A5_SCL] of U4 on F.Cu",
+                    "pos": {
+                        "x": 130.4,
+                        "y": 86.5
+                    },
+                    "uuid": "7dd1cfa1-a371-48bf-8003-3f4aeaa6246e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 5 [A5_SCL] of U4 on F.Cu",
+                    "pos": {
+                        "x": 130.4,
+                        "y": 86.5
+                    },
+                    "uuid": "7dd1cfa1-a371-48bf-8003-3f4aeaa6246e"
+                },
+                {
+                    "description": "Pad 2 [A5_SCL] of R7 on F.Cu",
+                    "pos": {
+                        "x": 133.01,
+                        "y": 88.0
+                    },
+                    "uuid": "a98b6866-2016-4d07-813c-bd55b1bccbe3"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [A0_TH1] of R21 on F.Cu",
+                    "pos": {
+                        "x": 131.825,
+                        "y": 72.25
+                    },
+                    "uuid": "91193471-7a40-4171-a670-5c40c7dd607b"
+                },
+                {
+                    "description": "Pad 53 [A0_TH1] of U1 on F.Cu",
+                    "pos": {
+                        "x": 124.25,
+                        "y": 74.325
+                    },
+                    "uuid": "7346b88c-7124-4f60-a945-7d3c8fbd96c6"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [A0_TH1] of C21 on F.Cu",
+                    "pos": {
+                        "x": 133.77,
+                        "y": 72.25
+                    },
+                    "uuid": "10c91e45-5e35-487a-b672-0066c3c50402"
+                },
+                {
+                    "description": "Pad 2 [A0_TH1] of R21 on F.Cu",
+                    "pos": {
+                        "x": 131.825,
+                        "y": 72.25
+                    },
+                    "uuid": "91193471-7a40-4171-a670-5c40c7dd607b"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [A0_TH1] on F.Cu, length 30.2900 mm",
+                    "pos": {
+                        "x": 142.18,
+                        "y": 72.0
+                    },
+                    "uuid": "adc3d611-bb45-4e18-b5a8-de276b84628a"
+                },
+                {
+                    "description": "Pad 1 [A0_TH1] of C21 on F.Cu",
+                    "pos": {
+                        "x": 133.77,
+                        "y": 72.25
+                    },
+                    "uuid": "10c91e45-5e35-487a-b672-0066c3c50402"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 59 [VREF] of U1 on F.Cu",
+                    "pos": {
+                        "x": 121.25,
+                        "y": 74.325
+                    },
+                    "uuid": "5a79dd52-1e62-4344-b463-b67489f86203"
+                },
+                {
+                    "description": "Pad 1 [VREF] of R22 on F.Cu",
+                    "pos": {
+                        "x": 130.175,
+                        "y": 74.25
+                    },
+                    "uuid": "b807dfcc-a1eb-4189-857a-1910d4e5119e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [VREF] of R22 on F.Cu",
+                    "pos": {
+                        "x": 130.175,
+                        "y": 74.25
+                    },
+                    "uuid": "b807dfcc-a1eb-4189-857a-1910d4e5119e"
+                },
+                {
+                    "description": "Pad 1 [VREF] of R21 on F.Cu",
+                    "pos": {
+                        "x": 130.175,
+                        "y": 72.25
+                    },
+                    "uuid": "abb34d5c-b060-4af2-a7b4-2f21fb430c03"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [VREF] of R22 on F.Cu",
+                    "pos": {
+                        "x": 130.175,
+                        "y": 74.25
+                    },
+                    "uuid": "b807dfcc-a1eb-4189-857a-1910d4e5119e"
+                },
+                {
+                    "description": "Pad 1 [VREF] of R23 on F.Cu",
+                    "pos": {
+                        "x": 130.175,
+                        "y": 76.25
+                    },
+                    "uuid": "53e79aec-c087-4891-9dd1-c357a582f66d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [VREF] of R24 on F.Cu",
+                    "pos": {
+                        "x": 130.175,
+                        "y": 78.25
+                    },
+                    "uuid": "4dae8c04-1b04-46b0-9530-e90a351a22fb"
+                },
+                {
+                    "description": "Pad 1 [VREF] of R23 on F.Cu",
+                    "pos": {
+                        "x": 130.175,
+                        "y": 76.25
+                    },
+                    "uuid": "53e79aec-c087-4891-9dd1-c357a582f66d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [VREF] of C13 on F.Cu",
+                    "pos": {
+                        "x": 137.02,
+                        "y": 74.25
+                    },
+                    "uuid": "e7fc2c1b-0a1d-49e7-ac69-0b698b11a40e"
+                },
+                {
+                    "description": "Pad 2 [VREF] of R11 on F.Cu",
+                    "pos": {
+                        "x": 138.01,
+                        "y": 72.25
+                    },
+                    "uuid": "a2c0e347-4650-4c80-b04f-b33dc112e742"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [VREF] of C13 on F.Cu",
+                    "pos": {
+                        "x": 137.02,
+                        "y": 74.25
+                    },
+                    "uuid": "e7fc2c1b-0a1d-49e7-ac69-0b698b11a40e"
+                },
+                {
+                    "description": "Pad 1 [VREF] of R22 on F.Cu",
+                    "pos": {
+                        "x": 130.175,
+                        "y": 74.25
+                    },
+                    "uuid": "b807dfcc-a1eb-4189-857a-1910d4e5119e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 62 [A3_TH4] of U1 on F.Cu",
+                    "pos": {
+                        "x": 119.75,
+                        "y": 74.325
+                    },
+                    "uuid": "ba577c7d-f5a2-4a1d-aa7a-23300bfefce1"
+                },
+                {
+                    "description": "Pad 2 [A3_TH4] of R24 on F.Cu",
+                    "pos": {
+                        "x": 131.825,
+                        "y": 78.25
+                    },
+                    "uuid": "f2101822-540f-4983-9366-5a368a2b15ed"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [A3_TH4] of R24 on F.Cu",
+                    "pos": {
+                        "x": 131.825,
+                        "y": 78.25
+                    },
+                    "uuid": "f2101822-540f-4983-9366-5a368a2b15ed"
+                },
+                {
+                    "description": "Pad 1 [A3_TH4] of C24 on F.Cu",
+                    "pos": {
+                        "x": 133.77,
+                        "y": 78.25
+                    },
+                    "uuid": "e3122dae-2c1d-4ddd-be23-4e3363fa0c11"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [A3_TH4] of C24 on F.Cu",
+                    "pos": {
+                        "x": 133.77,
+                        "y": 78.25
+                    },
+                    "uuid": "e3122dae-2c1d-4ddd-be23-4e3363fa0c11"
+                },
+                {
+                    "description": "Pad 1 [A3_TH4] of TH4 on F.Cu",
+                    "pos": {
+                        "x": 136.99,
+                        "y": 76.25
+                    },
+                    "uuid": "0dc8f232-fe47-49ee-90ac-56ee5426ad8e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 63 [A2_TH3] of U1 on F.Cu",
+                    "pos": {
+                        "x": 119.25,
+                        "y": 74.325
+                    },
+                    "uuid": "c0098af3-c977-4514-a258-fbc626d44440"
+                },
+                {
+                    "description": "Pad 2 [A2_TH3] of R23 on F.Cu",
+                    "pos": {
+                        "x": 131.825,
+                        "y": 76.25
+                    },
+                    "uuid": "3800c6bb-cfc8-4e55-aef9-bd29313c67c3"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [A2_TH3] of C23 on F.Cu",
+                    "pos": {
+                        "x": 133.77,
+                        "y": 76.25
+                    },
+                    "uuid": "ee494d36-8cab-4d81-ab11-36ec91f6f441"
+                },
+                {
+                    "description": "Pad 2 [A2_TH3] of R23 on F.Cu",
+                    "pos": {
+                        "x": 131.825,
+                        "y": 76.25
+                    },
+                    "uuid": "3800c6bb-cfc8-4e55-aef9-bd29313c67c3"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [A2_TH3] on F.Cu, length 30.2900 mm",
+                    "pos": {
+                        "x": 142.18,
+                        "y": 88.0
+                    },
+                    "uuid": "0e215959-ac79-4983-8c21-d4b3219bf052"
+                },
+                {
+                    "description": "Pad 1 [A2_TH3] of C23 on F.Cu",
+                    "pos": {
+                        "x": 133.77,
+                        "y": 76.25
+                    },
+                    "uuid": "ee494d36-8cab-4d81-ab11-36ec91f6f441"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [A1_TH2] of R22 on F.Cu",
+                    "pos": {
+                        "x": 131.825,
+                        "y": 74.25
+                    },
+                    "uuid": "cedcb51e-dfd7-440a-8e91-9acf77259958"
+                },
+                {
+                    "description": "Pad 64 [A1_TH2] of U1 on F.Cu",
+                    "pos": {
+                        "x": 118.75,
+                        "y": 74.325
+                    },
+                    "uuid": "60904ea2-d3b1-4cd5-a80e-dcf8f773bd7a"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [A1_TH2] of C22 on F.Cu",
+                    "pos": {
+                        "x": 133.77,
+                        "y": 74.25
+                    },
+                    "uuid": "5fc56c0c-a3d3-49d6-8b07-010b96f5b630"
+                },
+                {
+                    "description": "Pad 2 [A1_TH2] of R22 on F.Cu",
+                    "pos": {
+                        "x": 131.825,
+                        "y": 74.25
+                    },
+                    "uuid": "cedcb51e-dfd7-440a-8e91-9acf77259958"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [A1_TH2] of C22 on F.Cu",
+                    "pos": {
+                        "x": 133.77,
+                        "y": 74.25
+                    },
+                    "uuid": "5fc56c0c-a3d3-49d6-8b07-010b96f5b630"
+                },
+                {
+                    "description": "Track [A1_TH2] on B.Cu, length 53.7200 mm",
+                    "pos": {
+                        "x": 142.18,
+                        "y": 79.45
+                    },
+                    "uuid": "2f92a09d-5fbe-4950-92ff-58eee3a7001d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [VIN_P] of U3 on F.Cu",
+                    "pos": {
+                        "x": 105.6375,
+                        "y": 78.5
+                    },
+                    "uuid": "b9cc7c5b-7b29-4f13-96fe-ffed477e0bb8"
+                },
+                {
+                    "description": "Pad 1 [VIN_P] of D1 on F.Cu",
+                    "pos": {
+                        "x": 108.35,
+                        "y": 85.0
+                    },
+                    "uuid": "3bc317be-ee74-445a-ad42-e4965ab8b3a7"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [VIN_P] of C1 on F.Cu",
+                    "pos": {
+                        "x": 106.05,
+                        "y": 74.75
+                    },
+                    "uuid": "76c1098e-15b7-404d-b70c-f1e05e4b4493"
+                },
+                {
+                    "description": "Pad 2 [VIN_P] of U3 on F.Cu",
+                    "pos": {
+                        "x": 105.6375,
+                        "y": 78.5
+                    },
+                    "uuid": "b9cc7c5b-7b29-4f13-96fe-ffed477e0bb8"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [VIN_P] of D1 on F.Cu",
+                    "pos": {
+                        "x": 108.35,
+                        "y": 85.0
+                    },
+                    "uuid": "3bc317be-ee74-445a-ad42-e4965ab8b3a7"
+                },
+                {
+                    "description": "Pad 10 [VIN_P] of U4 on F.Cu",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 84.5
+                    },
+                    "uuid": "1ed2bff7-1bcb-408b-a298-1cc1c130cbcb"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 10 [VIN_P] of U4 on F.Cu",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 84.5
+                    },
+                    "uuid": "1ed2bff7-1bcb-408b-a298-1cc1c130cbcb"
+                },
+                {
+                    "description": "Pad 1 [VIN_P] of R5 on F.Cu",
+                    "pos": {
+                        "x": 136.75,
+                        "y": 84.0875
+                    },
+                    "uuid": "94514020-c0f5-40a4-af2e-c1a303d4235f"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 9 [HEAT_P] of U4 on F.Cu",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 85.0
+                    },
+                    "uuid": "9d7b8575-3711-4384-9dcb-658fb262e830"
+                },
+                {
+                    "description": "Pad 8 [HEAT_P] of U4 on F.Cu",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 85.5
+                    },
+                    "uuid": "f2959bdc-e761-4588-b5ba-06f43c36377b"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 8 [HEAT_P] of U4 on F.Cu",
+                    "pos": {
+                        "x": 134.6,
+                        "y": 85.5
+                    },
+                    "uuid": "f2959bdc-e761-4588-b5ba-06f43c36377b"
+                },
+                {
+                    "description": "Pad 2 [HEAT_P] of R5 on F.Cu",
+                    "pos": {
+                        "x": 136.75,
+                        "y": 85.9125
+                    },
+                    "uuid": "c581936a-63db-477f-8557-5391748b4b4d"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [HEAT_P] of R5 on F.Cu",
+                    "pos": {
+                        "x": 136.75,
+                        "y": 85.9125
+                    },
+                    "uuid": "c581936a-63db-477f-8557-5391748b4b4d"
+                },
+                {
+                    "description": "Track [HEAT_P] on F.Cu, length 9.2900 mm",
+                    "pos": {
+                        "x": 142.18,
+                        "y": 80.0
+                    },
+                    "uuid": "9854d13d-03b3-4ab3-a22d-36a85887e60a"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [TH_RTN] of TH4 on F.Cu",
+                    "pos": {
+                        "x": 138.01,
+                        "y": 76.25
+                    },
+                    "uuid": "ce5a4213-4085-4e0f-90aa-ab04df7d5879"
+                },
+                {
+                    "description": "Track [TH_RTN] on B.Cu, length 56.4400 mm",
+                    "pos": {
+                        "x": 142.18,
+                        "y": 80.55
+                    },
+                    "uuid": "41f7d14d-ef7e-41a0-9733-ad4ee91cff32"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 3 [TH_RTN] of Q2 on F.Cu",
+                    "pos": {
+                        "x": 141.9375,
+                        "y": 74.0
+                    },
+                    "uuid": "1d0e4fa4-84ca-4237-98d0-33fb713f3c7e"
+                },
+                {
+                    "description": "Track [TH_RTN] on B.Cu, length 32.1600 mm",
+                    "pos": {
+                        "x": 174.34,
+                        "y": 72.0
+                    },
+                    "uuid": "b3c104fd-0dac-4352-97d1-d6f118693788"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 3 [TH_RTN] of Q2 on F.Cu",
+                    "pos": {
+                        "x": 141.9375,
+                        "y": 74.0
+                    },
+                    "uuid": "1d0e4fa4-84ca-4237-98d0-33fb713f3c7e"
+                },
+                {
+                    "description": "Pad 2 [TH_RTN] of TH4 on F.Cu",
+                    "pos": {
+                        "x": 138.01,
+                        "y": 76.25
+                    },
+                    "uuid": "ce5a4213-4085-4e0f-90aa-ab04df7d5879"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [TH_RTN] on B.Cu, length 56.4400 mm",
+                    "pos": {
+                        "x": 142.18,
+                        "y": 80.55
+                    },
+                    "uuid": "41f7d14d-ef7e-41a0-9733-ad4ee91cff32"
+                },
+                {
+                    "description": "Track [TH_RTN] on B.Cu, length 32.1600 mm",
+                    "pos": {
+                        "x": 174.34,
+                        "y": 88.0
+                    },
+                    "uuid": "6227f113-dd62-4710-97d4-073c8e13f8ac"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [HEAT_GATE] of Q1 on F.Cu",
+                    "pos": {
+                        "x": 139.5625,
+                        "y": 82.25
+                    },
+                    "uuid": "9dd5e112-c8f0-4f60-bd7d-aeea75e4dfa1"
+                },
+                {
+                    "description": "Pad 2 [HEAT_GATE] of R9 on F.Cu",
+                    "pos": {
+                        "x": 140.51,
+                        "y": 86.0
+                    },
+                    "uuid": "1b414711-1ad1-42e9-8f5b-67afc49b8ab0"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [HEAT_GATE] of R9 on F.Cu",
+                    "pos": {
+                        "x": 140.51,
+                        "y": 86.0
+                    },
+                    "uuid": "1b414711-1ad1-42e9-8f5b-67afc49b8ab0"
+                },
+                {
+                    "description": "Pad 1 [HEAT_GATE] of R10 on F.Cu",
+                    "pos": {
+                        "x": 141.49,
+                        "y": 86.0
+                    },
+                    "uuid": "efc16d46-4ee7-49ca-8d78-9355f2726a2e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [HEAT_RTN] on B.Cu, length 52.8500 mm",
+                    "pos": {
+                        "x": 195.03,
+                        "y": 80.0
+                    },
+                    "uuid": "04ba3a6a-d9e7-4b93-bc23-beb8a1355995"
+                },
+                {
+                    "description": "Pad 3 [HEAT_RTN] of Q1 on F.Cu",
+                    "pos": {
+                        "x": 141.4375,
+                        "y": 83.2
+                    },
+                    "uuid": "6c2fc0f7-3ea3-4b41-8b4e-9ba5b9a1e656"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 3 [5V_LDO] of U3 on F.Cu",
+                    "pos": {
+                        "x": 105.55,
+                        "y": 80.0
+                    },
+                    "uuid": "2a0f12aa-bb80-485b-ae7f-df1aad505969"
+                },
+                {
+                    "description": "Pad 2 [5V_LDO] of D7 on F.Cu",
+                    "pos": {
+                        "x": 110.15,
+                        "y": 82.5
+                    },
+                    "uuid": "dcde2257-9800-4a79-ade9-52200d7cd351"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [5V_LDO] of D7 on F.Cu",
+                    "pos": {
+                        "x": 110.15,
+                        "y": 82.5
+                    },
+                    "uuid": "dcde2257-9800-4a79-ade9-52200d7cd351"
+                },
+                {
+                    "description": "Pad 1 [5V_LDO] of C2 on F.Cu",
+                    "pos": {
+                        "x": 111.0,
+                        "y": 78.7
+                    },
+                    "uuid": "0831b86d-531b-449e-8a03-87d4b4ccb7d3"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [SDI_LINE] of C4 on F.Cu",
+                    "pos": {
+                        "x": 101.27,
+                        "y": 73.75
+                    },
+                    "uuid": "a137214e-dc73-47b1-8282-f2d988125a4a"
+                },
+                {
+                    "description": "PTH pad 2 [SDI_LINE] of J1",
+                    "pos": {
+                        "x": 102.0,
+                        "y": 80.0
+                    },
+                    "uuid": "39fbe2fa-76fa-4e68-94db-9a68467cc211"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [SDI_LINE] of R3 on F.Cu",
+                    "pos": {
+                        "x": 105.175,
+                        "y": 85.25
+                    },
+                    "uuid": "f53030f8-4602-4eef-9d0f-1cb13a847a09"
+                },
+                {
+                    "description": "Pad 1 [SDI_LINE] of D4 on F.Cu",
+                    "pos": {
+                        "x": 105.5,
+                        "y": 83.8
+                    },
+                    "uuid": "cc0a38c4-2245-40c3-900d-8bb86a0f3425"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [SDI_LINE] of D4 on F.Cu",
+                    "pos": {
+                        "x": 105.5,
+                        "y": 83.8
+                    },
+                    "uuid": "cc0a38c4-2245-40c3-900d-8bb86a0f3425"
+                },
+                {
+                    "description": "PTH pad 2 [SDI_LINE] of J1",
+                    "pos": {
+                        "x": 102.0,
+                        "y": 80.0
+                    },
+                    "uuid": "39fbe2fa-76fa-4e68-94db-9a68467cc211"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [SDI_LINE] of R4 on F.Cu",
+                    "pos": {
+                        "x": 113.74,
+                        "y": 75.25
+                    },
+                    "uuid": "4e1ee493-3212-448e-b34b-32602246ce9f"
+                },
+                {
+                    "description": "Pad 1 [SDI_LINE] of D4 on F.Cu",
+                    "pos": {
+                        "x": 105.5,
+                        "y": 83.8
+                    },
+                    "uuid": "cc0a38c4-2245-40c3-900d-8bb86a0f3425"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [EXC_GATE] of R17 on F.Cu",
+                    "pos": {
+                        "x": 140.49,
+                        "y": 77.8
+                    },
+                    "uuid": "a4dd3bd2-de53-43e1-88af-74659d9de74b"
+                },
+                {
+                    "description": "Pad 2 [EXC_GATE] of R12 on F.Cu",
+                    "pos": {
+                        "x": 141.51,
+                        "y": 76.6
+                    },
+                    "uuid": "84eab437-a991-4eb7-9222-94881128e9fc"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [EXC_GATE] of R12 on F.Cu",
+                    "pos": {
+                        "x": 141.51,
+                        "y": 76.6
+                    },
+                    "uuid": "84eab437-a991-4eb7-9222-94881128e9fc"
+                },
+                {
+                    "description": "Pad 1 [EXC_GATE] of Q2 on F.Cu",
+                    "pos": {
+                        "x": 140.0625,
+                        "y": 73.05
+                    },
+                    "uuid": "46561a8a-6b1d-46fa-9d67-d1daf8d4a15e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [VIN] of D2 on F.Cu",
+                    "pos": {
+                        "x": 109.6,
+                        "y": 74.75
+                    },
+                    "uuid": "0bd318cb-0247-4f58-a094-68815cc6bc74"
+                },
+                {
+                    "description": "PTH pad 1 [VIN] of J1",
+                    "pos": {
+                        "x": 102.0,
+                        "y": 76.0
+                    },
+                    "uuid": "0f185830-2ee5-420d-ad9d-11ea6b994053"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [VIN] of D1 on F.Cu",
+                    "pos": {
+                        "x": 111.15,
+                        "y": 85.0
+                    },
+                    "uuid": "f4bef92b-f51c-498c-b655-089c1bca1f15"
+                },
+                {
+                    "description": "Pad 1 [VIN] of D2 on F.Cu",
+                    "pos": {
+                        "x": 109.6,
+                        "y": 74.75
+                    },
+                    "uuid": "0bd318cb-0247-4f58-a094-68815cc6bc74"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 1 [VUSB] of R15 on F.Cu",
+                    "pos": {
+                        "x": 114.9,
+                        "y": 85.11
+                    },
+                    "uuid": "80eac239-57c3-4d8b-bded-a3edc552a876"
+                },
+                {
+                    "description": "PTH pad 1 [VUSB] of J2",
+                    "pos": {
+                        "x": 103.75,
+                        "y": 87.5
+                    },
+                    "uuid": "95b43320-4a4d-4c71-a551-9e1c48bba7a9"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Pad 2 [VUSB] of D5 on F.Cu",
+                    "pos": {
+                        "x": 138.9,
+                        "y": 80.25
+                    },
+                    "uuid": "2011dc58-544e-49b4-8645-305e1bdb428b"
+                },
+                {
+                    "description": "Pad 1 [VUSB] of R15 on F.Cu",
+                    "pos": {
+                        "x": 114.9,
+                        "y": 85.11
+                    },
+                    "uuid": "80eac239-57c3-4d8b-bded-a3edc552a876"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        }
+    ],
+    "violations": [
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [A0_TH1] on F.Cu, length 30.2900 mm",
+                    "pos": {
+                        "x": 142.18,
+                        "y": 72.0
+                    },
+                    "uuid": "adc3d611-bb45-4e18-b5a8-de276b84628a"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [A2_TH3] on F.Cu, length 30.2900 mm",
+                    "pos": {
+                        "x": 142.18,
+                        "y": 88.0
+                    },
+                    "uuid": "0e215959-ac79-4983-8c21-d4b3219bf052"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [A1_TH2] on B.Cu, length 53.7200 mm",
+                    "pos": {
+                        "x": 142.18,
+                        "y": 79.45
+                    },
+                    "uuid": "2f92a09d-5fbe-4950-92ff-58eee3a7001d"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [TH_RTN] on B.Cu, length 56.4400 mm",
+                    "pos": {
+                        "x": 142.18,
+                        "y": 80.55
+                    },
+                    "uuid": "41f7d14d-ef7e-41a0-9733-ad4ee91cff32"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [TH_RTN] on B.Cu, length 32.1600 mm",
+                    "pos": {
+                        "x": 174.34,
+                        "y": 88.0
+                    },
+                    "uuid": "6227f113-dd62-4710-97d4-073c8e13f8ac"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [TH_RTN] on B.Cu, length 32.1600 mm",
+                    "pos": {
+                        "x": 174.34,
+                        "y": 72.0
+                    },
+                    "uuid": "b3c104fd-0dac-4352-97d1-d6f118693788"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [HEAT_P] on F.Cu, length 9.2900 mm",
+                    "pos": {
+                        "x": 142.18,
+                        "y": 80.0
+                    },
+                    "uuid": "9854d13d-03b3-4ab3-a22d-36a85887e60a"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [HEAT_RTN] on B.Cu, length 52.8500 mm",
+                    "pos": {
+                        "x": 195.03,
+                        "y": 80.0
+                    },
+                    "uuid": "04ba3a6a-d9e7-4b93-bc23-beb8a1355995"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        }
+    ]
+}

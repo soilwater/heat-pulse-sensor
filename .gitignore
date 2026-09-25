@@ -1,0 +1,59 @@
+# ---------------------------------------------------------------------------
+# heat-pulse: KiCad sensor boards (flat-nano, hat), digital twin, reference data.
+# The website will be served from /docs; nothing under docs/ is ignored here.
+# ---------------------------------------------------------------------------
+
+# --- OS, editor and OneDrive clutter ---
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+*.tmp
+*.swp
+.vscode/
+.idea/
+
+# --- Scratch and test output ---
+.scratch/
+**/.scratch/
+playwright-artifacts-*/
+playwright_chromiumdev_profile-*/
+test-results/
+playwright-report/
+node_modules/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# --- KiCad: backups, caches, locks and per-user view settings ---
+*-backups/
+*.kicad_prl
+fp-info-cache
+*.lck
+~*.lck
+_autosave-*
+*.bak
+*-bak
+\#auto_saved_files\#
+
+# --- Board check scratch (routing attempts are logged, not versioned) ---
+# Kept on purpose: erc.rpt / drc_routed.rpt (hashed into the release manifests)
+# and checks/*.sha256.json (read by the variant and release checks).
+*/checks/tmp/
+*/checks/*.log
+*.log
+
+# --- Third-party documents (copyrighted, re-downloadable from the vendor) ---
+reference/*.pdf
+reference/*.jpg
+hat/mechanical/sources/*.pdf
+hat/mechanical/sources/*.gif
+hat/mechanical/sources/*.zip
+hat/mechanical/sources/*.png
+# Kept on purpose: hat/mechanical/sources/ABX00142.step (hash-checked by check_assembly.py)
+
+# --- Claude Code: keep the shared preview config, not personal settings ---
+.claude/settings.local.json

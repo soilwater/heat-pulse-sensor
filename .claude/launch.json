@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "hp-twin",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["-e", "const h=require('http'),f=require('fs'),p=require('path');const T={js:'text/javascript',css:'text/css',html:'text/html',md:'text/plain; charset=utf-8'};h.createServer((q,r)=>{let u=decodeURIComponent(q.url.split('?')[0]);if(u=='/')u='/index.html';f.readFile(p.join(process.cwd(),'docs',u),(e,d)=>{if(e){r.writeHead(404);r.end();return}r.writeHead(200,{'Content-Type':T[u.split('.').pop()]||'application/octet-stream'});r.end(d)})}).listen(process.env.PORT||8765)"],
+      "port": 8765,
+      "autoPort": true
+    }
+  ]
+}

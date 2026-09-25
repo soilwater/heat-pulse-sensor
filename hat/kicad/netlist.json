@@ -1,0 +1,700 @@
+{
+ "parts": {
+  "J1": {
+   "value": "Hand-soldered cable (3 wires)",
+   "footprint": "hp_sensor:CablePads_1x03_P4mm",
+   "pins": {
+    "1": "VIN",
+    "2": "SDI_LINE",
+    "3": "GND"
+   },
+   "Note": "1 = 12V, 2 = SDI-12 data, 3 = GND; solder after assembly and provide cable strain relief"
+  },
+  "D2": {
+   "value": "SMF15CA 15V bidir TVS",
+   "footprint": "Diode_SMD:D_SOD-123F",
+   "pins": {
+    "1": "VIN",
+    "2": "GND"
+   }
+  },
+  "D1": {
+   "value": "1A 40V Schottky (SOD-123F)",
+   "footprint": "Diode_SMD:D_SOD-123F",
+   "pins": {
+    "1": "VIN_P",
+    "2": "VIN"
+   },
+   "Note": "reverse-polarity protection"
+  },
+  "C1": {
+   "value": "4.7u 50V",
+   "footprint": "Capacitor_SMD:C_0805_2012Metric",
+   "pins": {
+    "1": "VIN_P",
+    "2": "GND"
+   }
+  },
+  "C2": {
+   "value": "10u 10V",
+   "footprint": "Capacitor_SMD:C_0805_2012Metric",
+   "pins": {
+    "1": "+5V",
+    "2": "GND"
+   }
+  },
+  "R18": {
+   "value": "22",
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "pins": {
+    "1": "VIN_P",
+    "2": "NANO_VIN"
+   },
+   "Note": "input filter resistor; not overvoltage protection (Nano VIN operating range 6-21 V)"
+  },
+  "R3": {
+   "value": "1.5k 1%",
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "pins": {
+    "1": "SDI_LINE",
+    "2": "D2_SDI12"
+   }
+  },
+  "R4": {
+   "value": "220k",
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "pins": {
+    "1": "SDI_LINE",
+    "2": "GND"
+   }
+  },
+  "C4": {
+   "value": "3.3n",
+   "footprint": "Capacitor_SMD:C_0402_1005Metric",
+   "pins": {
+    "1": "SDI_LINE",
+    "2": "GND"
+   }
+  },
+  "D4": {
+   "value": "bidir ESD diode 6-7V (SOD-323)",
+   "footprint": "Diode_SMD:D_SOD-323",
+   "pins": {
+    "1": "SDI_LINE",
+    "2": "GND"
+   }
+  },
+  "J3": {
+   "value": "Nano solder-stack header",
+   "footprint": "hp_sensor:Nano_SolderStack_1x15",
+   "pins": {
+    "1": null,
+    "2": null,
+    "3": null,
+    "4": "D9_HEAT",
+    "5": null,
+    "6": null,
+    "7": null,
+    "8": null,
+    "9": "D4_EXC",
+    "10": null,
+    "11": "D2_SDI12",
+    "12": "GND",
+    "13": null,
+    "14": null,
+    "15": null
+   },
+   "Note": "1 D12, 2 D11, 3 D10, 4 D9, 5 D8, 6 D7, 7 D6, 8 D5, 9 D4, 10 D3, 11 D2, 12 GND, 13 RST, 14 RX, 15 TX"
+  },
+  "J4": {
+   "value": "Nano solder-stack header",
+   "footprint": "hp_sensor:Nano_SolderStack_1x15",
+   "pins": {
+    "1": null,
+    "2": null,
+    "3": "VREF",
+    "4": "A0_TH1",
+    "5": "A1_TH2",
+    "6": "A2_TH3",
+    "7": "A3_TH4",
+    "8": "A4_SDA",
+    "9": "A5_SCL",
+    "10": null,
+    "11": null,
+    "12": "+5V",
+    "13": null,
+    "14": "GND",
+    "15": "NANO_VIN"
+   },
+   "Note": "1 D13, 2 3V3, 3 AREF (printed B0), 4 A0, 5 A1, 6 A2, 7 A3, 8 A4, 9 A5, 10 A6, 11 A7, 12 5V, 13 BOOT (printed B1) - leave unconnected, 14 GND, 15 VIN (6-21 V)"
+  },
+  "R5": {
+   "value": "0.1 1%",
+   "footprint": "Resistor_SMD:R_0805_2012Metric",
+   "pins": {
+    "1": "VIN_P",
+    "2": "HEAT_P"
+   },
+   "Note": "current shunt"
+  },
+  "U4": {
+   "value": "INA226",
+   "footprint": "Package_SO:MSOP-10_3x3mm_P0.5mm",
+   "pins": {
+    "10": "VIN_P",
+    "9": "HEAT_P",
+    "8": "HEAT_P",
+    "6": "+5V",
+    "7": "GND",
+    "4": "A4_SDA",
+    "5": "A5_SCL",
+    "3": null,
+    "1": "GND",
+    "2": "GND"
+   },
+   "Note": "I2C address 0x40"
+  },
+  "C12": {
+   "value": "100n",
+   "footprint": "Capacitor_SMD:C_0402_1005Metric",
+   "pins": {
+    "1": "+5V",
+    "2": "GND"
+   }
+  },
+  "R6": {
+   "value": "4.7k",
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "pins": {
+    "1": "+5V",
+    "2": "A4_SDA"
+   }
+  },
+  "R7": {
+   "value": "4.7k",
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "pins": {
+    "1": "+5V",
+    "2": "A5_SCL"
+   }
+  },
+  "Q1": {
+   "value": "AO3400A",
+   "footprint": "Package_TO_SOT_SMD:SOT-23",
+   "pins": {
+    "1": "HEAT_GATE",
+    "2": "GND",
+    "3": "HEAT_RTN"
+   },
+   "Note": "logic-level N-MOSFET, low side"
+  },
+  "R9": {
+   "value": "1.5k",
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "pins": {
+    "1": "D9_HEAT",
+    "2": "HEAT_GATE"
+   },
+   "Note": "1%; limits RA4M1 gate charging current below 4 mA"
+  },
+  "R10": {
+   "value": "100k",
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "pins": {
+    "1": "HEAT_GATE",
+    "2": "GND"
+   },
+   "Note": "gate pull-down"
+  },
+  "RH1": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "HEAT_P",
+    "2": "H_1"
+   }
+  },
+  "RH2": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_1",
+    "2": "H_2"
+   }
+  },
+  "RH3": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_2",
+    "2": "H_3"
+   }
+  },
+  "RH4": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_3",
+    "2": "H_4"
+   }
+  },
+  "RH5": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_4",
+    "2": "H_5"
+   }
+  },
+  "RH6": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_5",
+    "2": "H_6"
+   }
+  },
+  "RH7": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_6",
+    "2": "H_7"
+   }
+  },
+  "RH8": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_7",
+    "2": "H_8"
+   }
+  },
+  "RH9": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_8",
+    "2": "H_9"
+   }
+  },
+  "RH10": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_9",
+    "2": "H_10"
+   }
+  },
+  "RH11": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_10",
+    "2": "H_11"
+   }
+  },
+  "RH12": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_11",
+    "2": "H_12"
+   }
+  },
+  "RH13": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_12",
+    "2": "H_13"
+   }
+  },
+  "RH14": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_13",
+    "2": "H_14"
+   }
+  },
+  "RH15": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_14",
+    "2": "H_15"
+   }
+  },
+  "RH16": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_15",
+    "2": "H_16"
+   }
+  },
+  "RH17": {
+   "value": "3.3",
+   "footprint": "hp_sensor:R_0603_Vishay_HP",
+   "pins": {
+    "1": "H_16",
+    "2": "HEAT_RTN"
+   }
+  },
+  "R11": {
+   "value": "10",
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "pins": {
+    "1": "+5V",
+    "2": "VREF"
+   },
+   "Note": "filters the reference node"
+  },
+  "C13": {
+   "value": "1u",
+   "footprint": "Capacitor_SMD:C_0402_1005Metric",
+   "pins": {
+    "1": "VREF",
+    "2": "GND"
+   }
+  },
+  "Q2": {
+   "value": "AO3400A",
+   "footprint": "Package_TO_SOT_SMD:SOT-23",
+   "pins": {
+    "1": "EXC_GATE",
+    "2": "GND",
+    "3": "TH_RTN"
+   },
+   "Note": "switches the thermistor ground"
+  },
+  "R12": {
+   "value": "1.5k",
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "pins": {
+    "1": "D4_EXC",
+    "2": "EXC_GATE"
+   },
+   "Note": "1%; limits gate charging current below 4 mA"
+  },
+  "R17": {
+   "value": "100k",
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "pins": {
+    "1": "EXC_GATE",
+    "2": "GND"
+   }
+  },
+  "R21": {
+   "value": "10k 0.1%",
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "pins": {
+    "1": "VREF",
+    "2": "A0_TH1"
+   },
+   "Note": "reference resistor"
+  },
+  "TH1": {
+   "value": "10k NTC 1%",
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "pins": {
+    "1": "A0_TH1",
+    "2": "TH_RTN"
+   },
+   "Note": "left prong"
+  },
+  "C21": {
+   "value": "100n",
+   "footprint": "Capacitor_SMD:C_0402_1005Metric",
+   "pins": {
+    "1": "A0_TH1",
+    "2": "GND"
+   }
+  },
+  "R22": {
+   "value": "10k 0.1%",
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "pins": {
+    "1": "VREF",
+    "2": "A1_TH2"
+   },
+   "Note": "reference resistor"
+  },
+  "TH2": {
+   "value": "10k NTC 1%",
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "pins": {
+    "1": "A1_TH2",
+    "2": "TH_RTN"
+   },
+   "Note": "heater prong tip"
+  },
+  "C22": {
+   "value": "100n",
+   "footprint": "Capacitor_SMD:C_0402_1005Metric",
+   "pins": {
+    "1": "A1_TH2",
+    "2": "GND"
+   }
+  },
+  "R23": {
+   "value": "10k 0.1%",
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "pins": {
+    "1": "VREF",
+    "2": "A2_TH3"
+   },
+   "Note": "reference resistor"
+  },
+  "TH3": {
+   "value": "10k NTC 1%",
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "pins": {
+    "1": "A2_TH3",
+    "2": "TH_RTN"
+   },
+   "Note": "right prong"
+  },
+  "C23": {
+   "value": "100n",
+   "footprint": "Capacitor_SMD:C_0402_1005Metric",
+   "pins": {
+    "1": "A2_TH3",
+    "2": "GND"
+   }
+  },
+  "R24": {
+   "value": "10k 0.1%",
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "pins": {
+    "1": "VREF",
+    "2": "A3_TH4"
+   },
+   "Note": "reference resistor"
+  },
+  "TH4": {
+   "value": "10k NTC 1%",
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "pins": {
+    "1": "A3_TH4",
+    "2": "TH_RTN"
+   },
+   "Note": "board body (diagnostic)"
+  },
+  "C24": {
+   "value": "100n",
+   "footprint": "Capacitor_SMD:C_0402_1005Metric",
+   "pins": {
+    "1": "A3_TH4",
+    "2": "GND"
+   }
+  }
+ },
+ "nets": {
+  "VIN": [
+   "J1.1",
+   "D2.1",
+   "D1.2"
+  ],
+  "SDI_LINE": [
+   "J1.2",
+   "R3.1",
+   "R4.1",
+   "C4.1",
+   "D4.1"
+  ],
+  "GND": [
+   "J1.3",
+   "D2.2",
+   "C1.2",
+   "C2.2",
+   "R4.2",
+   "C4.2",
+   "D4.2",
+   "J3.12",
+   "J4.14",
+   "U4.1",
+   "U4.2",
+   "U4.7",
+   "C12.2",
+   "Q1.2",
+   "R10.2",
+   "C13.2",
+   "Q2.2",
+   "R17.2",
+   "C21.2",
+   "C22.2",
+   "C23.2",
+   "C24.2"
+  ],
+  "VIN_P": [
+   "D1.1",
+   "C1.1",
+   "R18.1",
+   "R5.1",
+   "U4.10"
+  ],
+  "+5V": [
+   "C2.1",
+   "J4.12",
+   "U4.6",
+   "C12.1",
+   "R6.1",
+   "R7.1",
+   "R11.1"
+  ],
+  "NANO_VIN": [
+   "R18.2",
+   "J4.15"
+  ],
+  "D2_SDI12": [
+   "R3.2",
+   "J3.11"
+  ],
+  "D9_HEAT": [
+   "J3.4",
+   "R9.1"
+  ],
+  "D4_EXC": [
+   "J3.9",
+   "R12.1"
+  ],
+  "VREF": [
+   "J4.3",
+   "R11.2",
+   "C13.1",
+   "R21.1",
+   "R22.1",
+   "R23.1",
+   "R24.1"
+  ],
+  "A0_TH1": [
+   "J4.4",
+   "R21.2",
+   "TH1.1",
+   "C21.1"
+  ],
+  "A1_TH2": [
+   "J4.5",
+   "R22.2",
+   "TH2.1",
+   "C22.1"
+  ],
+  "A2_TH3": [
+   "J4.6",
+   "R23.2",
+   "TH3.1",
+   "C23.1"
+  ],
+  "A3_TH4": [
+   "J4.7",
+   "R24.2",
+   "TH4.1",
+   "C24.1"
+  ],
+  "A4_SDA": [
+   "J4.8",
+   "U4.4",
+   "R6.2"
+  ],
+  "A5_SCL": [
+   "J4.9",
+   "U4.5",
+   "R7.2"
+  ],
+  "HEAT_P": [
+   "R5.2",
+   "U4.8",
+   "U4.9",
+   "RH1.1"
+  ],
+  "HEAT_GATE": [
+   "Q1.1",
+   "R9.2",
+   "R10.1"
+  ],
+  "HEAT_RTN": [
+   "Q1.3",
+   "RH17.2"
+  ],
+  "H_1": [
+   "RH1.2",
+   "RH2.1"
+  ],
+  "H_2": [
+   "RH2.2",
+   "RH3.1"
+  ],
+  "H_3": [
+   "RH3.2",
+   "RH4.1"
+  ],
+  "H_4": [
+   "RH4.2",
+   "RH5.1"
+  ],
+  "H_5": [
+   "RH5.2",
+   "RH6.1"
+  ],
+  "H_6": [
+   "RH6.2",
+   "RH7.1"
+  ],
+  "H_7": [
+   "RH7.2",
+   "RH8.1"
+  ],
+  "H_8": [
+   "RH8.2",
+   "RH9.1"
+  ],
+  "H_9": [
+   "RH9.2",
+   "RH10.1"
+  ],
+  "H_10": [
+   "RH10.2",
+   "RH11.1"
+  ],
+  "H_11": [
+   "RH11.2",
+   "RH12.1"
+  ],
+  "H_12": [
+   "RH12.2",
+   "RH13.1"
+  ],
+  "H_13": [
+   "RH13.2",
+   "RH14.1"
+  ],
+  "H_14": [
+   "RH14.2",
+   "RH15.1"
+  ],
+  "H_15": [
+   "RH15.2",
+   "RH16.1"
+  ],
+  "H_16": [
+   "RH16.2",
+   "RH17.1"
+  ],
+  "EXC_GATE": [
+   "Q2.1",
+   "R12.2",
+   "R17.1"
+  ],
+  "TH_RTN": [
+   "Q2.3",
+   "TH1.2",
+   "TH2.2",
+   "TH3.2",
+   "TH4.2"
+  ]
+ },
+ "n_heat": 17,
+ "pitch": 2.6
+}

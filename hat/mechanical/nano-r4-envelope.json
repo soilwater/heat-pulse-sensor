@@ -1,0 +1,1036 @@
+{
+  "source_url": "https://docs.arduino.cc/resources/models/ABX00142-step.zip",
+  "source_file": "sources/ABX00142.step",
+  "source_sha256": "b7726b06c35e97b78c2c19c05874ae14f6d8eccd88192d6d68658b1c1fea8eea",
+  "method": "STEP assembly transformations applied recursively to all solid vertices. Nominal model envelopes only; curved-edge extrema may extend beyond vertex bounds. Use dimensional tolerance margins and validate first hardware assembly.",
+  "units": "mm",
+  "frame": "Right-handed STEP Nano frame: x=0..43.18 from USB to Qwiic, y=0..17.78 from analog/D13 row toward digital/D12 row, populated face z=0 and components +z. STEP y direction is opposite screen-down KiCad Y when Nano faces up.",
+  "face_to_face_mapping": "To KiCad HAT placement coordinates centered at Y=0: Hat X=Nano x, Hat Y=Nano y-8.89, component height from Hat populated surface=4.0-Nano z. For board lower-left coordinates use Hat Y=Nano y. This accounts for KiCad screen-down Y and the physical face-down mirror; do not mirror Y twice.",
+  "board_thickness_mm": 1.63680394,
+  "parts": [
+    {
+      "ref": "Board",
+      "bbox_min_mm": [
+        0.0,
+        -1.3e-05,
+        -1.636804
+      ],
+      "bbox_max_mm": [
+        43.18,
+        17.780013,
+        0.0
+      ],
+      "vertex_count": 246,
+      "height_above_board_mm": 0,
+      "depth_below_top_mm": 1.636804
+    },
+    {
+      "ref": "C1",
+      "bbox_min_mm": [
+        36.01596,
+        5.995611,
+        0.0
+      ],
+      "bbox_max_mm": [
+        36.51596,
+        6.995611,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "L1",
+      "bbox_min_mm": [
+        19.132687,
+        5.772684,
+        0.0
+      ],
+      "bbox_max_mm": [
+        19.932687,
+        7.372684,
+        0.8
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.8,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C24",
+      "bbox_min_mm": [
+        10.650002,
+        3.969999,
+        0.0
+      ],
+      "bbox_max_mm": [
+        11.450002,
+        5.569999,
+        0.8
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.8,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "Z3",
+      "bbox_min_mm": [
+        6.704788,
+        9.86602,
+        0.0
+      ],
+      "bbox_max_mm": [
+        8.454787,
+        10.816021,
+        0.23
+      ],
+      "vertex_count": 8,
+      "height_above_board_mm": 0.23,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "Q1",
+      "bbox_min_mm": [
+        34.564238,
+        12.309134,
+        -0.050001
+      ],
+      "bbox_max_mm": [
+        37.564239,
+        14.809134,
+        1.049999
+      ],
+      "vertex_count": 84,
+      "height_above_board_mm": 1.049999,
+      "depth_below_top_mm": 0.050001
+    },
+    {
+      "ref": "D1",
+      "bbox_min_mm": [
+        12.564152,
+        9.529032,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        14.564152,
+        13.229032,
+        1.205
+      ],
+      "vertex_count": 68,
+      "height_above_board_mm": 1.205,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R25",
+      "bbox_min_mm": [
+        18.706675,
+        10.303854,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        19.706676,
+        10.803854,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "Q2",
+      "bbox_min_mm": [
+        14.957293,
+        8.163625,
+        0.0
+      ],
+      "bbox_max_mm": [
+        18.057293,
+        10.763625,
+        1.15
+      ],
+      "vertex_count": 128,
+      "height_above_board_mm": 1.15,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "Z2",
+      "bbox_min_mm": [
+        6.705001,
+        6.815003,
+        0.0
+      ],
+      "bbox_max_mm": [
+        8.455,
+        7.765003,
+        0.23
+      ],
+      "vertex_count": 8,
+      "height_above_board_mm": 0.23,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "Z1",
+      "bbox_min_mm": [
+        6.705001,
+        8.615002,
+        0.0
+      ],
+      "bbox_max_mm": [
+        8.455,
+        9.565003,
+        0.23
+      ],
+      "vertex_count": 8,
+      "height_above_board_mm": 0.23,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R23",
+      "bbox_min_mm": [
+        10.356315,
+        13.736151,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        11.356315,
+        14.236151,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R22",
+      "bbox_min_mm": [
+        10.356315,
+        11.892355,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        11.356315,
+        12.392355,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R20",
+      "bbox_min_mm": [
+        10.356315,
+        12.814154,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        11.356315,
+        13.314154,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "DL1",
+      "bbox_min_mm": [
+        8.097405,
+        11.775783,
+        0.0
+      ],
+      "bbox_max_mm": [
+        9.097403,
+        12.775781,
+        0.629999
+      ],
+      "vertex_count": 32,
+      "height_above_board_mm": 0.629999,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C12",
+      "bbox_min_mm": [
+        18.779252,
+        12.22828,
+        0.0
+      ],
+      "bbox_max_mm": [
+        19.579252,
+        13.828281,
+        0.8
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.8,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "U3",
+      "bbox_min_mm": [
+        15.46242,
+        11.065855,
+        -0.05
+      ],
+      "bbox_max_mm": [
+        17.862421,
+        14.065855,
+        1.1
+      ],
+      "vertex_count": 142,
+      "height_above_board_mm": 1.1,
+      "depth_below_top_mm": 0.05
+    },
+    {
+      "ref": "C11",
+      "bbox_min_mm": [
+        12.764155,
+        14.127998,
+        0.0
+      ],
+      "bbox_max_mm": [
+        14.364155,
+        14.927998,
+        0.8
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.8,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R19",
+      "bbox_min_mm": [
+        40.050002,
+        3.03208,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        40.550002,
+        4.03208,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R17",
+      "bbox_min_mm": [
+        38.209998,
+        3.03208,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        38.709998,
+        4.03208,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R16",
+      "bbox_min_mm": [
+        33.316504,
+        3.03208,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        33.816504,
+        4.03208,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R15",
+      "bbox_min_mm": [
+        39.129996,
+        3.03208,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        39.629996,
+        4.03208,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "Q3",
+      "bbox_min_mm": [
+        37.747069,
+        12.309134,
+        -0.050001
+      ],
+      "bbox_max_mm": [
+        40.747069,
+        14.809134,
+        1.049999
+      ],
+      "vertex_count": 84,
+      "height_above_board_mm": 1.049999,
+      "depth_below_top_mm": 0.050001
+    },
+    {
+      "ref": "J2",
+      "bbox_min_mm": [
+        37.821975,
+        5.874998,
+        0.015001
+      ],
+      "bbox_max_mm": [
+        42.771975,
+        11.874998,
+        2.975001
+      ],
+      "vertex_count": 162,
+      "height_above_board_mm": 2.975001,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "L3",
+      "bbox_min_mm": [
+        15.396763,
+        4.892489,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        17.546763,
+        7.54249,
+        1.0
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 1.0,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "Y1",
+      "bbox_min_mm": [
+        34.129996,
+        7.79,
+        0.0
+      ],
+      "bbox_max_mm": [
+        36.629996,
+        10.99,
+        0.8
+      ],
+      "vertex_count": 194,
+      "height_above_board_mm": 0.8,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R14",
+      "bbox_min_mm": [
+        35.156508,
+        3.032049,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        35.656508,
+        4.032049,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R11",
+      "bbox_min_mm": [
+        34.236503,
+        3.032049,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        34.736503,
+        4.032049,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R2",
+      "bbox_min_mm": [
+        21.200004,
+        14.450003,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        22.200004,
+        14.950003,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R1",
+      "bbox_min_mm": [
+        18.702472,
+        8.217528,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        19.702472,
+        8.717528,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "L2",
+      "bbox_min_mm": [
+        19.148034,
+        3.04062,
+        0.0
+      ],
+      "bbox_max_mm": [
+        19.948034,
+        4.64062,
+        0.8
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.8,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C10",
+      "bbox_min_mm": [
+        35.095962,
+        5.995756,
+        0.0
+      ],
+      "bbox_max_mm": [
+        35.595962,
+        6.995756,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C9",
+      "bbox_min_mm": [
+        34.175963,
+        5.995756,
+        0.0
+      ],
+      "bbox_max_mm": [
+        34.675963,
+        6.995756,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C8",
+      "bbox_min_mm": [
+        18.247134,
+        6.126669,
+        0.0
+      ],
+      "bbox_max_mm": [
+        18.747134,
+        7.126669,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C7",
+      "bbox_min_mm": [
+        18.237124,
+        3.342001,
+        0.0
+      ],
+      "bbox_max_mm": [
+        18.737124,
+        4.342001,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C6",
+      "bbox_min_mm": [
+        32.2965,
+        13.606112,
+        0.0
+      ],
+      "bbox_max_mm": [
+        32.7965,
+        14.606112,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C5",
+      "bbox_min_mm": [
+        33.216506,
+        13.606112,
+        0.0
+      ],
+      "bbox_max_mm": [
+        33.716506,
+        14.606112,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C4",
+      "bbox_min_mm": [
+        18.706675,
+        9.172671,
+        0.0
+      ],
+      "bbox_max_mm": [
+        19.706676,
+        9.672671,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C3",
+      "bbox_min_mm": [
+        39.334632,
+        4.622416,
+        0.0
+      ],
+      "bbox_max_mm": [
+        40.334632,
+        5.122416,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C2",
+      "bbox_min_mm": [
+        33.798179,
+        11.804991,
+        0.0
+      ],
+      "bbox_max_mm": [
+        34.298179,
+        12.804991,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "U1",
+      "bbox_min_mm": [
+        20.850005,
+        2.774998,
+        0.0
+      ],
+      "bbox_max_mm": [
+        33.050006,
+        14.974999,
+        1.669999
+      ],
+      "vertex_count": 1828,
+      "height_above_board_mm": 1.669999,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R7",
+      "bbox_min_mm": [
+        5.145953,
+        14.477999,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        6.145953,
+        14.977999,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R13",
+      "bbox_min_mm": [
+        34.823386,
+        4.877035,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        35.823386,
+        5.377035,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R9",
+      "bbox_min_mm": [
+        3.129001,
+        2.792002,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        4.129001,
+        3.292002,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R6",
+      "bbox_min_mm": [
+        6.726264,
+        3.682066,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        7.726264,
+        4.182066,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R5",
+      "bbox_min_mm": [
+        6.726264,
+        4.612066,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        7.726264,
+        5.112067,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R4",
+      "bbox_min_mm": [
+        32.396506,
+        3.03208,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        32.896506,
+        4.03208,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R3",
+      "bbox_min_mm": [
+        7.104609,
+        11.662943,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        7.604609,
+        12.662943,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R8",
+      "bbox_min_mm": [
+        3.129001,
+        14.477999,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        4.129001,
+        14.977999,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "DL2",
+      "bbox_min_mm": [
+        0.600042,
+        2.649997,
+        0.0
+      ],
+      "bbox_max_mm": [
+        2.200043,
+        3.449998,
+        0.795
+      ],
+      "vertex_count": 120,
+      "height_above_board_mm": 0.795,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C22",
+      "bbox_min_mm": [
+        8.36119,
+        3.888609,
+        0.0
+      ],
+      "bbox_max_mm": [
+        8.86119,
+        4.888609,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C23",
+      "bbox_min_mm": [
+        9.349999,
+        3.969999,
+        0.0
+      ],
+      "bbox_max_mm": [
+        10.149999,
+        5.569999,
+        0.8
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.8,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "U2",
+      "bbox_min_mm": [
+        12.317304,
+        3.843305,
+        0.0
+      ],
+      "bbox_max_mm": [
+        13.919304,
+        5.943305,
+        0.9
+      ],
+      "vertex_count": 139,
+      "height_above_board_mm": 0.9,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C28",
+      "bbox_min_mm": [
+        12.374999,
+        2.947497,
+        0.0
+      ],
+      "bbox_max_mm": [
+        13.374999,
+        3.447497,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C25",
+      "bbox_min_mm": [
+        16.600001,
+        2.9475,
+        0.0
+      ],
+      "bbox_max_mm": [
+        17.600001,
+        3.4475,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C20",
+      "bbox_min_mm": [
+        14.549563,
+        5.030432,
+        0.0
+      ],
+      "bbox_max_mm": [
+        15.049563,
+        6.030432,
+        0.5
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.5,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C27",
+      "bbox_min_mm": [
+        12.764155,
+        8.024437,
+        0.0
+      ],
+      "bbox_max_mm": [
+        14.364155,
+        8.824437,
+        0.8
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.8,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "C26",
+      "bbox_min_mm": [
+        12.764155,
+        6.694435,
+        0.0
+      ],
+      "bbox_max_mm": [
+        14.364155,
+        7.494435,
+        0.8
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 0.8,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R21",
+      "bbox_min_mm": [
+        14.749999,
+        2.9475,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        15.749999,
+        3.4475,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "R18",
+      "bbox_min_mm": [
+        16.600001,
+        3.899,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        17.600001,
+        4.399,
+        0.3375
+      ],
+      "vertex_count": 72,
+      "height_above_board_mm": 0.3375,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "DL3",
+      "bbox_min_mm": [
+        0.599997,
+        14.330002,
+        0.0
+      ],
+      "bbox_max_mm": [
+        2.199997,
+        15.130002,
+        0.795
+      ],
+      "vertex_count": 120,
+      "height_above_board_mm": 0.795,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "PB1",
+      "bbox_min_mm": [
+        9.344318,
+        6.639986,
+        -0.0
+      ],
+      "bbox_max_mm": [
+        12.244318,
+        11.139986,
+        2.005
+      ],
+      "vertex_count": 453,
+      "height_above_board_mm": 2.005,
+      "depth_below_top_mm": 0
+    },
+    {
+      "ref": "J1",
+      "bbox_min_mm": [
+        -1.111955,
+        4.120001,
+        -0.450001
+      ],
+      "bbox_max_mm": [
+        5.688045,
+        13.660001,
+        3.17
+      ],
+      "vertex_count": 2181,
+      "height_above_board_mm": 3.17,
+      "depth_below_top_mm": 0.450001
+    },
+    {
+      "ref": "C16",
+      "bbox_min_mm": [
+        7.189143,
+        13.38254,
+        0.0
+      ],
+      "bbox_max_mm": [
+        9.189143,
+        14.63254,
+        1.25
+      ],
+      "vertex_count": 56,
+      "height_above_board_mm": 1.25,
+      "depth_below_top_mm": 0
+    }
+  ]
+}

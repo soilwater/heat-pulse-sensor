@@ -1,0 +1,26 @@
+** Drc report for hp_sensor_routed.kicad_pcb **
+** Created on 2026-09-23T18:10:56 **
+** Report includes: Errors, Warnings, Exclusions **
+
+** Found 2 DRC violations **
+[clearance]: Clearance violation ( clearance 0.1270 mm; actual 0.1250 mm)
+    Local override; error
+    @(195.1300 mm, 80.0000 mm): Track [HEAT_RTN] on B.Cu, length 52.9500 mm
+    @(142.2500 mm, 79.5000 mm): Track [A1_TH2] on B.Cu, length 0.1250 mm
+[clearance]: Clearance violation ( clearance 0.1270 mm; actual 0.1250 mm)
+    Local override; error
+    @(142.2500 mm, 80.5000 mm): Track [TH_RTN] on B.Cu, length 0.1250 mm
+    @(195.1300 mm, 80.0000 mm): Track [HEAT_RTN] on B.Cu, length 52.9500 mm
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **
