@@ -342,7 +342,7 @@
         allocation: 'Aggregate only; individual MCU/INA consumption is not modeled.'}, notes};
   }
 
-  /** What the sensor would report: analyse the simulated TH1 ADC readings the way firmware
+  /** What the sensor would report: analyze the simulated TH1 ADC readings the way firmware
    * would. Baseline = mean of the background samples; rise = reading - baseline, one sample
    * per interval after the heater turns on; pulsed infinite-line-source fit (engine.fitILS)
    * with q' = average heater power / heated length and the nominal needle spacing.

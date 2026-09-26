@@ -2,7 +2,7 @@
 
 Information, datasets, and digital twins for heat-pulse sensors that measure soil thermal properties.
 
-**Digital twin:** an interactive simulation of the HP-SDI12-NANO r2 sensor running in real Kansas soils, published from [`docs/`](docs/). Open `docs/index.html` locally in Chrome or Edge; no installation is needed.
+**Digital twin:** an interactive simulation of the HP-SDI12-NANO r2 sensor running in real Kansas soils, published from [`docs/`](docs/). Open `docs/index.html` locally in Chrome or Edge; no installation is needed. **Guided tour** in its header steps through one measurement part by part.
 
 ## Repository layout
 

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Heat pulse · Sensor twin</title>
   <link rel="stylesheet" href="sensor.css">
+  <link rel="stylesheet" href="tour.css">
   <script>
     // Theme before first paint: saved choice, else dark. Storage may be unavailable (private mode).
     (function(){var t='dark';try{t=localStorage.getItem('hp-theme')||t;}catch(e){}document.documentElement.dataset.theme=t==='light'?'light':'dark';})();
@@ -18,6 +19,7 @@
       <div><h1>Heat pulse sensor</h1><p>HP-SDI12-NANO r2 <span>·</span> Digital twin <span>·</span> 12 V · 17 × 3.3 Ω</p></div>
     </div>
     <div class="header-meta">
+      <button id="tourButton" class="tour-button" title="Step through one measurement, part by part"><i aria-hidden="true"></i>Guided tour</button>
       <button id="themeToggle" class="theme-toggle" aria-pressed="true" title="Switch between dark and light theme"><span aria-hidden="true" class="theme-icon"></span><span class="theme-text">Dark</span></button>
       <button id="modelInfo" class="info-button" aria-label="About the simulation" title="About the simulation">i</button>
     </div>
@@ -187,6 +189,8 @@
 <script src="sensor-heatmap.js"></script>
 <script src="sensor-board.js"></script>
 <script src="sensor-soil.js"></script>
+<script src="tour.js"></script>
+<script src="tour-steps.js"></script>
 <script src="sensor-ui.js"></script>
 </body>
 </html>

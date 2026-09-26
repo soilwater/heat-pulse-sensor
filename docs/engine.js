@@ -346,10 +346,10 @@
     // geometry / method
     sens.forEach(t => {
       const off = t.z - n.zMid;
-      add('Geometry', Math.abs(off) > 0.15 * n.heatedLen * 1000 ? 'warn' : 'pass', t.name + ': ' + f(Math.abs(off), 1) + ' mm from heater mid-length', 'Thermistor at z = ' + t.z + ' mm, heater centre at ' + f(n.zMid, 1) + ' mm. Off-centre sensors see more end-effect.');
+      add('Geometry', Math.abs(off) > 0.15 * n.heatedLen * 1000 ? 'warn' : 'pass', t.name + ': ' + f(Math.abs(off), 1) + ' mm from heater mid-length', 'Thermistor at z = ' + t.z + ' mm, heater center at ' + f(n.zMid, 1) + ' mm. Off-center sensors see more end-effect.');
       if (t.err) {
         const g = Math.max(Math.abs(t.err.CGeom), Math.abs(t.err.lambdaGeom)), m = Math.max(Math.abs(t.err.C), Math.abs(t.err.lambda));
-        add('Geometry', g > 5 ? 'fail' : g > 2 ? 'warn' : 'pass', t.name + ': finite-heater error C ' + f(t.err.CGeom, 1) + '%, lambda ' + f(t.err.lambdaGeom, 1) + '%', 'Error from analysing a short, discrete heater with the infinite-line-source model (no noise). The bias grows late in the record (axial heat loss), so a shorter fit window (about 2-3 x t_max) helps; so do a longer heater and closer spacing.');
+        add('Geometry', g > 5 ? 'fail' : g > 2 ? 'warn' : 'pass', t.name + ': finite-heater error C ' + f(t.err.CGeom, 1) + '%, lambda ' + f(t.err.lambdaGeom, 1) + '%', 'Error from analyzing a short, discrete heater with the infinite-line-source model (no noise). The bias grows late in the record (axial heat loss), so a shorter fit window (about 2-3 x t_max) helps; so do a longer heater and closer spacing.');
         add('Result', m > 10 ? 'fail' : m > 3 ? 'warn' : 'pass', t.name + ': recovered C ' + f(t.err.C, 1) + '%, lambda ' + f(t.err.lambda, 1) + '% vs truth', 'Whole chain (geometry + ADC + noise + sampling). Curve fit gives C = ' + f(t.fit.C / 1e6, 3) + ' MJ/m3/K, lambda = ' + f(t.fit.lambda, 3) + ' W/m/K, water content ' + f(t.thetaEst, 3) + ' (true ' + f(c.soil.theta, 3) + ' in model mode).');
       }
     });

@@ -78,7 +78,7 @@
     const powerNets=['5V_LDO','+5V','VREF'],supplyNets=['VIN','VIN_P'];
     const gateNets=['D9_HEAT','HEAT_GATE'],excitationNets=['D4_EXC','EXC_GATE'];
     const busNets=['A4_SDA','A5_SCL'],senseNets=['TH_RTN','A0_TH1','A1_TH2','A2_TH3','A3_TH4'];
-    // Drafting-sheet millimetre grid (1 mm minor, 5 mm major) behind the drawing.
+    // Drafting-sheet millimeter grid (1 mm minor, 5 mm major) behind the drawing.
     const defs=node('defs'),grid=node('pattern',{id:'mmGrid',width:5,height:5,patternUnits:'userSpaceOnUse'});
     for(let i=1;i<5;i++)grid.append(node('path',{d:`M${i},0 V5 M0,${i} H5`,class:'grid-minor'}));
     grid.append(node('path',{d:'M0,0 H5 M0,0 V5',class:'grid-major'}));defs.append(grid);svg.append(defs);
@@ -204,7 +204,37 @@
       tag.append(node('rect',{x:right?x-.8:x-17,y:y-2,width:18,height:6,fill:'transparent'}));svg.append(tag);
     }
     SensorAnnotations.drawContext(svg,board);
+    // Camera: glide the view to frame a set of parts (used by guided tours; empty list = whole board).
+    let flight=null;
+    function flyTo(target,ms) {
+      if(flight)cancelAnimationFrame(flight);
+      const from={...view},start=performance.now();
+      const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const step=now=>{
+        const k=reduce||ms<=0?1:Math.min(1,(now-start)/ms),e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+        for(const key of ['x','y','w','h'])view[key]=from[key]+(target[key]-from[key])*e;
+        zoom=fit.w/view.w;drawView(k===1);
+        flight=k<1?requestAnimationFrame(step):null;
+      };
+      flight=requestAnimationFrame(step);
+    }
+    function focus(refs,{pad=3,maxZoom=8,ms=900}={}) {
+      const els=(refs||[]).map(r=>partEls[r]).filter(Boolean);
+      if(!els.length){flyTo({...fit},ms);return;}
+      const inv=svg.getScreenCTM().inverse();let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
+      for(const el of els){const b=el.getBoundingClientRect();
+        for(const [cx,cy] of [[b.left,b.top],[b.right,b.bottom]]){const p=new DOMPoint(cx,cy).matrixTransform(inv);
+          x0=Math.min(x0,p.x);y0=Math.min(y0,p.y);x1=Math.max(x1,p.x);y1=Math.max(y1,p.y);}}
+      const z=Math.max(1,Math.min(maxZoom,fit.w/(x1-x0+2*pad),fit.h/(y1-y0+2*pad))),w=fit.w/z,h=fit.h/z;
+      flyTo({x:(x0+x1)/2-w/2,y:(y0+y1)/2-h/2,w,h},ms);
+    }
+    function highlight(refs) {
+      const set=new Set(refs||[]);
+      svg.classList.toggle('tour-mode',!!refs);
+      for(const [r,g] of Object.entries(partEls))g.classList.toggle('tour-focus',set.has(r));
+    }
     return {
+      focus,highlight,
       refreshTheme(){heatmap.refresh();},
       zoomBy,resetView,setLayerView,get layerView(){return layerView;},get zoom(){return zoom;},
       update(state,run,playing) {

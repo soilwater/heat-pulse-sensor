@@ -1,0 +1,66 @@
+/* Guided tour (tour.js). Works with the dashboard's light and dark themes. */
+:root{--tour-accent:#1f8f6f;--tour-card:#ffffffee;--tour-text:#1d3129;--tour-soft:#4f6558;--tour-muted:#7b8d81;--tour-edge:rgba(31,143,111,.35);--tour-shadow:0 24px 80px rgba(16,40,30,.25)}
+:root[data-theme=dark]{--tour-accent:#2ff5b9;--tour-card:rgba(13,21,26,.94);--tour-text:#eef6f3;--tour-soft:#bfd0cb;--tour-muted:#8aa19c;--tour-edge:rgba(47,245,185,.35);--tour-shadow:0 24px 90px rgba(0,0,0,.6)}
+/* phase colors: power (logic yellow), signal (pink), heat (orange), cool (blue), result (accent) */
+.tour-card{--phase:var(--tour-accent)}
+.tour-card[data-phase=power]{--phase:#e0b400}.tour-card[data-phase=logic]{--phase:#3aa0ff}.tour-card[data-phase=signal]{--phase:#ff4de3}
+.tour-card[data-phase=heat]{--phase:#ff8a00}.tour-card[data-phase=cool]{--phase:#4cc6ff}
+:root[data-theme=dark] .tour-card[data-phase=power]{--phase:#ffe600}
+
+/* Everything except the stage recedes. */
+.tour-blur{filter:blur(6px) saturate(.6);opacity:.28;pointer-events:none;transition:filter .5s,opacity .5s}
+.tour-stage{position:relative;z-index:5;box-shadow:0 0 0 1px var(--tour-edge),0 0 60px rgba(47,245,185,.18);transition:box-shadow .5s}
+.tour-active body{overflow:hidden}
+.tour-active .sensor-footer{opacity:.85}
+
+/* Parts in focus glow; everything else on the board dims a little. */
+#board.tour-mode .part:not(.tour-focus){opacity:.42;transition:opacity .4s}
+/* Focus color: cyan, unused by the board (green PCB) and by the activity highlights (yellow logic,
+   pink signals, orange heater). A slow pulse draws the eye without hiding the part. */
+:root{--tour-focus:#00e5ff}
+#board.tour-mode .part.tour-focus .part-outline{stroke:var(--tour-focus);stroke-width:3px;animation:tour-pulse 1.6s ease-in-out infinite}
+#board.tour-mode .part.tour-focus .part-body{stroke:var(--tour-focus);stroke-width:.12}
+@keyframes tour-pulse{
+  0%,100%{stroke-opacity:1;stroke-width:3px;filter:drop-shadow(0 0 2px var(--tour-focus)) drop-shadow(0 0 6px var(--tour-focus))}
+  50%{stroke-opacity:.45;stroke-width:5px;filter:drop-shadow(0 0 1px var(--tour-focus))}}
+@media(prefers-reduced-motion:reduce){#board.tour-mode .part.tour-focus .part-outline{animation:none;filter:drop-shadow(0 0 3px var(--tour-focus))}}
+
+/* Caption card */
+.tour-card{position:fixed;z-index:20;box-sizing:border-box;padding:22px 24px 18px;border-radius:14px;background:var(--tour-card);color:var(--tour-text);
+  border:1px solid var(--tour-edge);box-shadow:var(--tour-shadow);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  font-family:inherit;max-height:calc(100vh - 32px);overflow:auto}
+.tour-card::before{content:'';position:absolute;left:0;top:18px;bottom:18px;width:3px;border-radius:0 3px 3px 0;background:var(--phase);box-shadow:0 0 12px var(--phase)}
+.tour-enter{animation:tour-in .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes tour-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.tour-top{display:flex;align-items:center;gap:10px;font-size:11px;color:var(--tour-muted)}
+.tour-kicker{letter-spacing:.8px;text-transform:uppercase;font-weight:600}
+.tour-phase{padding:2px 9px;border-radius:10px;border:1px solid var(--phase);color:var(--phase);font-weight:600;letter-spacing:.3px}
+.tour-count{margin-left:auto;font-variant-numeric:tabular-nums}
+.tour-close{border:0;background:none;color:var(--tour-muted);font-size:20px;line-height:1;width:26px;height:26px;border-radius:6px;cursor:pointer}
+.tour-close:hover{background:rgba(127,127,127,.15);color:var(--tour-text)}
+.tour-title{font-size:22px;line-height:1.25;letter-spacing:-.3px;font-weight:650;margin:12px 0 6px;color:var(--tour-text)}
+.tour-parts span{display:inline-block;font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:11.5px;color:var(--phase);border:1px solid var(--tour-focus);background:rgba(127,127,127,.1);padding:2px 8px;border-radius:5px}
+.tour-live{margin:12px 0 0;font-family:ui-monospace,"Cascadia Mono",Consolas,monospace;font-size:12px;color:var(--tour-accent)}
+.tour-progress{display:flex;gap:3px;margin-top:18px}
+.tour-progress button{flex:1;height:5px;padding:0;border:0;border-radius:3px;background:rgba(127,127,127,.22);cursor:pointer}
+.tour-progress button.done{background:var(--tour-muted)}
+.tour-progress button.now{background:var(--phase);box-shadow:0 0 8px var(--phase)}
+.tour-progress button:hover{background:var(--tour-soft)}
+.tour-controls{display:flex;align-items:center;gap:10px;margin-top:14px}
+.tour-controls button{border:1px solid rgba(127,127,127,.3);background:transparent;color:var(--tour-text);padding:8px 14px;border-radius:8px;font:inherit;font-size:13px;cursor:pointer}
+.tour-controls button:disabled{opacity:.35;cursor:default}
+.tour-controls .tour-next{margin-left:auto;background:var(--tour-accent);border-color:var(--tour-accent);color:#04140e;font-weight:600;min-width:104px}
+.tour-hint{font-size:11px;color:var(--tour-muted)}
+.tour-hint kbd{font-family:inherit;font-size:10px;padding:1px 5px;border:1px solid rgba(127,127,127,.4);border-bottom-width:2px;border-radius:4px}
+.tour-card-below{max-height:46vh}
+/* Header button */
+.tour-button{display:flex;align-items:center;gap:7px;border:1px solid var(--tour-edge);background:transparent;color:var(--tour-accent);padding:5px 12px;border-radius:14px;font-size:11.5px;font-weight:600;cursor:pointer}
+.tour-button:hover{background:rgba(47,245,185,.1)}
+.tour-button i{width:0;height:0;border-left:7px solid currentColor;border-top:4.5px solid transparent;border-bottom:4.5px solid transparent}
+@media(prefers-reduced-motion:reduce){.tour-enter{animation:none}.tour-blur,.tour-stage{transition:none}}
+/* The floating legend would cover a zoomed-in part; show it only on whole-board steps. */
+.tour-active .sensor-canvas:has(#board.tour-mode) .sensor-footer{opacity:0;pointer-events:none;transition:opacity .4s}
+/* Card sections: plain terms, what happens, why it is here. One style, equal weight, thin dividers. */
+.tour-sec{margin-top:14px;padding-top:12px;border-top:1px solid rgba(127,127,127,.18)}
+.tour-sec span{display:block;font-size:10px;letter-spacing:.8px;text-transform:uppercase;font-weight:600;color:var(--phase);margin-bottom:4px}
+.tour-sec p{margin:0;font-size:13.5px;line-height:1.6;color:var(--tour-text)}

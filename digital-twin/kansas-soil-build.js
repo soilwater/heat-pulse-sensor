@@ -1,7 +1,7 @@
 'use strict';
 /* Builds docs/kansas-soil-data.js (every Kansas Mesonet core and its KD2 Pro readings, for the
  * dashboard's Soil panel) from the Kansas Mesonet soil database, and prints the checks
- * summarised in KANSAS_SOIL.md.
+ * summarized in KANSAS_SOIL.md.
  *
  *   node digital-twin/kansas-soil-build.js            write docs/kansas-soil-data.js + print checks
  *   node digital-twin/kansas-soil-build.js --check    print checks only

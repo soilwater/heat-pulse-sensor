@@ -105,7 +105,7 @@
     $('plotCursor').setAttribute('opacity',started?'1':'0');
     if(dialog.open)renderDialogValues();
   }
-  // Sensor estimate: the simulated TH1 ADC record analysed as firmware would, shown once cooling ends.
+  // Sensor estimate: the simulated TH1 ADC record analyzed as firmware would, shown once cooling ends.
   function estimateRows() {
     const e=estimate,signedPct=v=>(v>=0?'+':'')+fmt(v,1)+'%',err=(a,b)=>signedPct(100*(a/b-1));
     const thetaFrom=C=>soil.bd?(C/1e6-soil.bd*CS_MINERAL)/CW:NaN;
@@ -305,6 +305,16 @@
   setTheme(document.documentElement.dataset.theme==='light'?'light':'dark',false);
   if(soilPicker)soilPicker.emit();else applyTiming();
   window.SensorTwin={get config(){return {...cfg};},get run(){return run;},get state(){return state;},
-    get power(){return power;},get time(){return time;},get duration(){return duration;},get soil(){return {...soil};},get estimate(){return estimate;}};
+    get power(){return power;},get time(){return time;},get duration(){return duration;},get soil(){return {...soil};},get estimate(){return estimate;},
+    // Hooks for add-ons such as the guided tour: jump to a displayed time (paused) and drive the board camera.
+    seek(t){if(!valid)return;playing=false;started=true;time=Math.max(0,Math.min(duration,t));render();},
+    get board(){return board;}};
+  // Optional guided tour (tour.js + tour-steps.js); the dashboard works without them.
+  if(window.TwinTour&&window.TwinTourSteps&&$('tourButton'))
+    $('tourButton').addEventListener('click',()=>TwinTour.start({twin:window.SensorTwin,steps:window.TwinTourSteps,
+      stage:document.querySelector('.sensor-panel'),blur:['.header','.control-row','.readouts','footer'],
+      camera:{focus:(refs,o)=>board.focus(refs,o),highlight:refs=>board.highlight(refs)},
+      onExit:()=>{board.highlight(null);board.resetView();}}));
+  else if($('tourButton'))$('tourButton').hidden=true;
   requestAnimationFrame(frame);
 })();

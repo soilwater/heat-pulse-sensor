@@ -15,7 +15,7 @@ This review covers the compact 43.18 × 17.78 mm electronics head with four copp
 
 ## Measured critical routes
 
-These are approximate pad-centre-to-pad-centre distances along explicit track centre lines, including short connections within pads. They are routing measurements, not extracted electrical delay or current-density results. Front/back changes count through-via traversal; a plated J2 entry can also contribute one change. Connections through a plane do not have a unique centreline length and are reported separately.
+These are approximate pad-center-to-pad-center distances along explicit track center lines, including short connections within pads. They are routing measurements, not extracted electrical delay or current-density results. Front/back changes count through-via traversal; a plated J2 entry can also contribute one change. Connections through a plane do not have a unique centerline length and are reported separately.
 
 | Connection | Length, mm | Front/back changes |
 |---|---:|---:|
@@ -40,7 +40,7 @@ These are approximate pad-centre-to-pad-centre distances along explicit track ce
 | Heater supply: R5.2 → RH1.1 | 18.55 | 2 |
 | Heater return: RH22.2 → Q1.3 | 57.26 | 2 |
 
-The ADC reference capacitor is now local to U1 and its reference route stays on the front. The USB pair has approximately 2.50 mm centreline mismatch and different via counts. These dimensions alone do not demonstrate a USB failure, but this review does not establish differential impedance or signal integrity. Likewise, crystal trace lengths do not establish oscillator startup margin.
+The ADC reference capacitor is now local to U1 and its reference route stays on the front. The USB pair has approximately 2.50 mm centerline mismatch and different via counts. These dimensions alone do not demonstrate a USB failure, but this review does not establish differential impedance or signal integrity. Likewise, crystal trace lengths do not establish oscillator startup margin.
 
 ## Decoupling and local plane access
 
@@ -54,9 +54,9 @@ The ADC reference capacitor is now local to U1 and its reference route stays on 
 | D7.1 / D5.1, power-diode outputs | 0.85 / 0.85 |
 | C17.1, rail bulk capacitor | 0.80 |
 
-C8 and C9 also have direct explicit routes to their associated MCU supply pins, approximately 2.45 and 2.87 mm. C7 and C12 connect through the power plane; the absence of a centreline-only path between those capacitors and the IC pins is expected.
+C8 and C9 also have direct explicit routes to their associated MCU supply pins, approximately 2.45 and 2.87 mm. C7 and C12 connect through the power plane; the absence of a centerline-only path between those capacitors and the IC pins is expected.
 
-Nearest GND-via distances from capacitor ground-pad centres are approximately 0.63–0.75 mm for C7/C8/C9/C10/C12/C16, 0.57–0.63 mm for C5/C6, 0.80–0.83 mm for C1/C2, and 1.34 mm for C13. These are spatial proximity measurements, not ground impedance or a proof of the current-return path. They avoid placing ordinary drilled vias within the solder pads.
+Nearest GND-via distances from capacitor ground-pad centers are approximately 0.63–0.75 mm for C7/C8/C9/C10/C12/C16, 0.57–0.63 mm for C5/C6, 0.80–0.83 mm for C1/C2, and 1.34 mm for C13. These are spatial proximity measurements, not ground impedance or a proof of the current-return path. They avoid placing ordinary drilled vias within the solder pads.
 
 ## Selected fabrication construction
 

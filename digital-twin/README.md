@@ -34,6 +34,14 @@ The **Parts / Top / In1 / In2 / Bot** tabs preserve zoom, pan, measurement time,
 
 The drawing is a top view on a 1 mm drafting grid with a title block. Callouts give each designator and its function. The soil-temperature and circuit-activity legends float in the drawing's upper-left corner.
 
+## Guided tour
+
+**Guided tour** in the header walks through one measurement in 20 stops: power in, protection, regulator, controller, the SDI-12 request, thermistor sampling, the heater command, energy measurement, the heater chain, heat spreading, heater off, the side-needle peak, and the result. Everything except the sensor is blurred; the camera flies to each part while its current flow is highlighted, and a card explains it at two levels: a short “In plain terms” line (the processor as the brain, a transistor as a gate, why a resistor heats up, how a thermistor senses temperature) followed by the technical account of what happens and why the part is there, with live values from the current soil. The tour also explains why the heater runs on the raw 12 V battery supply (trimmed by switching) while the processor runs on a regulated 5 V.
+
+**Space** (or →, Enter) runs the simulation forward to the next event and stops; **←** goes back; **Esc** exits. The progress bar jumps to any stop.
+
+The tour is two self-contained files: `tour.js`, a generic engine (spotlight, blur, card, keys, camera and time stepping) that knows nothing about heat pulses, and `tour-steps.js`, this sensor's script as plain data (parts to frame, when, plain-language line, what, why). A tour for another board needs only a new steps file and a twin exposing `seek(time)` and a camera with `focus(refs)`. The dashboard works without either file.
+
 ## Readings and the sensor estimate
 
 The **Readings** table updates with the time slider: TH1, TH3 and TH2 temperatures and rises, the soil beside the heated section, battery draw and current, heater power and energy, and the component losses. TH4 (board) stays on the drawing but is not reported, because board heating is not modeled. Click any row for details.
@@ -96,6 +104,7 @@ Web app, in `docs/` (served as-is; no build step):
 | `sensor-board.js`, `sensor-components.js` | Vertical PCB rendering, zoom/pan, component interactions, and explanations |
 | `sensor-routes.js`, `sensor-annotations.js` | Actual copper selection, soldered cable illustration, and outline dimensions |
 | `sensor-soil.js` | Select soil dialog: texture triangle, core and water-state selection, KD2 Pro curve |
+| `tour.js`, `tour-steps.js`, `tour.css` | Guided tour: generic engine, this sensor's step script, and styles |
 | `sensor-heatmap.js` | Fixed logarithmic soil colormap, sampled from the shared spatial temperature model |
 | `sensor-model.js` | Electrical/measurement model, PWM average power ledger, ON-state values, and the sensor estimate (`soilEstimate`) |
 | `engine.js` | Shared ideal-soil thermal calculations |

@@ -88,7 +88,7 @@ if [fp['ref'] for fp in heaters] != [f'RH{i}' for i in range(1,18)]:
 for index, fp in enumerate(heaters):
     if fp.get('mpn') != 'CRCW06033R30FKEAHP' or fp.get('lcsc') != 'C313752':
         raise ValueError(f"{fp['ref']}: PCB and released heater BOM do not match r2.")
-    if abs(fp['xy'][0]-(data['bodyLengthMm']+8.8+index*2.6)) > .001 or abs(fp['xy'][1]-9) > .001:   # centre line: y = 80 mm board, 71 mm frame offset
+    if abs(fp['xy'][0]-(data['bodyLengthMm']+8.8+index*2.6)) > .001 or abs(fp['xy'][1]-9) > .001:   # center line: y = 80 mm board, 71 mm frame offset
         raise ValueError(f"{fp['ref']}: heater position differs from the r2 thermal model.")
 for t in board.GetTracks():
     via = t.GetClass()=='PCB_VIA'
