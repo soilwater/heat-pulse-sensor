@@ -34,7 +34,7 @@ POLYGON_ERROR_MM = 0.001
 def exterior_mask_openings(board):
     """Return dictionaries with pad identity and effective mask polygon.
 
-    `polygon` is a pcbnew.SHAPE_POLY_SET in KiCad nanometres. Each actual board
+    `polygon` is a pcbnew.SHAPE_POLY_SET in KiCad nanometers. Each actual board
     side is returned separately. The original board and pads are never changed.
     """
     openings = []

@@ -1,51 +1,97 @@
-"""Copper-finalization hook for the compact hat.
+"""Simplify two audited, redundant front-copper contacts in the compact board.
 
-The 1.4 mm heater prong carries two 0.10 mm thermistor lanes 0.43 mm either side of
-the 0.3 mm HEAT_RTN trace. Where the router joins those lanes at the prong root it can
-leave short, redundant 0.2 mm stubs that sit 0.125 mm from HEAT_RTN. Remove any bottom
-copper stub on a lane net that violates clearance to HEAT_RTN, then drop the dangling
-pieces that leaves behind. The caller's DRC reports unconnected pads, so a stub that was
-actually needed fails the release instead of passing silently.
+Run with KiCad's Python. ``finalize_copper(board)`` changes only matching 0.2 mm
+track patterns in memory; it does not move pads/vias, refill zones, or save files.
+The caller must refill and run DRC, physical Kelvin, and solder-via checks before
+release. These local repairs replace detours with full-width connections where
+the original via/trace also grazed its own pad with a narrower redundant contact.
+
+Coordinates are absolute KiCad millimeters. A different route with neither
+pattern is left alone. Partial or unexpected matches raise before either repair
+is applied. Repeating the function on a repaired board makes no changes.
 """
-import pcbnew
+from __future__ import annotations
 
-LANE_NETS = {"A1_TH2", "TH_RTN"}
-CLEARANCE = pcbnew.FromMM(0.127)
-
-
-def _tracks(board, names):
-    return [t for t in board.GetTracks() if t.GetClass() == "PCB_TRACK" and t.GetLayer() == pcbnew.B_Cu and t.GetNetname() in names]
+import pcbnew as pcb
 
 
-def _dangling(board, t):
-    """True if either end of t touches no pad, via or other same-net copper."""
-    xy = lambda p: (p.x, p.y)
-    uid = t.m_Uuid.AsString()      # SWIG wrappers are never identical objects: compare UUIDs and coordinates
-    for end in (t.GetStart(), t.GetEnd()):
-        touched = False
-        for o in board.GetTracks():
-            if o.m_Uuid.AsString() == uid or o.GetNetCode() != t.GetNetCode(): continue
-            if o.GetClass() == "PCB_VIA" and o.HitTest(end): touched = True; break
-            if o.GetClass() == "PCB_TRACK" and o.IsOnLayer(t.GetLayer()) and xy(end) in (xy(o.GetStart()), xy(o.GetEnd())): touched = True; break
-        if not touched:
-            for pad in board.GetPads():
-                if pad.GetNetCode() == t.GetNetCode() and pad.IsOnLayer(t.GetLayer()) and pad.HitTest(end): touched = True; break
-        if not touched: return True
-    return False
+# The two audited repairs belonged to one earlier route; a fresh route is judged by DRC alone.
+REPAIRS = ()
+
+
+def _point(xy):
+    return tuple(pcb.FromMM(value) for value in xy)
+
+
+def _key(a, b):
+    return tuple(sorted((tuple(a), tuple(b))))
 
 
 def finalize_copper(board):
-    removed = 0   # board.Delete, not Remove: Remove has a SWIG lifetime issue in KiCad 10.0.6
-    returns = _tracks(board, {"HEAT_RTN"})
-    for t in _tracks(board, LANE_NETS):
-        shape = t.GetEffectiveShape(pcbnew.B_Cu)
-        if not any(shape.Collide(r.GetEffectiveShape(pcbnew.B_Cu), CLEARANCE - 1) for r in returns): continue
-        board.Delete(t); removed += 1
-    changed = True
-    while changed and removed:
-        changed = False
-        for t in _tracks(board, LANE_NETS):
-            if _dangling(board, t):
-                board.Delete(t); removed += 1; changed = True
-    board.BuildConnectivity()
-    return {"repairs": ["heater-prong lane stubs"] if removed else [], "removed_tracks": removed, "added_tracks": 0}
+    """Return per-pad status and track counts; modify only fully matched repairs.
+
+    Status is ``applied``, ``already_finalized``, or ``not_applicable``. The latter
+    is not a DRC exemption: other routing results still need independent checks.
+    All matching geometry is validated before the first mutation.
+    """
+    tracks = list(board.GetTracks())
+    by_endpoints = {}
+    for track in tracks:
+        if track.GetClass() == "PCB_TRACK" and track.GetLayer() == pcb.F_Cu:
+            by_endpoints.setdefault(_key(track.GetStart(), track.GetEnd()), []).append(track)
+
+    plans, report = [], []
+    for repair in REPAIRS:
+        name = f"{repair['reference']}.{repair['pin']}"
+        old = [by_endpoints.get(_key(_point(a), _point(b)), []) for a, b in repair["old"]]
+        new = [by_endpoints.get(_key(_point(a), _point(b)), []) for a, b in repair["new"]]
+        if not any(old) and not any(new):
+            report.append({"pad": name, "status": "not_applicable"})
+            continue
+        if any(old):
+            if not all(len(items) == 1 for items in old) or any(new):
+                raise ValueError(f"{name}: incomplete or ambiguous original copper pattern")
+            matched, status = [items[0] for items in old], "applied"
+        else:
+            if not all(len(items) == 1 for items in new):
+                raise ValueError(f"{name}: incomplete or ambiguous finalized copper pattern")
+            matched, status = [items[0] for items in new], "already_finalized"
+        if any(track.GetNetname() != repair["net"] or track.GetWidth() != pcb.FromMM(0.2)
+               for track in matched):
+            raise ValueError(f"{name}: expected {repair['net']} tracks of width 0.2 mm")
+        pads = [pad for fp in board.GetFootprints() if fp.GetReference() == repair["reference"]
+                for pad in fp.Pads() if pad.GetNumber() == repair["pin"]]
+        if (len(pads) != 1 or tuple(pads[0].GetPosition()) != _point(repair["pad"])
+                or pads[0].GetNetname() != repair["net"] or not pads[0].IsOnLayer(pcb.F_Cu)):
+            raise ValueError(f"{name}: pad position, layer, or net differs from audited geometry")
+        vias = [track for track in tracks if track.GetClass() == "PCB_VIA"
+                and tuple(track.GetPosition()) == _point(repair["via"])]
+        if (len(vias) != 1 or vias[0].GetNetname() != repair["net"]
+                or vias[0].GetWidth(pcb.F_Cu) != pcb.FromMM(0.6)
+                or vias[0].GetDrillValue() != pcb.FromMM(0.35)
+                or not vias[0].IsOnLayer(pcb.F_Cu)):
+            raise ValueError(f"{name}: via geometry or net differs from audited geometry")
+        report.append({"pad": name, "status": status})
+        if status == "applied":
+            plans.append((repair, matched, pads[0].GetNetCode()))
+
+    removed_count = 0
+    added_count = 0
+    for repair, matched, netcode in plans:
+        for track in matched:
+            # KiCad's Delete removes the item without transferring C++ ownership
+            # to its Python wrapper (Remove has a SWIG lifetime issue in 10.0.6).
+            board.Delete(track)
+            removed_count += 1
+        for a, b in repair["new"]:
+            track = pcb.PCB_TRACK(board)
+            track.SetStart(pcb.VECTOR2I(*_point(a)))
+            track.SetEnd(pcb.VECTOR2I(*_point(b)))
+            track.SetLayer(pcb.F_Cu)
+            track.SetWidth(pcb.FromMM(0.2))
+            track.SetNetCode(netcode)
+            board.Add(track)
+            added_count += 1
+    if plans:
+        board.BuildConnectivity()
+    return {"repairs": report, "removed_tracks": removed_count, "added_tracks": added_count}

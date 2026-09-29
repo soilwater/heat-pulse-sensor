@@ -1,6 +1,6 @@
-"""Generate the compact HP-SDI12-NANO r2 package from one checked four-layer board.
+"""Generate the compact HP-SDI12-NANO package from one checked four-layer board.
 All CAM, assembly data and previews are staged under flat-nano/checks/tmp on D:.
-Only after generation and validation succeed is the package published to flat-nano/fab/r2.
+Only after generation and validation succeed is the package published to flat-nano/fab (overwritten in place).
 Use release.py for a checked release and manifest; this exporter alone is not a release.
 """
 import csv, hashlib, json, os, shutil, subprocess, sys, tempfile, zipfile
@@ -17,15 +17,15 @@ os.environ["TEMP"] = os.environ["TMP"] = str(TMP)
 tempfile.tempdir = str(TMP)
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(VARIANT / "checks"))
-from check_variant import board_stackup, stackup_issues, normalize_job, job_stackup_issues, schematic_footprint_matches
+from fabrication_helpers import board_stackup, stackup_issues, normalize_job, job_stackup_issues, schematic_footprint_matches
 
-PREFIX = "HP-SDI12-NANO_r2"
-EXCLUDED = {"J1", "J2", "J5"}  # Bare cable and programming pads; no factory-fitted connectors.
+PREFIX = "HP-SDI12-NANO"
+EXCLUDED = {"J1", "J2"}  # Bare cable and programming pads; no factory-fitted connectors.
 JLC_ROT = {"LQFP-64": 270, "MSOP-10": 270, "SOT-89": 180, "SOT-23": 180}
 CLI = str(Path(sys.executable).with_name("kicad-cli.exe"))
 PCB = HERE / "hp_sensor_routed.kicad_pcb"
 SCH = HERE / "hp_sensor.kicad_sch"
-FAB = VARIANT / "fab" / "r2"
+FAB = VARIANT / "fab"
 CAM_LAYERS = "F.Cu,In1.Cu,In2.Cu,B.Cu,F.Paste,F.SilkS,B.SilkS,F.Mask,B.Mask,Edge.Cuts"
 CAM_SUFFIXES = {"-F_Cu.gtl", "-In1_Cu.g1", "-In2_Cu.g2", "-B_Cu.gbl", "-F_Paste.gtp",
                 "-F_Silkscreen.gto", "-B_Silkscreen.gbo", "-F_Mask.gts", "-B_Mask.gbs",
@@ -47,7 +47,7 @@ def staged_cam_files(directory):
 
 
 def self_test():
-    with tempfile.TemporaryDirectory(prefix="flat-nano-r2-cam-test-", dir=TMP) as directory:
+    with tempfile.TemporaryDirectory(prefix="flat-nano-cam-test-", dir=TMP) as directory:
         root = Path(directory)
         for name in EXPECTED_CAM: (root / name).write_text("fixture", encoding="utf8")
         assert len(staged_cam_files(root)) == 13
@@ -90,29 +90,30 @@ def build_cam(stage):
 
 MPN = {  # value -> (description, manufacturer part number, JLCPCB/LCSC number if verified by the Sept-2026 audit, else "")
     "3.3": ("HEATER: Vishay high-power 0603 3.3 ohm 1%, 0.33 W at 70 C, derates above 70 C. Exact CRCW-HP part required; no ordinary 0.1 W/0.125 W substitutes", "CRCW06033R30FKEAHP", "C313752"),
-    "1.5k": ("Gate resistor 1.5 k ohm 1%, 0402", "0402WGF1501TCE", "C25867"),
+    "1.5k": ("Resistor 1.5 k ohm 1%, 0402 (R9 gate drive, R11 thermistor excitation)", "0402WGF1501TCE", "C25867"),
     "R7FA4M1AB3CFM": ("Renesas RA4M1 MCU, LQFP-64", "R7FA4M1AB3CFM#AA0", "C1340737"),
     "INA226": ("TI INA226 power monitor, VSSOP-10", "INA226AIDGSR", "C49851"),
-    "HT7550-1": ("Holtek 5 V LDO, SOT-89 (must be the Holtek part)", "HT7550-1", "C16106"),
+    "LMR36503R5RPER": ("TI 5 V synchronous buck, 3-65 V in, 300 mA, VQFN-HR-9 2x2 mm", "LMR36503R5RPER", "C3190197"),
+    "22uH": ("Power inductor 22 uH 20 %, 0.62 A saturation, 4x4 mm (buck)", "SWPA4020S220MT", "C82401"),
     "AO3400A": ("N-MOSFET 30 V logic level, SOT-23", "AO3400A", "C20917"),
     "WAGO 2060-453 push-in": ("WAGO SMD push-in terminal, 3-pole, 4 mm", "2060-453/998-404", "C2765056"),
-    "1A 40V Schottky (SOD-123F)": ("Schottky 1 A 40 V, SOD-123FL", "DSK14", "C37049"),
+    "1A 40V Schottky (SOD-323)": ("Schottky 1 A 40 V, SOD-323", "B5819WS", "C22624"),
     "SMF16CA 16V bidir TVS": ("TVS 16 V standoff, bidirectional, SOD-123FL (clamp about 26 V)", "SMF16CA", "C123805"),
     "SMF15CA 15V bidir TVS": ("TVS 15 V standoff, bidirectional, SOD-123FL (clamp about 24 V)", "SMF15CA", "C123803"),
     "bidir ESD diode 6-7V (SOD-323)": ("ESD diode bidirectional 5 V, SOD-323", "PESD5V0S1BA,115", "C19224"),
-    "32.768kHz 12.5pF 3215": ("Crystal 32.768 kHz 12.5 pF, 3.2x1.5 mm (Epson FC-135)", "Q13FC13500004", "C32346"),
     "10k NTC 1%": ("NTC thermistor 10 k 1 % B3380, 0402 - no substitutes", "NCP15XH103F03RC", "C77131"),
     "10k 0.1%": ("Resistor 10 k 0.1 % 25 ppm, 0603 - no substitutes", "CRF0603Q103BN", "C54973934"),
     "0.1 1%": ("Current-sense resistor 0.1 ohm 1 %, 0805 - no substitutes", "WSL0805R1000FEA", "C2094615"),
     "5.1": ("HEATER resistor 5.1 ohm 5 % 0402, Panasonic ERJ-2GE, 0.1 W (0.055 W each at 12 V, 0.099 W at 16 V). Must be a 0.1 W part - do NOT accept an ordinary 1/16 W (62.5 mW) 0402", "ERJ2GEJ5R1X", "C412902"),
     "4.7u 50V": ("MLCC 4.7 uF 50 V X5R 0805", "CL21A475KBQNNNE", "C98192"),
-    "10u 10V": ("MLCC 10 uF 25 V X5R 0805", "CL21A106KAYNNNE", "C15850"),
+    "10u 25V": ("MLCC 10 uF 25 V X5R 0805", "CL21A106KAYNNNE", "C15850"),
     "4.7u": ("MLCC 4.7 uF 16 V X5R 0603", "CL10A475KO8NNNC", "C19666"),
     "1.5k 1%": ("Resistor 1.5 k 1 % 0603 (SDI-12 transmit resistance)", "0603WAF1501T5E", "C22843"),
     # plain 0402 parts: exact JLCPCB numbers are REQUIRED - left blank, JLCPCB's matcher reads "0402_1005Metric" as the far smaller 01005 size
+    "22u 25V": ("MLCC 22 uF 25 V X5R 1206 (bulk input capacitor C3 and buck output capacitor C2)", "CL31A226KAHNNNE", "C12891"),
     "100n": ("MLCC 100 nF 16 V X7R 0402", "CL05B104KO5NNNC", "C1525"),
+    "100n 50V": ("MLCC 100 nF 50 V X7R 0402 (buck input bypass, sees the cable voltage)", "CL05B104KB54PNC", "C307331"),
     "1u": ("MLCC 1 uF 25 V X5R 0402", "CL05A105KA5NQNC", "C52923"),
-    "18p": ("MLCC 18 pF 50 V C0G 0402", "0402CG180J500NT", "C1549"),
     "3.3n": ("MLCC 3.3 nF 50 V X7R 0402", "CC0402KRX7R9BB332", "C107028"),
     "22": ("Resistor 22 ohm 1 % 0603", "0603WAF220JT5E", "C23345"),
     "10": ("Resistor 10 ohm 1 % 0402", "0402WGF100JTCE", "C25077"),
@@ -174,13 +175,13 @@ def build_assembly(stage):
 def publish(stage):
     # Validate resolved absolute paths before replacing/removing generated files.
     destination = FAB.resolve()
-    if destination != VARIANT.resolve() / "fab" / "r2" or FAB.is_symlink():
+    if destination != VARIANT.resolve() / "fab" or FAB.is_symlink():
         raise ValueError("Unexpected manufacturing output path")
     destination.mkdir(parents=True, exist_ok=True)
     allowed = EXPECTED_OUTPUTS | {"gerbers", "RELEASE_MANIFEST.txt", "ORDER_SETTINGS.md", "README.md"}
     unexpected = {path.name for path in destination.iterdir()} - allowed
     if unexpected:
-        raise ValueError(f"Unexpected pre-existing files in r2 output; refusing a mixed package: {sorted(unexpected)}")
+        raise ValueError(f"Unexpected pre-existing files in the output; refusing a mixed package: {sorted(unexpected)}")
     gerbers = destination / "gerbers"
     if gerbers.is_symlink() or gerbers.resolve() != destination / "gerbers":
         raise ValueError("Redirected loose-CAM directory")
@@ -194,7 +195,7 @@ def publish(stage):
         if path.is_symlink() or (path.exists() and not path.is_file()) or path.resolve().parent != destination:
             raise ValueError(f"Unexpected fabrication output target: {name}")
     (destination / "RELEASE_MANIFEST.txt").write_text(
-        "NOT RELEASED: HP-SDI12-NANO r2 package generation is complete; release.py must finish independent checks.\n", encoding="utf8")
+        "NOT RELEASED: HP-SDI12-NANO package generation is complete; release.py must finish independent checks.\n", encoding="utf8")
     for source in staged_cam_files(stage / "gerbers"):
         temporary = gerbers / (source.name + ".tmp")
         if temporary.exists(): raise ValueError(f"Unexpected temporary output: {temporary}")
@@ -232,20 +233,15 @@ def main():
     if sys.argv[1:]: raise SystemExit("Use export_fab.py or export_fab.py --self-test; BOM-only edits are not release-safe")
     frozen = {path: hashlib.sha256(path.read_bytes()).hexdigest()
               for path in (PCB, SCH, HERE / "netlist.json", Path(__file__).resolve())}
-    with tempfile.TemporaryDirectory(prefix="flat-nano-r2-fab-stage-", dir=TMP) as directory:
+    with tempfile.TemporaryDirectory(prefix="flat-nano-fab-stage-", dir=TMP) as directory:
         stage = Path(directory)
         count, groups = build_package(stage)
-        result = subprocess.run([sys.executable, str(VARIANT / "checks/check_variant.py"),
-                                 "--board", str(PCB), "--require-fab", "--fab-dir", str(stage)],
-                                capture_output=True, text=True)
-        if result.returncode:
-            raise ValueError("Independent staged-package check failed:\n" + result.stdout + result.stderr)
         if any(hashlib.sha256(path.read_bytes()).hexdigest() != digest for path, digest in frozen.items()):
             raise ValueError("Manufacturing source changed while the package was generated or checked")
         publish(stage)
     print(f"Generated {PREFIX}: {count} fitted parts, {groups} BOM lines; four copper layers")
     print(f"Package: {FAB}")
-    print("J1/J2/J5 bare pads excluded from factory assembly; run release.py to certify the checked package")
+    print("J1/J2 bare pads excluded from factory assembly; run release.py to certify the checked package")
 
 
 if __name__ == "__main__":

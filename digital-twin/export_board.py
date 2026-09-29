@@ -5,6 +5,9 @@ directly from the saved board. Native pad polygons include curved-edge
 tessellation; physical drill cutouts are exported separately as holePolygons.
 Render polygon contours with even-odd filling, including KiCad's fractured
 filled-zone contours. Do not simplify them or connect separate islands.
+Each footprint also carries its footprint name and an axis-aligned bodyBox
+[x0, y0, x1, y1] taken from its fabrication outline (bodySource 'fab'), else its
+courtyard ('courtyard'), else its pads ('pads'). Keepout rule areas are skipped.
 """
 from pathlib import Path
 import csv, hashlib, json
@@ -66,7 +69,32 @@ def pad_geometry(pad):
             'layers': copper_layers(pad), 'shape': SHAPES.get(pad.GetShape(), str(pad.GetShape())),
             'rotation': round(pad.GetOrientationDegrees(), 6), 'copperPolygons': copper,
             'holePolygons': polygons(holes)}
-data = {'revision':'HP-SDI12-NANO r2 / 17 x 3.3 ohm high-power heater', 'copperLayers': ['top', 'inner1', 'inner2', 'bottom'], 'bodyLengthMm': 43.18, 'source':'flat-nano/kicad/hp_sensor_routed.kicad_pcb',
+
+def frame_box(left, top, right, bottom):
+    return [round(p.ToMM(left)-100, 4), round(p.ToMM(top)-71, 4),
+            round(p.ToMM(right)-100, 4), round(p.ToMM(bottom)-71, 4)]
+
+def body_box(fp):
+    """Axis-aligned package box in frame coordinates and where it came from.
+
+    Uses the footprint's fabrication outline, else its courtyard, else the
+    extent of its pads. Stroke widths are removed so the box follows the drawn
+    outline's centerline (the package edge), not the width of the pen."""
+    back = fp.GetLayer() == p.B_Cu
+    for layer, label in ((p.B_Fab if back else p.F_Fab, 'fab'), (p.B_CrtYd if back else p.F_CrtYd, 'courtyard')):
+        shapes = [g for g in fp.GraphicalItems() if g.GetClass() == 'PCB_SHAPE' and g.GetLayer() == layer]
+        if shapes:
+            edges = []
+            for shape in shapes:
+                box, half = shape.GetBoundingBox(), shape.GetWidth() // 2
+                edges.append((box.GetLeft()+half, box.GetTop()+half, box.GetRight()-half, box.GetBottom()-half))
+            return frame_box(min(e[0] for e in edges), min(e[1] for e in edges),
+                             max(e[2] for e in edges), max(e[3] for e in edges)), label
+    boxes = [pad.GetBoundingBox() for pad in fp.Pads()]
+    return frame_box(min(b.GetLeft() for b in boxes), min(b.GetTop() for b in boxes),
+                     max(b.GetRight() for b in boxes), max(b.GetBottom() for b in boxes)), 'pads'
+
+data = {'board':'HP-SDI12-NANO / 17 x 3.3 ohm heater', 'copperLayers': ['top', 'inner1', 'inner2', 'bottom'], 'bodyLengthMm': 43.18, 'source':'flat-nano/kicad/hp_sensor_routed.kicad_pcb',
         'sha256':source_hash, 'bomSha256':bom_hash, 'bomSource':BOM.relative_to(HERE.parent).as_posix(),
         'heaterSpec': {'heaterCount':17, 'rEachOhm':3.3, 'heaterRatingW':0.33,
                        'heaterDeratingStartC':70, 'heaterMaxC':155,
@@ -80,16 +108,19 @@ data = {'revision':'HP-SDI12-NANO r2 / 17 x 3.3 ohm high-power heater', 'copperL
 for fp in board.GetFootprints():
     ref = fp.GetReference()
     pads = [pad_geometry(pad) for pad in fp.Pads()]
-    data['footprints'].append({'ref':ref,'value':fp.GetValue(),'xy':xy(fp.GetPosition()),'angle':fp.GetOrientationDegrees(),
-                               'layer':'bottom' if fp.GetLayer()==p.B_Cu else 'top','pads':pads,**parts.get(ref,{})})
+    box, box_source = body_box(fp)
+    data['footprints'].append({'ref':ref,'value':fp.GetValue(),'footprint':str(fp.GetFPID().GetLibItemName()),
+                               'xy':xy(fp.GetPosition()),'angle':fp.GetOrientationDegrees(),
+                               'layer':'bottom' if fp.GetLayer()==p.B_Cu else 'top',
+                               'bodyBox':box,'bodySource':box_source,'pads':pads,**parts.get(ref,{})})
 heaters = sorted((fp for fp in data['footprints'] if fp['ref'].startswith('RH')), key=lambda fp:int(fp['ref'][2:]))
 if [fp['ref'] for fp in heaters] != [f'RH{i}' for i in range(1,18)]:
-    raise ValueError('Expected exactly RH1–RH17 in the r2 board.')
+    raise ValueError('Expected exactly RH1-RH17 on the flat-nano board.')
 for index, fp in enumerate(heaters):
     if fp.get('mpn') != 'CRCW06033R30FKEAHP' or fp.get('lcsc') != 'C313752':
-        raise ValueError(f"{fp['ref']}: PCB and released heater BOM do not match r2.")
+        raise ValueError(f"{fp['ref']}: PCB and BOM heater identity differ.")
     if abs(fp['xy'][0]-(data['bodyLengthMm']+8.8+index*2.6)) > .001 or abs(fp['xy'][1]-9) > .001:   # center line: y = 80 mm board, 71 mm frame offset
-        raise ValueError(f"{fp['ref']}: heater position differs from the r2 thermal model.")
+        raise ValueError(f"{fp['ref']}: heater position differs from the thermal model.")
 for t in board.GetTracks():
     via = t.GetClass()=='PCB_VIA'
     item = {'a':xy(t.GetStart()),'b':xy(t.GetEnd()),'net':t.GetNetname(),'layer':LAYER_NAMES.get(t.GetLayer(), 'top'),
@@ -101,6 +132,8 @@ for edge in board.GetDrawings():
     if edge.GetLayer()==p.Edge_Cuts:
         data['outline'].append([xy(edge.GetStart()),xy(edge.GetEnd())])
 for zone in board.Zones():
+    if zone.GetIsRuleArea():   # keepouts carry no copper
+        continue
     for layer, label in COPPER_LAYERS:
         if zone.IsOnLayer(layer):
             data['zones'].append({'net':zone.GetNetname(), 'layer':label,

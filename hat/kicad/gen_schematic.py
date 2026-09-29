@@ -1,4 +1,4 @@
-"""Compact heat-pulse HAT for the Arduino Nano R4, rev 4 - schematic generator.
+"""Compact heat-pulse HAT for the Arduino Nano R4 - schematic generator.
 Shares the released flat-nano heater and sensing circuit. A headerless Nano R4
 uses ordinary pin strips soldered through both boards, face-to-face with the hat.
 
@@ -47,12 +47,13 @@ def flag(n, net, x, y):
 X, Y = 40, 60
 text("POWER IN   -   12 V battery / logger supply, normally 11.5-14.4 V, through three soldered wires. D1 provides reverse-polarity protection. "
      "The Nano VIN branch uses R18; its onboard regulator supplies the hat's 5 V. The TVS and R18 do not guarantee a 21 V surge limit.", 30, 25, 2.0, right=300)
-part("J1", "Connector_Generic:Conn_01x03", "Hand-soldered cable (3 wires)", "hp_sensor:CablePads_1x03_P4mm", X, Y, {1: "VIN", 2: "SDI_LINE", 3: "GND"},
+part("J1", "Connector_Generic:Conn_01x03", "Hand-soldered cable (3 wires)", "hp_sensor:CableSolder_1x03", X, Y, {1: "VIN", 2: "SDI_LINE", 3: "GND"},
      Note="1 = 12V, 2 = SDI-12 data, 3 = GND; solder after assembly and provide cable strain relief")
 two("D2", "Device:D_TVS", "SMF15CA 15V bidir TVS", "Diode_SMD:D_SOD-123F", X + 40, Y, "VIN", "GND")
-two("D1", "Device:D_Schottky", "1A 40V Schottky (SOD-123F)", "Diode_SMD:D_SOD-123F", X + 75, Y, "VIN_P", "VIN", Note="reverse-polarity protection")
+two("D1", "Device:D_Schottky", "1A 40V Schottky (SOD-323)", "Diode_SMD:D_SOD-323", X + 75, Y, "VIN_P", "VIN", Note="reverse-polarity protection")
 two("C1", "Device:C", "4.7u 50V", FP["C0805"], X + 100, Y, "VIN_P", "GND")
-two("C2", "Device:C", "10u 10V", FP["C0805"], X + 125, Y, "+5V", "GND")
+two("C3", "Device:C", "22u 25V", "Capacitor_SMD:C_1206_3216Metric", X + 100, Y + 20, "VIN_P", "GND", Note="bulk: supplies the heater switching edges locally")
+two("C17", "Device:C", "10u 25V", FP["C0805"], X + 125, Y, "+5V", "GND")
 two("R18", "Device:R", "22", FP["R0603"], X + 150, Y, "VIN_P", "NANO_VIN", Note="input filter resistor; not overvoltage protection (Nano VIN operating range 6-21 V)")
 for i, net in enumerate(["VIN", "VIN_P", "GND", "+5V"]):
     flag(i + 1, net, X + 40 + 25 * i, Y + 35)
@@ -74,7 +75,7 @@ part("J3", "Connector_Generic:Conn_01x15", "Nano solder-stack header", "hp_senso
      dict(zip(range(1, 16), [None, None, None, "D9_HEAT", None, None, None, None, "D4_EXC", None, "D2_SDI12", "GND", None, None, None])),
      Note="1 D12, 2 D11, 3 D10, 4 D9, 5 D8, 6 D7, 7 D6, 8 D5, 9 D4, 10 D3, 11 D2, 12 GND, 13 RST, 14 RX, 15 TX")
 part("J4", "Connector_Generic:Conn_01x15", "Nano solder-stack header", "hp_sensor:Nano_SolderStack_1x15", 200, 190,
-     dict(zip(range(1, 16), [None, None, "VREF", "A0_TH1", "A1_TH2", "A2_TH3", "A3_TH4", "A4_SDA", "A5_SCL", None, None, "+5V", None, "GND", "NANO_VIN"])),
+     dict(zip(range(1, 16), [None, None, "VREF", "A0_TH3", "A1_TH2", "A2_TH1", "A3_TH4", "A4_SDA", "A5_SCL", None, None, "+5V", None, "GND", "NANO_VIN"])),
      Note="1 D13, 2 3V3, 3 AREF (printed B0), 4 A0, 5 A1, 6 A2, 7 A3, 8 A4, 9 A5, 10 A6, 11 A7, 12 5V, 13 BOOT (printed B1) - leave unconnected, 14 GND, 15 VIN (6-21 V)")
 
 # ------------------------------------------------------------------ HEATER ------------------------------------------------------------------
@@ -91,7 +92,7 @@ part("Q1", "Transistor_FET:AO3400A", "AO3400A", "Package_TO_SOT_SMD:SOT-23", X +
 two("R9", "Device:R", "1.5k", FP["R0402"], X + 48, Y + 65, "D9_HEAT", "HEAT_GATE", Note="1%; limits RA4M1 gate charging current below 4 mA")
 two("R10", "Device:R", "100k", FP["R0402"], X + 63, Y + 65, "HEAT_GATE", "GND", Note="gate pull-down")
 
-text(f"HEATER RESISTOR CHAIN (top side of the centre prong only)   -   {N_HEAT} x {R_HEAT} ohm 1% 0603 in series, {PITCH} mm pitch. EXACT Vishay CRCW06033R30FKEAHP, 0.33 W at 70 C. The return runs on the bottom copper of the prong. "
+text(f"HEATER RESISTOR CHAIN (top side of the center prong only)   -   {N_HEAT} x {R_HEAT} ohm 1% 0603 in series, {PITCH} mm pitch. EXACT Vishay CRCW06033R30FKEAHP, 0.33 W at 70 C. The return runs on the bottom copper of the prong. "
      "Use Panasonic ERJ2GEJ5R1X, 0.1 W; resistor tolerance and local temperature affect the margin. First resistor starts outside the epoxy body. "
      "Firmware must detect zero heater current as a fault.", 30, 365, 2.0)
 for i in range(N_HEAT):
@@ -99,20 +100,18 @@ for i in range(N_HEAT):
 
 # ------------------------------------------------------------------ THERMISTORS ------------------------------------------------------------------
 X, Y = 470, 215
-text("THERMISTORS   -   dividers and Nano AREF share filtered VREF. Q2 switches their ground return to reduce self-heating between readings. "
+text("THERMISTORS   -   pin map (same as flat-nano): A2 = TH1 right needle, A1 = TH2 heater-needle tip, A0 = TH3 left needle, A3 = TH4 board body (left/right seen on the top face, toward the Nano, cable end up, needles down; from the outer face they appear swapped). "
+     "Dividers and Nano AREF share VREF. D4 powers them through R11, so they are off between readings (no self-heating) and the reading stays ratiometric. "
      "Firmware: analogReference(AR_EXTERNAL), analogReadResolution(14); D4 HIGH, wait 10 ms, sample, D4 LOW. Verify settling, noise and calibration on assembled hardware. "
      "NTC = Murata NCP15XH103F03RC (10k, 1%); Rref = 10k 0.1% 25 ppm.", 430, 160, 2.0)
-two("R11", "Device:R", "10", FP["R0402"], X, Y + 15, "+5V", "VREF", Note="filters the reference node")
-two("C13", "Device:C", "1u", FP["C0402"], X + 14, Y + 15, "VREF", "GND")
-part("Q2", "Transistor_FET:AO3400A", "AO3400A", "Package_TO_SOT_SMD:SOT-23", X + 45, Y + 20, {1: "EXC_GATE", 2: "GND", 3: "TH_RTN"}, Note="switches the thermistor ground")
-two("R12", "Device:R", "1.5k", FP["R0402"], X + 75, Y + 15, "D4_EXC", "EXC_GATE", Note="1%; limits gate charging current below 4 mA")
-two("R17", "Device:R", "100k", FP["R0402"], X + 90, Y + 15, "EXC_GATE", "GND")
-names = {1: ("left prong", "A0_TH1"), 2: ("heater prong tip", "A1_TH2"), 3: ("right prong", "A2_TH3"), 4: ("board body (diagnostic)", "A3_TH4")}
+two("R11", "Device:R", "1.5k", FP["R0402"], X, Y + 15, "D4_EXC", "VREF", Note="limits pin D4 (RA4M1 P103) to 3.3 mA while C13 charges; the datasheet allows 4 mA per pin")
+two("C13", "Device:C", "1u", FP["C0402"], X + 80, Y + 15, "VREF", "GND")   # right of R11's note
+names = {1: ("right prong", "A2_TH1"), 2: ("heater prong tip", "A1_TH2"), 3: ("left prong", "A0_TH3"), 4: ("board body (diagnostic)", "A3_TH4")}
 for i in range(1, 5):
     x = X - 30 + 36 * (i - 1)
     node = names[i][1]
     two(f"R2{i}", "Device:R", "10k 0.1%", FP["R0603"], x, Y + 85, "VREF", node, Note="reference resistor")
-    two(f"TH{i}", "Device:Thermistor_NTC", "10k NTC 1%", FP["R0402"], x, Y + 125, node, "TH_RTN", Note=names[i][0])
+    two(f"TH{i}", "Device:Thermistor_NTC", "10k NTC 1%", FP["R0402"], x, Y + 125, node, "GND", Note=names[i][0])
     two(f"C2{i}", "Device:C", "100n", FP["C0402"], x + 18, Y + 125, node, "GND")
 
 # =============================================================== writer ===============================================================
@@ -178,7 +177,7 @@ def build():
     for s, x, y, size in TEXTS:
         items.append([Sym("text"), s.replace("\n", chr(92) + "n"), [Sym("exclude_from_sim"), Sym("no")], [Sym("at"), x, y, 0], EFF(size=size, just=["left", "bottom"]), [Sym("uuid"), uid()]])
     sch = [Sym("kicad_sch"), [Sym("version"), 20250114], [Sym("generator"), "eeschema"], [Sym("generator_version"), "9.0"], [Sym("uuid"), ROOT], [Sym("paper"), "A2"],
-           [Sym("title_block"), [Sym("title"), "Compact heat-pulse hat for Arduino Nano R4, SDI-12 (rev 4)"], [Sym("company"), "K-State Soil Water Processes Lab"], [Sym("comment"), 1, "Generated by gen_schematic.py - edit the script, not this file"]],
+           [Sym("title_block"), [Sym("title"), "Compact heat-pulse hat for Arduino Nano R4, SDI-12"], [Sym("company"), "K-State Soil Water Processes Lab"], [Sym("comment"), 1, "Generated by gen_schematic.py - edit the script, not this file"]],
            [Sym("lib_symbols")] + list(lib_syms.values())] + items + [[Sym("sheet_instances"), [Sym("path"), "/", [Sym("page"), "1"]]], [Sym("embedded_fonts"), Sym("no")]]
     return sch, netlist
 

@@ -1,4 +1,4 @@
-"""Generate the compact HP-HAT r4 package from one checked four-layer board.
+"""Generate the compact HP-HAT package from one checked four-layer board.
 All CAM, assembly data and previews are staged under hat/checks/tmp on D:.
 Only after generation and validation succeed is the package published to hat/fab.
 Use release.py for a checked release and manifest; this exporter alone is not a release.
@@ -22,12 +22,21 @@ from fabrication_helpers import board_stackup, stackup_issues, normalize_job, jo
 PREFIX = "HP-HAT"
 EXCLUDED = {"J1", "J3", "J4"}  # Cable pads and manually fitted HTSW solder-stack headers.
 JLC_ROT = {"MSOP-10": 270, "SOT-23": 180}
+
+
+def jlc_rotation(kicad_rotation, package, bottom):
+    """CPL rotation for JLCPCB. Top side: KiCad angle plus the package's library correction. Bottom side: JLCPCB views
+    the part from the bottom after turning the board over left-to-right, where a KiCad bottom footprint at angle a
+    appears at 180 - a; the same library correction is then added. Confirm polarized bottom parts in JLCPCB's preview."""
+    offset = next((value for key, value in JLC_ROT.items() if key in package), 0)
+    angle = (180 - kicad_rotation) if bottom else kicad_rotation
+    return (angle + offset) % 360
 CLI = str(Path(sys.executable).with_name("kicad-cli.exe"))
 PCB = HERE / "hp_hat_routed.kicad_pcb"
 SCH = HERE / "hp_hat.kicad_sch"
 FAB = HAT / "fab"
-CAM_LAYERS = "F.Cu,In1.Cu,In2.Cu,B.Cu,F.Paste,F.SilkS,B.SilkS,F.Mask,B.Mask,Edge.Cuts"
-CAM_SUFFIXES = {"-F_Cu.gtl", "-In1_Cu.g1", "-In2_Cu.g2", "-B_Cu.gbl", "-F_Paste.gtp",
+CAM_LAYERS = "F.Cu,In1.Cu,In2.Cu,B.Cu,F.Paste,B.Paste,F.SilkS,B.SilkS,F.Mask,B.Mask,Edge.Cuts"
+CAM_SUFFIXES = {"-F_Cu.gtl", "-In1_Cu.g1", "-In2_Cu.g2", "-B_Cu.gbl", "-F_Paste.gtp", "-B_Paste.gbp",
                 "-F_Silkscreen.gto", "-B_Silkscreen.gbo", "-F_Mask.gts", "-B_Mask.gbs",
                 "-Edge_Cuts.gm1", "-PTH.drl", "-NPTH.drl", "-job.gbrjob"}
 EXPECTED_CAM = {PCB.stem + suffix for suffix in CAM_SUFFIXES}
@@ -50,7 +59,7 @@ def self_test():
     with tempfile.TemporaryDirectory(prefix="hat-cam-test-", dir=TMP) as directory:
         root = Path(directory)
         for name in EXPECTED_CAM: (root / name).write_text("fixture", encoding="utf8")
-        assert len(staged_cam_files(root)) == 13
+        assert len(staged_cam_files(root)) == 14
         for name, make, remove in (
             ("stale file", lambda: (root / "old.gbr").write_text("stale"), lambda: (root / "old.gbr").unlink()),
             ("missing layer", lambda: (root / (PCB.stem + "-In2_Cu.g2")).unlink(), lambda: (root / (PCB.stem + "-In2_Cu.g2")).write_text("fixture")),
@@ -94,7 +103,7 @@ MPN = {  # value -> (description, manufacturer part number, JLCPCB/LCSC number i
     "HT7550-1": ("Holtek 5 V LDO, SOT-89 (must be the Holtek part)", "HT7550-1", "C16106"),
     "AO3400A": ("N-MOSFET 30 V logic level, SOT-23", "AO3400A", "C20917"),
     "WAGO 2060-453 push-in": ("WAGO SMD push-in terminal, 3-pole, 4 mm", "2060-453/998-404", "C2765056"),
-    "1A 40V Schottky (SOD-123F)": ("Schottky 1 A 40 V, SOD-123FL", "DSK14", "C37049"),
+    "1A 40V Schottky (SOD-323)": ("Schottky 1 A 40 V, SOD-323", "B5819WS", "C22624"),
     "SMF16CA 16V bidir TVS": ("TVS 16 V standoff, bidirectional, SOD-123FL (clamp about 26 V)", "SMF16CA", "C123805"),
     "SMF15CA 15V bidir TVS": ("TVS 15 V standoff, bidirectional, SOD-123FL (clamp about 24 V)", "SMF15CA", "C123803"),
     "bidir ESD diode 6-7V (SOD-323)": ("ESD diode bidirectional 5 V, SOD-323", "PESD5V0S1BA,115", "C19224"),
@@ -104,10 +113,11 @@ MPN = {  # value -> (description, manufacturer part number, JLCPCB/LCSC number i
     "0.1 1%": ("Current-sense resistor 0.1 ohm 1 %, 0805 - no substitutes", "WSL0805R1000FEA", "C2094615"),
     "3.3": ("HEATER: Vishay high-power 0603 3.3 ohm 1%, 0.33 W at 70 C, derates above 70 C. Exact CRCW-HP part required; no ordinary 0.1 W/0.125 W substitutes", "CRCW06033R30FKEAHP", "C313752"),
     "4.7u 50V": ("MLCC 4.7 uF 50 V X5R 0805", "CL21A475KBQNNNE", "C98192"),
-    "10u 10V": ("MLCC 10 uF 25 V X5R 0805", "CL21A106KAYNNNE", "C15850"),
+    "10u 25V": ("MLCC 10 uF 25 V X5R 0805", "CL21A106KAYNNNE", "C15850"),
     "4.7u": ("MLCC 4.7 uF 16 V X5R 0603", "CL10A475KO8NNNC", "C19666"),
     "1.5k 1%": ("Resistor 1.5 k 1 % 0603 (SDI-12 transmit resistance)", "0603WAF1501T5E", "C22843"),
     # plain 0402 parts: exact JLCPCB numbers are REQUIRED - left blank, JLCPCB's matcher reads "0402_1005Metric" as the far smaller 01005 size
+    "22u 25V": ("MLCC 22 uF 25 V X5R 1206 (bulk input capacitor)", "CL31A226KAHNNNE", "C12891"),
     "100n": ("MLCC 100 nF 16 V X7R 0402", "CL05B104KO5NNNC", "C1525"),
     "1u": ("MLCC 1 uF 25 V X5R 0402", "CL05A105KA5NQNC", "C52923"),
     "18p": ("MLCC 18 pF 50 V C0G 0402", "0402CG180J500NT", "C1549"),
@@ -115,7 +125,7 @@ MPN = {  # value -> (description, manufacturer part number, JLCPCB/LCSC number i
     "22": ("Resistor 22 ohm 1 % 0603", "0603WAF220JT5E", "C23345"),
     "10": ("Resistor 10 ohm 1 % 0402", "0402WGF100JTCE", "C25077"),
     "1k": ("Resistor 1 k 1 % 0402", "0402WGF1001TCE", "C11702"),
-    "1.5k": ("Gate resistor 1.5 k ohm 1%, 0402", "0402WGF1501TCE", "C25867"),
+    "1.5k": ("Resistor 1.5 k ohm 1%, 0402 (R9 gate drive, R11 thermistor excitation)", "0402WGF1501TCE", "C25867"),
     "4.7k": ("Resistor 4.7 k 1 % 0402", "0402WGF4701TCE", "C25900"),
     "5.1k": ("Resistor 5.1 k 1 % 0402", "0402WGF5101TCE", "C25905"),
     "10k": ("Resistor 10 k 1 % 0402", "0402WGF1002TCE", "C25744"),
@@ -139,18 +149,23 @@ def build_assembly(stage):
         if fp.GetValue() != part["value"] or fp.GetFPIDAsString() != part["footprint"]:
             raise ValueError(f"Board/source value or footprint differs at {ref}")
     pos = stage / "_pos.csv"
-    run("pcb", "export", "pos", "--format", "csv", "--units", "mm", "--side", "front", "--exclude-dnp", "-o", pos, PCB)
+    run("pcb", "export", "pos", "--format", "csv", "--units", "mm", "--side", "both", "--exclude-dnp", "-o", pos, PCB)
     with pos.open(encoding="utf8") as stream:
         rows = [r for r in csv.DictReader(stream) if r["Ref"] not in EXCLUDED]
     pos.unlink()
     if len(rows) != len(expected) or {r["Ref"] for r in rows} != expected:
-        raise ValueError("Front-side placement list must include every fitted hat component exactly once")
+        raise ValueError("Placement list must include every fitted hat component exactly once")
+    for row in rows:
+        side = "top" if actual[row["Ref"]].GetLayer() == pcbnew.F_Cu else "bottom"
+        if row["Side"] != side: raise ValueError(f"{row['Ref']}: placement side {row['Side']} differs from the board ({side})")
     with (stage / (PREFIX + "_CPL.csv")).open("w", newline="", encoding="utf8") as stream:
         writer = csv.writer(stream)
         writer.writerow(["Designator", "Mid X", "Mid Y", "Layer", "Rotation"])
-        for row in rows:
-            offset = next((v for k, v in JLC_ROT.items() if k in row["Package"]), 0)
-            writer.writerow([row["Ref"], f'{float(row["PosX"]):.4f}mm', f'{float(row["PosY"]):.4f}mm', "Top", f'{(float(row["Rot"]) + offset) % 360:.0f}'])
+        for row in sorted(rows, key=lambda r: (r["Side"] != "top", r["Ref"])):
+            bottom = row["Side"] == "bottom"
+            rotation = jlc_rotation(actual[row["Ref"]].GetOrientationDegrees(), row["Package"], bottom)
+            writer.writerow([row["Ref"], f'{float(row["PosX"]):.4f}mm', f'{float(row["PosY"]):.4f}mm',
+                             "Bottom" if bottom else "Top", f'{rotation:.0f}'])
     groups = {}
     for ref in sorted(expected):
         part = parts[ref]
@@ -190,7 +205,7 @@ def publish(stage):
         if path.is_symlink() or (path.exists() and not path.is_file()) or path.resolve().parent != destination:
             raise ValueError(f"Unexpected fabrication output target: {name}")
     (destination / "RELEASE_MANIFEST.txt").write_text(
-        "NOT RELEASED: HP-HAT r4 package generation is complete; release.py must finish independent checks.\n", encoding="utf8")
+        "NOT RELEASED: HP-HAT package generation is complete; release.py must finish independent checks.\n", encoding="utf8")
     for source in staged_cam_files(stage / "gerbers"):
         temporary = gerbers / (source.name + ".tmp")
         if temporary.exists(): raise ValueError(f"Unexpected temporary output: {temporary}")

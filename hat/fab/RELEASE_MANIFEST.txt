@@ -1,23 +1,64 @@
-HP-HAT r4 released 2026-09-25 01:07 by release.py; supersedes the former r3 package.
-ERC 0 | DRC 0 violations, 0 unconnected | schematic parity OK | physical Kelvin OK (3 sense pins) | exterior solder openings clear of via holes | four-layer stackup verified | BOM/CPL/ZIP consistency OK
-43.18 x 17.78 mm body; 99.86 x 17.78 mm overall; 0.8 mm four-layer PCB.
+HP-HAT released 2026-09-29 01:57 by release.py.
+Every order file was generated from the checked routed board, then verified against it.
+ERC 0 | DRC 0 violations, 0 unconnected (all severities) | schematic parity OK | physical Kelvin OK (3 sense pins) | exterior solder openings clear of via holes | layout quality gate passed (heater/battery/Nano-supply copper >= 0.5 mm outer, >= 1.2 mm inner; mirrored needles; left/right copper within 10% on every layer; heat sources on the axis; routing style) | Nano outline and needles identical to flat-nano | four-layer stackup verified | BOM/CPL/ZIP consistency OK
+BALANCE F.Cu body: north 258.3 mm2, south 278.3 mm2 (+7.2%); BALANCE In1.Cu body: north 335.9 mm2, south 337.6 mm2 (+0.5%); BALANCE In2.Cu body: north 318.8 mm2, south 329.4 mm2 (+3.2%); BALANCE B.Cu body: north 299.7 mm2, south 321.2 mm2 (+6.7%); Minimum opposing-part clearance after allowances: 0.495 mm; Outward (bottom-side) hat parts: 21, tallest assembled envelope 1.55 mm above the hat's outer face (potting cover)
+43.18 x 17.78 mm body (exact Arduino Nano R4 outline and pins); 99.86 x 17.78 mm overall; 0.8 mm four-layer PCB; lead-free HASL; parts on both sides (28 top, 21 bottom).
 30 face-down Nano contact positions/nets verified; conservative opposing-component envelope check passed at 4.00 mm face spacing with 0.40 mm minimum clearance after stated allowances.
-Factory assembly excludes J1/J3/J4 and the separately fitted Nano/two HTSW-115-07-T-S strips soldered through both boards.
+Factory assembly excludes J1/J3/J4 and the separately fitted Nano and two HTSW-115-07-T-S strips soldered through both boards.
 This validates the electronic layout and manufacturing data; assembled connector fit, height, firmware and potting remain physical verification items.
 
-SHA-256
-ca2832545b940aec2ecae9560ec3da0cb9658cb26b9eb6653fd97ea11e95f624  hp_hat_routed.kicad_pcb
-d61e00c2c91f28578dde34fa32bf455f502a7d5825be8eb0026fd7284af2bb92  hp_hat.kicad_sch
-9f8194ac283e186cf6a57ae41c52d9e4d294257aefb8e24b180eea4dc2fa38e1  netlist.json
-bc06bc505d26fd5af2b85d81facd911ddf605f4ad62637c21ff92516a344aca8  hp_hat_routed.kicad_pro
-cc9d62fde056b9006d752a7a7dfcb572c4861d3be868b0902ca6facb660df4ba  erc.rpt
-1bdd4a8714f022d943c3edaac95aee9d85f970cae12a810136ff420939f2dfb0  drc_routed.rpt
-cdd75efc7cd68d769d3fca4503ed7629a89bcded669ab7fbb7e880a1444dc788  nano-r4-envelope.json
-187bc12431fc8658551e7ee8e9242ed210261f3f895a5f9d5687e3a63a105b78  check_assembly.py
-7fad5edd3a593ba7b53e6cd9c51a93668b93f4c01cbfb3e33b18a63ee556b6cf  ASSEMBLY.md
-c88481f9fe9596c3f9aeb64054fa5e94c68ffeedbd710e052798a723071c959a  HP-HAT_BOM.csv
-4afe4c702bd60a6a3251bb06cabcf9babfe9f090f0f8c144a276db2c32c6049f  HP-HAT_CPL.csv
-f98fd152b5919b1cfa180411d054c61db48b30b478288b8a76aa53aed1f14973  HP-HAT_gerbers.zip
-86567cb88976a92c9e90e3abffa17a4dc61a29338c14757848fd4e12cefbd5ed  HP-HAT_schematic.pdf
-c4742e93b8c1bd202a3da12a28471f5c232ac7f214e99e811b2c0ce8aca71218  render_bottom.png
-ac96ffb8b4cca984929e9b0d1da3fee62af158feb95dbf6d83e2dba92f49c1a3  render_top.png
+SHA-256 (paths relative to hat/)
+1cb33fe5d1de3f841054eb8639b9a24e7c3a14dabf7c90927416a7f475fec63c  kicad/hp_hat_routed.kicad_pcb
+8b596b2d1cce3381308a858492a853e27948306f9bb9e380ecbc578b93d0fd24  kicad/hp_hat.kicad_sch
+66dc306914ec69d51b7b8b683cd19f6c24173b860f5eebf9e90915109e00f450  kicad/hp_hat.net
+abf03070f637e3ae631dac38f492c2825e1af3b126e7d1158f8e36e11364880e  kicad/netlist.json
+4433a4c339e900732fe349610d7338cf59f43603ab4c353b9a1e7e7d418c57ad  kicad/placement.json
+028c8b828c97b28eef6e955d29fff9c1789be508384d6ad421f192838fbe553c  kicad/hp_hat_routed.kicad_pro
+45d6f9fec024eb8fdd8faf2ab7c16f79ddc0838000db658ef641c9ce486b0d54  kicad/hp_hat.kicad_pro
+71a7b80e227ae6625aaf7ff33058d8e78a531410a8c0214087979dca554cb024  kicad/check_kelvin.py
+fade4f2ea80afe7cd6c448c3ecab24b5331d560fc8373124180ae1d201b989fd  kicad/check_parity.py
+8a462d6599a564338afb101d4edc124d6760ce5c7343238bd9a550c2d5786ee8  kicad/configure_fabrication.py
+fc551e5816ae61bec5cc815f09fd092c568822e1ea44ec3532be8ac5c49c15b8  kicad/export_fab.py
+62e3710ad3fb32ca75effd52057750d478ed24a4690a91748d489caa4e4acf18  kicad/export_view.py
+87285b8f7e22c786011405ac0e92df1d1b7db2bb446b3b6a7739754cef9d526f  kicad/finalize_copper.py
+3226fee5120771d34502a9e55defa3f367d34369a4b67d5f2d85cdac0f94a9bf  kicad/gen_pcb.py
+7f2fce27c31d6acd6a538f8b8184a3421a5984193537ca0b5f50398cba3d4daa  kicad/gen_schematic.py
+b221b8cfa651fbf88f0d51ae6a8aa38f43c06c98d4fc4f48de754620a7f73428  kicad/make_lib.py
+0872515d9b5f3651d267e49e781f05b23c1a0b9c24743aa7e861ccf7d85dd585  kicad/plot_view.py
+1ac2081dc91b2e5539304dc1a3e2dc127b7f56a4ff831602834384b0e7648c1c  kicad/preroute.py
+b505f34e69724cac0466f71fb460ae3b220192f4c8045cb87308ea01d2958120  kicad/release.py
+e9caa012741fc979201eb9f7097176f810620c5cb249132d9fc0472f27ca63a0  kicad/sexpr.py
+a00fbfda37f35a2806f27a2c57ae9582cd94ac4e62fb5ebee437b6d3789081de  kicad/hp_sensor.pretty/CableSolder_1x03.kicad_mod
+7dc0eac0f22f557cac4d3511c39fca1f744f92222387e247da3c410d1a1e4b56  kicad/hp_sensor.pretty/ClipRow_1x05_P2.54mm.kicad_mod
+3d92be9f8a78829127c92e13b99b66240a7fec5a8272df9a3b3cb5faf37a0829  kicad/hp_sensor.pretty/Nano_SolderStack_1x15.kicad_mod
+78177cf9c76dda5a8f66493f38e6424853eadb0b43ba55c2aa7dd835dad82e4c  kicad/hp_sensor.pretty/R_0603_Vishay_HP.kicad_mod
+ab989603cef7ac91fcae6fc0352a902f430af6c6dda9996732d554fbb313426c  kicad/hp_sensor.pretty/WAGO_2060-453.kicad_mod
+bcab9a552e09ebaefaf3058fb06c6eee3cf274bb64d1ff20430804147459024f  checks/check_compact.py
+d7d6f54056c6f8ce4d09baa4a08280c7ca451bc5975c8ac8ce3adcef8b735d26  checks/check_quality.py
+922b64414b48ccadc8839a2eb4f7923add9b0b7b1f04a0e93b6a47c369f0bab6  checks/check_solder_vias.py
+9ad68ee5b86a74682c2f5352662d3a25bab3358f67276608518f79e06afac208  checks/fabrication_helpers.py
+cdd75efc7cd68d769d3fca4503ed7629a89bcded669ab7fbb7e880a1444dc788  mechanical/nano-r4-envelope.json
+0f68246d300ebc271eb4f923abf200e4460c634e1c20ccdd09a7c86c9a985e59  mechanical/check_assembly.py
+0719dc7f07577e7e8c21bd3013cf35e0a98764001480f20d91393dc7d405f233  mechanical/ASSEMBLY.md
+4caaccf57f1426ce16f9c2e00c3b44c241de72df67e036d40b393e9a41f4882a  kicad/erc.rpt
+010642dbd62aa0b0e5d163d3be7d508d06769b45d2a35ef4179c49cb7083105f  kicad/drc_routed.rpt
+2c5dec775a599e2fc883cd685878b1dcd8aacd37cbd09db6b47bbcedda4736a1  fab/HP-HAT_BOM.csv
+c3a6ab16fded1d008aedffe5eec31afa7d8f9a1f56c387354e58a4a1657c3f12  fab/HP-HAT_CPL.csv
+600c0808c7e7da58d8cd04eca356124db0b99e8bd50e4a538d9090ecd2235f2a  fab/HP-HAT_gerbers.zip
+97f893c15bc2fcbe14017dc06ceeab4e7b2bdf31957a950acf609de5ffe4d718  fab/HP-HAT_schematic.pdf
+ab2cb4a3949f240f26bd2afa342a52970509a11d617f0bc7f17938fd53272e6d  fab/render_bottom.png
+8db424626524f5334e8ae4592e3f9e2a9dfba4a84066057217ca1b8f7692a1a6  fab/render_top.png
+e7101d9f83d61022da7720334584f561438e85041fc69be332b94329ac760a6f  fab/gerbers/hp_hat_routed-B_Cu.gbl
+17c88cb99f03bef41b565835a87556764c88e6608f5f413e1265b8d017f1c5b1  fab/gerbers/hp_hat_routed-B_Mask.gbs
+849cc830b72aa3bc169abdf14a456dc6dcbe727d16f2264ec52aa9914970e4e2  fab/gerbers/hp_hat_routed-B_Paste.gbp
+57d01b1a3ebc7e5145da656d47ae3a547988a25abe5594caf67537e8c9bb1782  fab/gerbers/hp_hat_routed-B_Silkscreen.gbo
+4463b577ad786c724b9cbd6dd5afbfffefd5aea08681400e7d945746bc4861c5  fab/gerbers/hp_hat_routed-Edge_Cuts.gm1
+b0a321db1cc19ea562b283d9049eaba14794222798fc8a5adcdbe445ae057e1d  fab/gerbers/hp_hat_routed-F_Cu.gtl
+240488a1b187fbc4870f8217d569dc748c1101c81dd38a0536db52973e916a20  fab/gerbers/hp_hat_routed-F_Mask.gts
+3b3aaec1f58d606c6b0fbaca53ffc4523045e50515f6ad6a6e9a0db91b0c71e7  fab/gerbers/hp_hat_routed-F_Paste.gtp
+d72b7fb7f9aaa331b23ebaefa4ad6229f40e0bd9baf716ccd25211c9f0135af5  fab/gerbers/hp_hat_routed-F_Silkscreen.gto
+f39b743793a82526feb534e3f811b06051e598e1a131c530a2c2fe2bf323666e  fab/gerbers/hp_hat_routed-In1_Cu.g1
+22d4bd04ca2c6e7e8c36de351fc19d1b88411dcedfcda69bbc2f49afbc97f858  fab/gerbers/hp_hat_routed-In2_Cu.g2
+8b6b13b4248e92d148fff690c0d5a22274b3b1e062c4e2f0f3ed4bb8154d9661  fab/gerbers/hp_hat_routed-NPTH.drl
+2eb9e443c47eb2f49d578cacd31169a3a5fee337fb7d367624360e54b9645588  fab/gerbers/hp_hat_routed-PTH.drl
+dddafcb09417a2d802ca35ff8446861084ffef8d7f97010cd53849528413a734  fab/gerbers/hp_hat_routed-job.gbrjob

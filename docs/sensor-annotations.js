@@ -1,7 +1,8 @@
-/* Connector illustration and dimensional context for the flat PCB.
- * Connector uses original KiCad-export coordinates inside the rotated board.
- * Context uses portrait coordinates x'=18-y, y'=x. Bodies and wires are
- * illustrative; dimensions are calculated from the exported PCB outline.
+/* Cable-wire illustration and dimensional context for the flat PCB.
+ * The wires end at the J1 cable holes (the board has no connector). Context
+ * uses portrait coordinates x'=18-y, y'=x. Wires are illustrative; their
+ * positions come from the exported J1 holes and the dimensions from the
+ * exported PCB outline.
  */
 (function (root) {
   'use strict';
@@ -21,24 +22,36 @@
     const tb = node('g', {'class': 'title-block'});
     tb.append(node('rect', {x: 27.5, y: 104.5, width: 19, height: 9, fill: '#fbfcfa', stroke: '#9aab9e', 'stroke-width': 0.14}));
     tb.append(node('line', {x1: 27.5, y1: 108.4, x2: 46.5, y2: 108.4, stroke: '#c3cec5', 'stroke-width': 0.1}));
-    tb.append(node('text', {x: 28.4, y: 107.3, 'class': 'tb-title'}, 'HP-SDI12-NANO r2'));
+    tb.append(node('text', {x: 28.4, y: 107.3, 'class': 'tb-title'}, 'HP-SDI12-NANO'));
     tb.append(node('text', {x: 28.4, y: 110.6, 'class': 'tb-meta'}, 'Top view · 4-layer'));
     tb.append(node('text', {x: 28.4, y: 112.6, 'class': 'tb-meta'}, 'Grid 1 mm · units mm'));
     context.append(tb);
-    const wires = node('g', {'class': 'connector-wires', 'aria-label': 'External battery and logger wiring'});
+    const wires = node('g', {'class': 'cable-wires', 'aria-label': 'External battery and logger wiring'});
     wires.append(node('text', {x: 9, y: -21, 'text-anchor': 'middle', 'font-size': 1.9,
       'font-family': 'Segoe UI, Arial, sans-serif', fill: '#596f63', 'font-weight': 600, 'class': 'context-title'}, 'External battery / logger'));
     const contacts = [
-      {pin: 1, x: 13, start: -8, labelY: -11.7, color: '#b8574c', label: '12 V', role: 'power'},
-      {pin: 2, x: 9, start: -13, labelY: -16.7, color: '#477dba', label: 'SDI-12', role: 'signal'},
-      {pin: 3, x: 5, start: -8, labelY: -11.7, color: '#66716d', label: 'GND', role: 'ground'}
+      {pin: 1, color: '#b8574c', label: '12 V', role: 'power'},
+      {pin: 2, color: '#477dba', label: 'SDI-12', role: 'signal'},
+      {pin: 3, color: '#66716d', label: 'GND', role: 'ground'}
     ];
-    const connector = (board.footprints || []).find(part => part.ref === 'J1');
-    if (!connector) throw new Error('J1 cable solder pads are required.');
+    const cableHoles = (board.footprints || []).find(part => part.ref === 'J1');
+    if (!cableHoles) throw new Error('J1 cable solder holes are required.');
     for (const wire of contacts) {
-      const pad = connector.pads.find(p=>p.pin===String(wire.pin));
-      wire.x=18-pad.xy[1];
-      const portDepth=pad.xy[0];
+      const pad = cableHoles.pads.find(p => p.pin === String(wire.pin));
+      if (!pad) throw new Error('J1 cable hole ' + wire.pin + ' is required.');
+      wire.x = 18 - pad.xy[1];
+      wire.depth = pad.xy[0];
+    }
+    // Stagger by position, not pin number: the middle hole's wire starts higher
+    // and carries a raised label, so the three labels never collide.
+    const middleX = contacts.map(wire => wire.x).sort((a, b) => a - b)[1];
+    for (const wire of contacts) {
+      const middle = wire.x === middleX;
+      wire.start = middle ? -13 : -8;
+      wire.labelY = middle ? -16.7 : -11.7;
+    }
+    for (const wire of contacts) {
+      const portDepth = wire.depth;
       // Wires terminate at the actual cable solder holes; no onboard connector housing.
       wires.append(node('path', {d: `M${wire.x},${wire.start} V${portDepth}`,
         fill: 'none', stroke: wire.color, 'stroke-width': 0.64, 'stroke-linecap': 'round',

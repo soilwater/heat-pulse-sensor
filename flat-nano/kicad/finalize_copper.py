@@ -6,7 +6,7 @@ The caller must refill and run DRC, physical Kelvin, and solder-via checks befor
 release. These local repairs replace detours with full-width connections where
 the original via/trace also grazed its own pad with a narrower redundant contact.
 
-Coordinates are absolute KiCad millimetres. A different route with neither
+Coordinates are absolute KiCad millimeters. A different route with neither
 pattern is left alone. Partial or unexpected matches raise before either repair
 is applied. Repeating the function on a repaired board makes no changes.
 """
@@ -15,36 +15,8 @@ from __future__ import annotations
 import pcbnew as pcb
 
 
-REPAIRS = (
-    {
-        "reference": "R24", "pin": "1", "net": "VREF",
-        "pad": (130.175, 78.25), "via": (130.875, 78.0),
-        "old": (
-            ((130.175, 78.25), (130.125, 78.25)),
-            ((130.125, 78.25), (130.375, 78.5)),
-            ((130.375, 78.5), (130.5, 78.5)),
-            ((130.5, 78.5), (130.875, 78.125)),
-            ((130.875, 78.125), (130.875, 78.0)),
-        ),
-        "new": (
-            ((130.175, 78.25), (130.175, 78.0)),
-            ((130.175, 78.0), (130.875, 78.0)),
-        ),
-    },
-    {
-        "reference": "U4", "pin": "6", "net": "+5V",
-        "pad": (135.1, 86.5), "via": (136.0, 86.875),
-        "old": (
-            ((135.1, 86.5), (136.25, 86.5)),
-            ((136.25, 86.5), (136.0, 86.75)),
-            ((136.0, 86.75), (136.0, 86.875)),
-        ),
-        "new": (
-            ((135.1, 86.5), (135.625, 86.5)),
-            ((135.625, 86.5), (136.0, 86.875)),
-        ),
-    },
-)
+# The two audited repairs belonged to one earlier route; a fresh route is judged by DRC alone.
+REPAIRS = ()
 
 
 def _point(xy):

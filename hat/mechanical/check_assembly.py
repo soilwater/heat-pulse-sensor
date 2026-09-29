@@ -40,7 +40,7 @@ ROWS = {
            "nets": ("", "", "", "D9_HEAT", "", "", "", "", "D4_EXC", "", "D2_SDI12", "GND", "", "", "")},
     "J4": {"y": -7.62,
            "labels": ("D13", "3V3", "AREF", "A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "5V", "BOOT", "GND", "VIN"),
-           "nets": ("", "", "VREF", "A0_TH1", "A1_TH2", "A2_TH3", "A3_TH4", "A4_SDA", "A5_SCL", "", "", "+5V", "", "GND", "NANO_VIN")},
+           "nets": ("", "", "VREF", "A0_TH3", "A1_TH2", "A2_TH1", "A3_TH4", "A4_SDA", "A5_SCL", "", "", "+5V", "", "GND", "NANO_VIN")},
 }
 
 # Where a verified part maximum is available, add 0.10 mm solder allowance.
@@ -51,9 +51,12 @@ HEIGHTS = {
     "C1": (1.40 + SOLDER_ALLOWANCE,
            "CL21A475KBQNNNE thickness 1.25 +/-0.15 mm; Samsung product table",
            "https://product.samsungsem.com/mlcc/CL21A475KBQNNN.do"),
-    "C2": (1.45 + SOLDER_ALLOWANCE,
+    "C17": (1.45 + SOLDER_ALLOWANCE,
            "CL21A106KAYNNNE thickness 1.25 +/-0.20 mm; Samsung product table",
            "https://product.samsungsem.com/mlcc/CL21A106KAYNNN.do"),
+    "C3": (1.80 + SOLDER_ALLOWANCE,
+           "CL31A226KAHNNNE thickness 1.60 +/-0.20 mm; Samsung product table",
+           "https://product.samsungsem.com/mlcc/CL31A226KAHNNN.do"),
     "U4": (1.10 + SOLDER_ALLOWANCE,
            "INA226 DGS0010A VSSOP package drawing: 1.10 mm maximum",
            "https://www.ti.com/lit/ds/symlink/ina226.pdf"),
@@ -64,7 +67,7 @@ HEIGHTS = {
 GENERIC_PACKAGES = {
     "C_0402_1005Metric", "R_0402_1005Metric", "R_0603_1608Metric",
     "R_0805_2012Metric", "R_0805_2012Metric_Pad1.20x1.40mm_HandSolder",
-    "SOT-23", "D_SOD-123F", "R_0402_1005Metric_Pad0.72x0.64mm_HandSolder",
+    "SOT-23", "D_SOD-123F", "D_SOD-323", "R_0402_1005Metric_Pad0.72x0.64mm_HandSolder",
 }
 
 
@@ -98,15 +101,15 @@ def box_mm(box, origin):
             pcb.ToMM(box.GetRight())-origin[0], pcb.ToMM(box.GetBottom())-origin[1]]
 
 
-def body_box(fp, origin):
-    """Actual placed F.Fab drawings plus pads; no reference/value text.
+def body_box(fp, origin, fab=pcb.F_Fab):
+    """Actual placed Fab drawings (F.Fab, or B.Fab for a bottom-side part) plus pads; no reference/value text.
 
     Bounding Fab ink slightly overestimates packages, deliberately conservative.
     Including pads also includes leads/land-pattern extents in the box.
     """
-    shapes = [item for item in fp.GraphicalItems() if isinstance(item, pcb.PCB_SHAPE) and item.GetLayer() == pcb.F_Fab]
+    shapes = [item for item in fp.GraphicalItems() if isinstance(item, pcb.PCB_SHAPE) and item.GetLayer() == fab]
     if not shapes:
-        raise ValueError(f"{fp.GetReference()}: missing F.Fab body geometry")
+        raise ValueError(f"{fp.GetReference()}: missing {pcb.LayerName(fab) if hasattr(pcb, 'LayerName') else 'Fab'} body geometry")
     boxes = [box_mm(item.GetBoundingBox(), origin) for item in shapes + list(fp.Pads())]
     return [min(b[0] for b in boxes), min(b[1] for b in boxes), max(b[2] for b in boxes), max(b[3] for b in boxes)]
 
@@ -128,11 +131,11 @@ def run(board_path, envelope_path, gap, minimum):
     envelope = json.loads(envelope_path.read_text(encoding="utf8"))
     origin = board_origin(board)
     fps = {fp.GetReference(): fp for fp in board.GetFootprints()}
-    errors, warnings, pairs, contacts, hats = [], [], [], [], []
+    errors, warnings, pairs, contacts, hats, outward = [], [], [], [], [], []
     def check(condition, message):
         if not condition:
             errors.append(message)
-    check(envelope.get("units") == "mm", "Nano envelope units must be millimetres")
+    check(envelope.get("units") == "mm", "Nano envelope units must be millimeters")
     check("Nano y-8.89" in envelope.get("face_to_face_mapping", ""),
           "Nano envelope mapping must use the corrected STEP-to-KiCad face-down Y convention")
     source = HERE / envelope["source_file"]
@@ -170,7 +173,15 @@ def run(board_path, envelope_path, gap, minimum):
     for ref, fp in fps.items():
         if xy(fp.GetPosition(), origin)[0] > LENGTH or ref in ("J3", "J4"):
             continue
-        check(fp.GetLayer() == pcb.F_Cu, f"{ref}: unexpected bottom component changes the height budget")
+        if fp.GetLayer() == pcb.B_Cu:
+            # Bottom-side parts face outward into the potting, away from the Nano: they share no height budget with
+            # it. They must still lie inside the Nano-sized head.
+            box = body_box(fp, origin, pcb.B_Fab)
+            check(box[0] >= -.1 and box[2] <= LENGTH+.1 and box[1] >= -WIDTH/2-.1 and box[3] <= WIDTH/2+.1,
+                  f"{ref}: bottom-side package envelope extends beyond the head")
+            outward.append({"ref": ref, "bbox": box, **hat_height(fp)})
+            continue
+        check(fp.GetLayer() == pcb.F_Cu, f"{ref}: component on an unexpected layer")
         if ref == "J1":
             # Cable exits on the exposed rear of the HAT. Cap the solder mound
             # on the face toward Nano at 0.50 mm; wires themselves must not run
@@ -220,7 +231,9 @@ def run(board_path, envelope_path, gap, minimum):
                                "solder_allowance_on_part_maxima": SOLDER_ALLOWANCE},
             "nominal_board_and_gap_thickness_mm": round(pcb.ToMM(board.GetDesignSettings().GetBoardThickness())+
                                                          gap+envelope["board_thickness_mm"], 6),
-            "thickness_note": "Board-and-gap total excludes outer connector tails, solder joints, cable and encapsulation; not the finished head thickness.",
+            "thickness_note": "Board-and-gap total excludes the outward (bottom-side) hat parts, outer connector tails, solder joints, cable and encapsulation; not the finished head thickness.",
+            "outward_parts": sorted(outward, key=lambda item: item["ref"]),
+            "maximum_outward_part_height_mm": max((item["assembled_height_mm"] for item in outward), default=0.0),
             "minimum_opposing_part_clearance_mm": min((p["clearance_after_allowances_mm"] for p in pairs), default=None),
             "connector_to_bare_hat_clearance_mm": connector_clearances,
             "contacts_checked": contacts, "hat_envelopes": hats,
@@ -257,6 +270,8 @@ def main():
         print(f"Checked {len(result['contacts_checked'])} pin positions/nets and {len(result['opposing_pairs'])} opposing part pairs")
         print("Minimum opposing-part clearance after allowances:", result["minimum_opposing_part_clearance_mm"], "mm")
         print("USB/Qwiic body-to-bare-hat gaps:", result["connector_to_bare_hat_clearance_mm"], "mm")
+        print(f"Outward (bottom-side) hat parts: {len(result['outward_parts'])}, tallest assembled envelope "
+              f"{result['maximum_outward_part_height_mm']:.2f} mm above the hat's outer face (potting cover)")
         for message in result["errors"]:
             print("ERROR:", message)
         for message in result["warnings"]:

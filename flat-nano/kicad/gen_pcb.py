@@ -1,7 +1,7 @@
-"""Compact Nano-sized heat-pulse SDI-12 sensor, r2 - PCB generator: outline, placement and prong wiring. route_body.py then routes the body and pours the ground plane.
+"""Compact Nano-sized heat-pulse SDI-12 sensor - PCB generator: outline, placement and prong wiring. preroute.py then draws every trace, via and pour of the body by hand plan.
 
 Run:  D:\KiCAD\bin\python.exe gen_pcb.py 12G      (after gen_schematic.py, which writes netlist.json)
-Board frame (mm): x = 0 at the cable end ... BODY_L at the prong roots, +x towards the tips; y = 0 on the centre line.
+Board frame (mm): x = 0 at the cable end ... BODY_L at the prong roots, +x towards the tips; y = 0 on the center line.
 
 The prongs slide into STOCK tri-bevel piercing needles (3 inch for all three needles) which are then filled with
 epoxy. Everything is on the TOP side (cheapest assembly). The first EMBED mm of each prong sits inside the cast body: no heater there.
@@ -29,7 +29,7 @@ NL = json.load(open("netlist.json"))
 N, PITCH = NL["n_heat"], NL["pitch"]
 BOARD_T, PRONG_W = ND["board_t"], ND["prong_w"]
 HEATER_PRONG_W = 1.4  # +0.2 mm routed-width tolerance still accommodates 0603 maximum body and insulation.
-BODY_L, BODY_W = 43.18, 17.78
+BODY_L, BODY_W = 43.18, 17.78                # exact Arduino Nano R4 PCB outline
 SPACING, TIP_L = 8.0, 0.6                    # blunt chamfer only - the steel needle does the piercing
 EMBED = 8.0                                  # prong + needle length buried in the epoxy body
 ROOT_HW, FLARE_L = 1.2, 1.5                  # each prong flares to 2*ROOT_HW (2.4 mm) at the body junction, tapering to its own
@@ -39,7 +39,8 @@ HEATER_FIRST_Z = 8.8
 Z0 = HEATER_FIRST_Z - 0.8
 HEATED = (N - 1) * PITCH + 1.6               # 0603 nominal body length.
 TH_Z = 29.8                                 # Preserve the released side-thermistor locations.
-LANE, LANE_W, RET_W = 0.43, 0.127, 0.3
+LANE, LANE_W, RET_W = 0.455, 0.09, 0.5          # TH2 lanes (uA signals) beside the 0.5 mm heater return; 0.2 mm to the prong edge
+PWR_W = 0.5                                      # every heater-current trace
 VIA_D, VIA_DRILL = 0.6, 0.35                  # Body/side vias; three center-prong vias use 0.50/0.30 mm.
 FP_DIR = r"D:\KiCAD\share\kicad\footprints"
 OX, OY = 100.0, 80.0
@@ -48,13 +49,13 @@ LOCAL_FP = os.path.join(os.path.dirname(os.path.abspath(__file__)), "hp_sensor.p
 # ---- body placement. All assembly components are on the top side; dimensions are in mm.
 PLACE = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "placement.json")))
 
-NOT_FITTED = {"J1", "J2", "J5"}     # bare copper features: nothing is soldered there
+NOT_FITTED = {"J1", "J2"}     # bare copper features: nothing is soldered there
 b = pcbnew.BOARD()
 b.SetCopperLayerCount(4)
 ds = b.GetDesignSettings()
 ds.SetBoardThickness(FromMM(BOARD_T))
 ds.m_CopperEdgeClearance = FromMM(0.2); ds.m_NetSettings.GetDefaultNetclass().SetClearance(FromMM(0.127))
-ds.m_MinClearance = FromMM(0.127); ds.m_TrackMinWidth = FromMM(0.10); ds.m_ViasMinSize = FromMM(.50); ds.m_MinThroughDrill = FromMM(.30)
+ds.m_MinClearance = FromMM(0.127); ds.m_TrackMinWidth = FromMM(0.09); ds.m_ViasMinSize = FromMM(.50); ds.m_MinThroughDrill = FromMM(.30)
 ds.m_HoleClearance = FromMM(0.2); ds.m_ViasMinAnnularWidth = FromMM(0.1)
 ds.m_SolderMaskMinWidth = FromMM(0.1)
 ds.m_SolderMaskToCopperClearance = FromMM(0.09)
@@ -115,7 +116,7 @@ def outline(prongs):
 
 
 def side_thermistor(ref, yc, z):
-    """Sensing prong: top trace straight down the centre to pad 1; pad 2 -> via just beyond the part -> bottom centre trace back.
+    """Sensing prong: top trace straight down the center to pad 1; pad 2 -> via just beyond the part -> bottom center trace back.
     No trace ever has to pass a via, so this works on the narrowest prong."""
     fp = place(ref, BODY_L + z, yc, 0, "F")
     (x1, _), (x2, _) = pad_xy(fp, 1), pad_xy(fp, 2)
@@ -133,10 +134,7 @@ def tip_thermistor(ref, yc, z):
     n1, n2 = NL["parts"][ref]["pins"]["1"], NL["parts"][ref]["pins"]["2"]
     for vx, px, n, lane in ((x1 - 0.85, x1, n1, -LANE), (x2 + 0.85, x2, n2, LANE)):
         via(vx, yc, n, .50, .30); track([(vx, yc), (px, yc)], n, pcbnew.F_Cu, 0.2)
-        entry_lane = math.copysign(.55, lane)
-        track([(BODY_L - 1.0, yc + entry_lane),
-               (BODY_L - 1.0 + abs(entry_lane - lane), yc + lane),
-               (vx, yc + lane), (vx, yc)], n, pcbnew.B_Cu, .10)
+        track([(BODY_L - 1.0, yc + lane), (vx, yc + lane), (vx, yc)], n, pcbnew.B_Cu, LANE_W)
     return z + 0.5 + 0.85 + VIA_D / 2
 
 
@@ -157,15 +155,15 @@ for ref, (x, y, rot, side) in PLACE.items():
 missing = [r for r in NL["parts"] if r not in PLACE and not r.startswith(("RH", "TH1", "TH2", "TH3"))]
 if missing: raise SystemExit(f"no placement for: {missing}")
 
-# ---- heater: single chain on the top side, return on the bottom centre line ----
+# ---- heater: single chain on the top side, return on the bottom center line ----
 fps = [place(f"RH{i + 1}", BODY_L + HEATER_FIRST_Z + i * PITCH, 0, 0, "F") for i in range(N)]
 for f1, f2, i in zip(fps, fps[1:], range(1, N)):
-    track([pad_xy(f1, 2), pad_xy(f2, 1)], f"H_{i}", pcbnew.F_Cu, 0.3)
-track([(BODY_L - 1.0, 0), (pad_xy(fps[0], 1)[0], 0)], "HEAT_P", pcbnew.F_Cu, 0.3)
+    track([pad_xy(f1, 2), pad_xy(f2, 1)], f"H_{i}", pcbnew.F_Cu, PWR_W)
+track([(BODY_L - 1.0, 0), (pad_xy(fps[0], 1)[0], 0)], "HEAT_P", pcbnew.F_Cu, PWR_W)
 # Keep the unfilled return-via hole 0.275 mm beyond RH17's mask opening.
 return_via_x = BODY_L + ret_via_z
-track([(pad_xy(fps[-1], 2)[0], 0), (return_via_x, 0)], "HEAT_RTN", pcbnew.F_Cu, 0.3)
-via(return_via_x, 0, "HEAT_RTN", .50, .30)
+track([(pad_xy(fps[-1], 2)[0], 0), (return_via_x, 0)], "HEAT_RTN", pcbnew.F_Cu, PWR_W)
+via(return_via_x, 0, "HEAT_RTN", .55, .35)          # barrel >= a 0.5 mm trace even at 18 um plating
 track([(return_via_x, 0), (BODY_L - 1.0, 0)], "HEAT_RTN", pcbnew.B_Cu, RET_W)
 
 if ND["th2_on_prong"]: tip_thermistor("TH2", 0.0, th2_z)
@@ -173,9 +171,8 @@ side_thermistor("TH1", -SPACING, TH_Z)
 side_thermistor("TH3", SPACING, TH_Z)
 
 # ---- silkscreen: all text is on the BOTTOM (no parts there), mirrored so it reads correctly from that side ----
-LABELS = [("12V", 4.9, -4.0), ("SDI", 4.9, 0.0), ("GND", 4.9, 4.0),
-          ("5V", 3.75, 5.7), ("D-", 6.29, 5.7), ("D+", 8.83, 5.7), ("G", 11.37, 5.7), ("B", 13.91, 5.7),
-          ("G 5V IO CK RS", 8.8, -5.7), ("HP-NANO r2", 27.0, 0.0)]
+LABELS = [("GND", 4.6, -4.0), ("12V", 4.6, 0.0), ("SDI", 4.6, 4.0),
+          ("5V D- D+ G B", 12.7, -5.7), ("HP-NANO", 27.0, 0.0)]
 for s, x, y in LABELS:
     t = pcbnew.PCB_TEXT(b); t.SetText(s); t.SetPosition(pt(x, y)); t.SetLayer(pcbnew.B_SilkS); t.SetMirrored(True)
     t.SetTextSize(VECTOR2I(FromMM(1.0), FromMM(1.0))); t.SetTextThickness(FromMM(0.15)); b.Add(t)

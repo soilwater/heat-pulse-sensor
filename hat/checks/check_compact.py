@@ -1,4 +1,6 @@
 """Read-only checks for the compact Nano R4 hat against released flat-nano.
+Both bodies are exactly the Nano R4 outline (43.18 x 17.78 mm). Needles, needle copper and needle parts are compared
+relative to each board's own body end, where the needles start.
 
 Run using KiCad's Python. Defaults validate geometry and the newest hat BOM.
 Use --skip-bom during placement, --board for a candidate, and --cli PATH for
@@ -30,10 +32,12 @@ HAT = HERE.parent
 ROOT = HAT.parent
 REFERENCE = ROOT / "flat-nano/kicad/hp_sensor_routed.kicad_pcb"
 REFERENCE_BOM = ROOT / "flat-nano/fab/HP-SDI12-NANO_BOM.csv"
-HEAD_LENGTH, HEAD_WIDTH, THICKNESS = 43.18, 17.78, .8
+HEAD_LENGTH, HEAD_WIDTH, THICKNESS = 43.18, 17.78, .8          # exact Arduino Nano R4 outline
+REFERENCE_HEAD_LENGTH = 43.18                                    # flat-nano body length
+INNER_POWER_STRIPS = {"VIN_P", "NANO_VIN"}                       # 1.2 mm supply strips allowed on the In2 layer
 LAYERS = (pcb.F_Cu, pcb.In1_Cu, pcb.In2_Cu, pcb.B_Cu)
 INNER_NETS = {pcb.In1_Cu: "GND", pcb.In2_Cu: "+5V"}
-ROUNDING = 4  # 0.1 micrometre, allowing only integer-coordinate rounding.
+ROUNDING = 4  # 0.1 micrometer, allowing only integer-coordinate rounding.
 
 
 def mm(value):
@@ -67,15 +71,26 @@ def point(p, zero):
     return tuple(round(mm(v) - base, ROUNDING) for v, base in zip((p.x, p.y), zero))
 
 
-def outline_signature(board):
+def outline_signature(board, head_length):
+    """(needle segments, body segments), with x measured from this board's body end (the needle roots)"""
     zero = origin(board)
-    return Counter((edge.GetShape(), tuple(sorted((point(edge.GetStart(), zero), point(edge.GetEnd(), zero)))))
-                   for edge in board_edges(board))
+    zero = (zero[0] + head_length, zero[1])
+    needles, body = Counter(), Counter()
+    for edge in board_edges(board):
+        key = (edge.GetShape(), tuple(sorted((point(edge.GetStart(), zero), point(edge.GetEnd(), zero)))))
+        (needles if min(key[1][0][0], key[1][1][0]) >= -.0001 else body)[key] += 1
+    return needles, body
 
 
-def prong_tracks(board):
+def expected_body(head_length, width):
+    L, W = round(head_length, ROUNDING), round(width / 2, ROUNDING)
+    seg = lambda a, b: (pcb.SHAPE_T_SEGMENT, tuple(sorted((a, b))))
+    return Counter([seg((-L, -W), (0., -W)), seg((-L, W), (0., W)), seg((-L, -W), (-L, W))])
+
+
+def prong_tracks(board, head_length):
     zero = origin(board)
-    zero = (zero[0] + HEAD_LENGTH, zero[1])
+    zero = (zero[0] + head_length, zero[1])
     items = Counter()
     for track in board.GetTracks():
         if isinstance(track, pcb.PCB_VIA):
@@ -135,19 +150,24 @@ class Audit:
         self.check(near(mm(board.GetDesignSettings().GetBoardThickness()), THICKNESS), "Board thickness must be 0.8 mm")
         self.check(all(isinstance(s, pcb.PCB_SHAPE) and s.GetShape() == pcb.SHAPE_T_SEGMENT for s in board_edges(board)),
                    "Unexpected curved outline; update the independent outline comparison before release")
-        self.check(outline_signature(board) == outline_signature(reference),
-                   "Complete outline must match the flat-nano body and needles")
+        needles, body = outline_signature(board, HEAD_LENGTH)
+        self.check(needles == outline_signature(reference, REFERENCE_HEAD_LENGTH)[0],
+                   "Needle outline must match flat-nano, measured from each body end")
+        self.check(body == expected_body(HEAD_LENGTH, HEAD_WIDTH),
+                   "Body outline must be exactly the 43.18 x 17.78 mm Arduino Nano R4 rectangle")
         outline = pcb.SHAPE_POLY_SET()
         self.check(board.GetBoardPolygonOutlines(outline, False) and outline.OutlineCount() == 1,
                    "Board outline must form one closed valid contour")
-        self.check(prong_tracks(board) == prong_tracks(reference), "Needle copper differs from released flat-nano")
+        self.check(prong_tracks(board, HEAD_LENGTH) == prong_tracks(reference, REFERENCE_HEAD_LENGTH),
+                   "Needle copper differs from released flat-nano")
         zero, rz = origin(board), origin(reference)
-        expected_prongs = {ref for ref, fp in reference_fps.items() if point(fp.GetPosition(), rz)[0] > HEAD_LENGTH}
+        expected_prongs = {ref for ref, fp in reference_fps.items() if point(fp.GetPosition(), rz)[0] > REFERENCE_HEAD_LENGTH}
         actual_prongs = {ref for ref, fp in fps.items() if point(fp.GetPosition(), zero)[0] > HEAD_LENGTH}
+        end, rend = (zero[0] + HEAD_LENGTH, zero[1]), (rz[0] + REFERENCE_HEAD_LENGTH, rz[1])
         self.check(actual_prongs == expected_prongs, "Needle component set differs from flat-nano")
         for ref in sorted(expected_prongs & set(fps)):
             a, b = fps[ref], reference_fps[ref]
-            self.check(point(a.GetPosition(), zero) == point(b.GetPosition(), rz) and
+            self.check(point(a.GetPosition(), end) == point(b.GetPosition(), rend) and
                        near(a.GetOrientationDegrees(), b.GetOrientationDegrees()) and a.GetLayer() == b.GetLayer(),
                        f"{ref}: needle placement/side/orientation differs from flat-nano")
             self.check(pad_signature(a) == pad_signature(b), f"{ref}: needle pad geometry/net differs from flat-nano")
@@ -208,7 +228,7 @@ class Audit:
                        if isinstance(shape, pcb.PCB_SHAPE) and shape.GetLayer() == fab_side]
             for item, is_body in objects:
                 box = item.GetBoundingBox()
-                # Fabrication outlines describe the package at the centre of
+                # Fabrication outlines describe the package at the center of
                 # their pen strokes; the drawing's ink width is not body width.
                 if is_body and item.GetShape() == pcb.SHAPE_T_POLY:
                     box = item.GetPolyShape().BBox()
@@ -266,7 +286,10 @@ class Audit:
             elif track.GetLayer() in INNER_NETS:
                 self.check(max(point(track.GetStart(), zero)[0], point(track.GetEnd(), zero)[0]) <= HEAD_LENGTH,
                            "Inner-layer track extends into a needle")
-                self.check(track.GetNetname() == INNER_NETS[track.GetLayer()], "Signal routed through an assigned inner power plane")
+                strip = (track.GetLayer() == pcb.In2_Cu and track.GetNetname() in INNER_POWER_STRIPS and
+                         mm(track.GetWidth()) >= 1.2 - 1e-6)
+                self.check(track.GetNetname() == INNER_NETS[track.GetLayer()] or strip,
+                           f"Signal routed through an assigned inner power plane: {track.GetNetname()}")
 
     def bom(self, path, fps):
         rows, reference = read_bom(path), read_bom(REFERENCE_BOM)

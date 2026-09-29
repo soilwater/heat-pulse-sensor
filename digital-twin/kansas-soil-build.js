@@ -137,8 +137,8 @@ function kd2Check() {
   row('RMSE infinite line source (C)', out.map(o => o.rIls));
 }
 
-// ---------- check 2: r2 sensor response over the measured Kansas range ----------
-function r2Envelope() {
+// ---------- check 2: flat-nano sensor response over the measured Kansas range ----------
+function sensorEnvelope() {
   const run = S.simulate({}, T), c = run.config, e = run.electrical, src = run._thermalSources;
   const heatedLen = (c.heaterCount - 1) * c.heaterPitchMm / 1000 + 0.0016, qP = e.heaterPowerW / heatedLen;
   const rows = pulses.filter(p => Number.isFinite(p.thermal_cond) && Number.isFinite(p.heat_capacity)).map(p => {
@@ -150,7 +150,7 @@ function r2Envelope() {
     return {state: stateBySheet.get(p.water_state).id, peak, tPeak: t[y.indexOf(peak)], hot,
       eL: 100 * (fit.lambda / soil.lambda - 1), eC: 100 * (fit.C / soil.C - 1)};
   });
-  console.log(`\nCheck 2: r2 sensor (${e.heaterPowerW.toFixed(2)} W average for ${c.pulseS} s, ${c.spacingMm} mm spacing) in ${rows.length} measured Kansas soil states`);
+  console.log(`\nCheck 2: flat-nano sensor (${e.heaterPowerW.toFixed(2)} W average for ${c.pulseS} s, ${c.spacingMm} mm spacing) in ${rows.length} measured Kansas soil states`);
   console.log(''.padEnd(34) + '     p5  median     p95');
   row('side-needle peak rise (C)', rows.map(o => o.peak));
   row('time of peak after heater on (s)', rows.map(o => o.tPeak), 0);
@@ -180,7 +180,7 @@ function propertyModelCheck() {
 }
 
 console.log(`Source ${SOURCE}\nSHA-256 ${sha256}\n${samples.length} cores, ${samples.reduce((a, c) => a + Object.keys(c.readings).length, 0)} readings`);
-medians(); kd2Check(); r2Envelope(); propertyModelCheck();
+medians(); kd2Check(); sensorEnvelope(); propertyModelCheck();
 
 if (!CHECK_ONLY) {
   const data = {source: SOURCE, sha256,

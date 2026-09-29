@@ -1,5 +1,14 @@
-/* Actual exported PCB geometry and routed activity highlights. The component
- * view retains a simplified heater guide; copper views show exported geometry.
+/* Actual exported PCB geometry and routed activity highlights. Every activity
+ * line follows exported copper (tracks and vias, never zones or invented chords).
+ * The Parts view shows the heater path directed along its real 0.5 mm copper:
+ * J1 middle hole, D1, the VIN_P feed inside the board on In2, R5, RH1-RH17, then
+ * HEAT_RTN on bottom copper back to Q1. Branches that carry no heater current (the
+ * U3, C1 and C18 buck input and the D2 surge path) are pruned as dead ends: each drawn
+ * segment ends in a sink pad (D1, C3, R5, a heater resistor or Q1) or continues into
+ * further drawn copper or a via. Inner-layer copper is otherwise hidden in
+ * the Parts view, so that In2 feed is drawn there as a hatched guide. The copper
+ * views pulse the heater and supply copper of the selected layer instead.
+ * Part bodies are sized from each footprint's exported bodyBox.
  * The quarter-turn is a rotation, not a reflection of the copper or component placement. */
 (() => {
   'use strict';
@@ -16,7 +25,7 @@
     function setLayerView(value) {
       if(!['components','top','inner1','inner2','bottom'].includes(value))return;
       layerView=value;svg.dataset.view=value;
-      svg.setAttribute('aria-label',`${value==='components'?'Assembled PCB':({top:'Top copper',inner1:'Inner copper 1, ground plane',inner2:'Inner copper 2, +5 V plane',bottom:'Bottom copper'})[value]+', viewed from above through the board'}. Scroll to zoom, drag to pan, or select a component for details.`);
+      svg.setAttribute('aria-label',`${value==='components'?'Assembled PCB':({top:'Top copper',inner1:'Inner copper 1, ground plane',inner2:'Inner copper 2, +5 V plane and heater feed',bottom:'Bottom copper'})[value]+', viewed from above through the board'}. Scroll to zoom, drag to pan, or select a component for details.`);
     }
     setLayerView(layerView);
     function drawView(announce=true) {
@@ -68,16 +77,19 @@
     const parts = Object.fromEntries(board.footprints.map(p => [p.ref, p]));
     const heaterRefs = Object.keys(parts).filter(ref=>/^RH\d+$/.test(ref)).sort((a,b)=>Number(a.slice(2))-Number(b.slice(2)));
     const lastHeater = heaterRefs[heaterRefs.length-1];
-    const at = ref => parts[ref].xy;
-    const pad = (ref, pin) => parts[ref].pads.find(p => p.pin === String(pin)).xy;
     const partEls = {}, flows = {}, copperPads=[], copperZones=[];
     const copperLayers=t=>(t.layers||(t.via?['top','bottom']:[t.layer])).join(' ');
     const polygonPath=polygons=>polygons.map(p=>[p.outer,...(p.holes||[])].map(ring=>
       ring.length?'M'+ring.map(p=>p.join(',')).join(' L')+' Z':'').join(' ')).join(' ');
-    const heaterNets=['HEAT_P',...Array.from({length:heaterRefs.length-1},(_,i)=>'H_'+(i+1)),'HEAT_RTN'];
-    const powerNets=['5V_LDO','+5V','VREF'],supplyNets=['VIN','VIN_P'];
-    const gateNets=['D9_HEAT','HEAT_GATE'],excitationNets=['D4_EXC','EXC_GATE'];
-    const busNets=['A4_SDA','A5_SCL'],senseNets=['TH_RTN','A0_TH1','A1_TH2','A2_TH3','A3_TH4'];
+    const chainNets=Array.from({length:heaterRefs.length-1},(_,i)=>'H_'+(i+1));
+    const heaterNets=['HEAT_P',...chainNets,'HEAT_RTN'];
+    // U3 buck (SW, BOOT, VCC_BUCK, 5V_BUCK) through D7 to +5V; USB feeds +5V through D5 instead.
+    const powerNets=['SW','BOOT','VCC_BUCK','5V_BUCK','+5V'],supplyNets=['VIN','VIN_P'],usbNets=['VUSB','VBUS_SENSE','+5V'];
+    // Pin D4 HIGH powers VREF (divider tops and AREF) through R11; the thermistors return to GND.
+    const gateNets=['D9_HEAT','HEAT_GATE'],excitationNets=['D4_EXC','VREF'];
+    const busNets=['A4_SDA','A5_SCL'],senseNets=['A0_TH3','A1_TH2','A2_TH1','A3_TH4'];
+    // Heater-current copper is at least 0.5 mm wide; narrower branches on these nets are sense taps.
+    const HEATER_COPPER_MM=.5;
     // Drafting-sheet millimeter grid (1 mm minor, 5 mm major) behind the drawing.
     const defs=node('defs'),grid=node('pattern',{id:'mmGrid',width:5,height:5,patternUnits:'userSpaceOnUse'});
     for(let i=1;i<5;i++)grid.append(node('path',{d:`M${i},0 V5 M0,${i} H5`,class:'grid-minor'}));
@@ -122,36 +134,82 @@
       pads.append(g);copperPads.push({element:g,net:p.net,ref:f.ref});
     }
     rotated.append(pads);
-    function flow(id, points, type) {
-      const p=node('path', {id:'flow-'+id,d:points.map((p,i)=>(i?'L':'M')+p.join(',')).join(' '),class:'flow component-only '+type});
-      flows[id]=p;rotated.append(p);
+    // Dead-end pruning for a directed route: repeatedly drop non-via segments whose
+    // downstream end is not inside a sink pad and does not continue into another kept
+    // segment (at its upstream end, part-way along it, or through a shared pad) or a via.
+    // Undirected segments and vias are kept.
+    const JOIN_MM=1e-3,sameXY=(p,q)=>Math.hypot(p[0]-q[0],p[1]-q[1])<=JOIN_MM;
+    const inPad=(xy,pad)=>Math.abs(xy[0]-pad.xy[0])<=pad.size[0]/2+1e-8&&Math.abs(xy[1]-pad.xy[1])<=pad.size[1]/2+1e-8;
+    const padLayers=(f,p)=>Array.isArray(p.layers)?p.layers:p.drill&&p.drill.some(v=>v>0)?['top','bottom']:[f.layer==='bottom'?'bottom':'top'];
+    const drawnEnds=t=>t.direction===-1?[t.b,t.a]:[t.a,t.b];
+    function onTrack(xy,t) {
+      const [ax,ay]=t.a,dx=t.b[0]-ax,dy=t.b[1]-ay,l2=dx*dx+dy*dy;
+      const k=l2?Math.max(0,Math.min(1,((xy[0]-ax)*dx+(xy[1]-ay)*dy)/l2)):0;
+      return Math.hypot(ax+k*dx-xy[0],ay+k*dy-xy[1])<=JOIN_MM;
     }
-    function routedFlow(id,nets,sources,type,activityOnly=false,copperOnly=false) {
-      const group=node('g',{id:'flow-'+id,class:'flow '+type+(activityOnly?' activity-only':'')+(copperOnly?' copper-detail':'')});
-      for(const track of SensorRoutes.buildRoute(board,{nets,sourcePads:sources})) {
+    function pruneDeadEnds(tracks,sinks) {
+      const sinkPads=sinks.map(({ref,pin})=>parts[ref]&&parts[ref].pads.find(p=>p.pin===String(pin))).filter(Boolean);
+      const padsAt=(xy,net,layer)=>board.footprints.flatMap(f=>f.pads.filter(p=>p.net===net&&padLayers(f,p).includes(layer)&&inPad(xy,p)));
+      const continues=(s,kept)=>{
+        const to=drawnEnds(s)[1],shared=padsAt(to,s.net,s.layer);
+        if(sinkPads.some(p=>p.net===s.net&&inPad(to,p)))return true;
+        return kept.some(t=>t!==s&&t.net===s.net&&(t.via
+          ?sameXY(t.a,to)&&(t.layers||['top','bottom']).includes(s.layer)
+          :t.layer===s.layer&&((onTrack(to,t)&&(t.direction===0||!sameXY(to,drawnEnds(t)[1])))||
+            (t.direction!==0&&shared.some(p=>inPad(drawnEnds(t)[0],p))))));
+      };
+      let kept=tracks,before;
+      do{before=kept.length;const current=kept;kept=current.filter(s=>s.via||s.direction===0||continues(s,current));}
+      while(kept.length<before);
+      return kept;
+    }
+    // view: 'all' (Parts and copper views), 'copper' (copper views only) or
+    // 'parts' (Parts view only). minWidth drops narrower segments (vias stay).
+    // sinks: [{ref,pin}] pads where the drawn current ends; dead-end branches are pruned.
+    function routedFlow(id,nets,sources,type,{activityOnly=false,view='all',minWidth=0,sinks=null}={}) {
+      const group=node('g',{id:'flow-'+id,class:'flow '+type+(activityOnly?' activity-only':'')+
+        (view==='copper'?' copper-detail':view==='parts'?' component-only':'')});
+      let tracks=SensorRoutes.buildRoute(board,{nets,sourcePads:sources}).filter(t=>t.via||t.width>=minWidth-1e-6);
+      if(sinks)tracks=pruneDeadEnds(tracks,sinks);
+      for(const track of tracks) {
         const meta={'data-track-index':track.index,'data-net':track.net,'data-layer':track.layer,'data-copper-layers':copperLayers(track)};
         if(track.via)group.append(node('circle',{...meta,cx:track.a[0],cy:track.a[1],r:track.width/2,class:'route-via'}));
         else {
           const [a,b]=track.direction===-1?[track.b,track.a]:[track.a,track.b];
-          group.append(node('path',{...meta,d:`M${a} L${b}`,class:'route-segment'+(track.direction===0?' undirected':''),style:`--trace-width:${track.width}px`}));
+          const inner=view==='parts'&&!['top','bottom'].includes(track.layer);
+          // The Parts view hides inner-layer copper; draw it hatched there, without
+          // copper-layer tags, so the path stays continuous and reads as inside the board.
+          if(inner)delete meta['data-copper-layers'];
+          group.append(node('path',{...meta,d:`M${a} L${b}`,
+            class:'route-segment'+(track.direction===0?' undirected':'')+(inner?' inner-layer-guide':''),
+            style:`--trace-width:${track.width}px`+(inner?';stroke-dasharray:.22 .3;stroke-opacity:.6':'')}));
         }
       }
       flows[id]=group;rotated.append(group);
     }
-    flow('heat',[pad('J1',1),pad('D1',2),pad('D1',1),pad('R5',1),pad('R5',2),pad(heaterRefs[0],1),...heaterRefs.map(at)],'heater');
-    flow('return',[at(lastHeater),[at(lastHeater)[0]+1,at(lastHeater)[1]+.65],[at('Q1')[0]+1,at(lastHeater)[1]+.65],pad('Q1',3),pad('Q1',2),pad('J1',3)],'heater');
-    routedFlow('logic',['5V_LDO','+5V','VREF'],[{ref:'U3',pin:3},{ref:'D7',pin:1},{ref:'R11',pin:2}],'logic');
+    // Heater current in the Parts view. The return is drawn first because it runs
+    // on bottom copper directly beneath the heater chain.
+    // Sinks follow the current: J1.1 to D1 pin 2; D1 pin 1 through the VIN_P via and In2 strip
+    // to R5 pin 1 (C3 pin 1 supplies the switching edges); R5 pin 2 on HEAT_P to RH1, then each
+    // chain net into the next resistor's pin 1; HEAT_RTN from the last resistor to Q1 pin 3.
+    routedFlow('return',['HEAT_RTN'],[{ref:lastHeater,pin:2}],'heater',{view:'parts',minWidth:HEATER_COPPER_MM,sinks:[{ref:'Q1',pin:3}]});
+    routedFlow('heat',['VIN','VIN_P','HEAT_P',...chainNets],[{ref:'J1',pin:1},{ref:'D1',pin:1},{ref:'R5',pin:2},
+      ...heaterRefs.slice(0,-1).map(ref=>({ref,pin:2}))],'heater',{view:'parts',minWidth:HEATER_COPPER_MM,
+      sinks:[{ref:'D1',pin:2},{ref:'C3',pin:1},{ref:'R5',pin:1},...heaterRefs.map(ref=>({ref,pin:1}))]});
+    routedFlow('logic',['SW','5V_BUCK','+5V'],[{ref:'U3',pin:5},{ref:'L1',pin:2},{ref:'D7',pin:1}],'logic');
+    // USB power (J2 clip pin 1) through D5 to +5V; shown only in the USB-only case.
+    routedFlow('usb',['VUSB','+5V'],[{ref:'J2',pin:1},{ref:'D5',pin:1}],'logic');
     routedFlow('gate',['D9_HEAT','HEAT_GATE'],[{ref:'U1',pin:29},{ref:'R9',pin:2}],'signal');
-    routedFlow('excitation',['D4_EXC','EXC_GATE'],[{ref:'U1',pin:45},{ref:'R12',pin:2}],'signal');
+    routedFlow('excitation',excitationNets,[{ref:'U1',pin:45},{ref:'R11',pin:2}],'signal');
     // I2C is bidirectional. Pulse actual copper rather than inventing bus traffic.
-    routedFlow('i2c',['A4_SDA','A5_SCL'],[],'signal',true);
-    routedFlow('thermistors',['TH_RTN','A0_TH1','A1_TH2','A2_TH3','A3_TH4'],[],'sense',true);
+    routedFlow('i2c',busNets,[],'signal',{activityOnly:true});
+    routedFlow('thermistors',senseNets,[],'sense',{activityOnly:true});
     // These nets include low-current sensing and protection branches. Pulse
     // the real copper without suggesting equal current or a direction in every branch.
-    routedFlow('heaterTracks',heaterNets,[],'heater',true,true);
-    routedFlow('supply',supplyNets,[],'logic',true,true);
+    routedFlow('heaterTracks',heaterNets,[],'heater',{activityOnly:true,view:'copper'});
+    routedFlow('supply',supplyNets,[],'logic',{activityOnly:true,view:'copper'});
     // Ground is shared. Indicate activity without inventing a path or current density.
-    routedFlow('ground',['GND'],[],'logic',true,true);
+    routedFlow('ground',['GND'],[],'logic',{activityOnly:true,view:'copper'});
     const drills=node('g',{class:'copper-detail copper-drills','pointer-events':'none'});
     for(const t of board.tracks)if(t.via&&t.drill>0)drills.append(node('circle',{
       cx:t.a[0],cy:t.a[1],r:t.drill/2,class:'copper-drill','data-copper-layers':(t.holeLayers||t.layers||board.copperLayers).join(' ')}));
@@ -165,38 +223,41 @@
       g.addEventListener('click',()=>onSelect(ref));
       g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onSelect(ref);}});
     }
+    // Package box from the export (fabrication outline, else courtyard, else pads).
+    const bodyBox=f=>f.bodyBox||[Math.min(...f.pads.map(p=>p.xy[0]-p.size[0]/2)),Math.min(...f.pads.map(p=>p.xy[1]-p.size[1]/2)),
+      Math.max(...f.pads.map(p=>p.xy[0]+p.size[0]/2)),Math.max(...f.pads.map(p=>p.xy[1]+p.size[1]/2))];
+    // J1 (cable holes) and J2 (programming clip holes) have no package: outline and click area only.
+    const bare=f=>f.bodySource!=='fab';
     for(const f of board.footprints) {
-      const ref=f.ref,[x,y]=f.xy;
+      const ref=f.ref,[x0,y0,x1,y1]=bodyBox(f),w=x1-x0,h=y1-y0,x=(x0+x1)/2,y=(y0+y1)/2;
       const g=node('g', {id:'part-'+ref,class:'part'+(/^RH/.test(ref)?' heater-part':'')+(/^TH/.test(ref)?' ntc-part':'')});
       selectable(g,ref);g.append(node('title',{},ref+' · '+(f.mpn||f.value)));
       for(const p of f.pads) {
         g.append(node('rect',{x:p.xy[0]-p.size[0]/2,y:p.xy[1]-p.size[1]/2,width:p.size[0],height:p.size[1],rx:.04,class:'pad'}));
         if(p.drill[0]>0)g.append(node('circle',{cx:p.xy[0],cy:p.xy[1],r:p.drill[0]/2,fill:'#edf2ed'}));
       }
-      let w=1,h=.55;
-      if(ref==='U1'){w=10;h=10;}else if(ref==='U4'){w=3;h=3;}else if(ref==='U3'){w=2;h=4.4;}
-      else if(ref==='J1'){w=2.4;h=10.4;}else if(ref.startsWith('Q')){w=1.4;h=2.8;}
-      else if(ref.startsWith('D')){w=Math.abs(f.angle)===90?1.7:2.6;h=Math.abs(f.angle)===90?2.6:1.7;}
-      else if(ref==='Y1'){w=1.5;h=3.2;}else if(ref==='R5'){w=1.25;h=1.8;}
-      else if(/^RH\d+$/.test(ref)){w=1.6;h=.85;}
-      else if(ref==='R18'||/^R2[1-4]$/.test(ref)){w=1.6;h=.8;}
-      else if(['C1','C2','C17'].includes(ref)){w=2;h=1.25;}
-      else if(Math.abs(f.angle)===90){w=.55;h=1;}
-      if(!['J1','J2','J5'].includes(ref))g.append(node('rect',{x:x-w/2,y:y-h/2,width:w,height:h,rx:.1,class:'part-body'}));
-      g.append(node('rect',{x:x-w/2-.14,y:y-h/2-.14,width:w+.28,height:h+.28,rx:0,fill:'none','vector-effect':'non-scaling-stroke',class:'part-outline'}));
-      // Rotate labels back so the vertical drawing remains readable.
-      if(ref!=='J1')g.append(node('text',{x,y,transform:`rotate(-90 ${x} ${y})`,class:'part-label',style:`font-size:${ref==='U1'?1.3:.59}px`},ref));
+      if(!bare(f))g.append(node('rect',{x:x0,y:y0,width:w,height:h,rx:Math.min(.1,w/4,h/4),class:'part-body'}));
+      g.append(node('rect',{x:x0-.14,y:y0-.14,width:w+.28,height:h+.28,rx:0,fill:'none','vector-effect':'non-scaling-stroke',class:'part-outline'}));
+      // Rotate labels back so the vertical drawing remains readable. Bare hole rows carry callout tags instead.
+      if(!bare(f))g.append(node('text',{x,y,transform:`rotate(-90 ${x} ${y})`,class:'part-label',style:`font-size:${ref==='U1'?1.3:.59}px`},ref));
       if(ref==='U1')g.append(node('text',{x:x+1.8,y,transform:`rotate(-90 ${x+1.8} ${y})`,class:'part-label',style:'font-size:.8px'},'RA4M1'));
       g.append(node('rect',{x:x-Math.max(w,1.35)/2,y:y-Math.max(h,1.35)/2,width:Math.max(w,1.35),height:Math.max(h,1.35),fill:'transparent'}));
       partEls[ref]=g;rotated.append(g);
     }
     // Larger labels remain clickable at the full-board scale.
-    // Two-line callouts: reference designator, then function.
-    const tags=[['J1',-5,2.4,'J1','Cable pads'],['U3',24,10,'U3','Regulator'],['U1',-5,22.5,'U1','Controller'],
-      ['U4',-5,33,'U4','Power monitor'],['Q1',24,42,'Q1','Heater switch'],['TH4',24,26,'TH4','Board temp.'],
-      ['TH3',-5,73,'TH3','Right needle'],['TH1',24,73,'TH1','Left needle'],['RH11',24,62,'RH1–RH17','Heater, 17 × 3.3 Ω'],['TH2',24,98,'TH2','Heater tip']];
+    // Two-line callouts: reference designator, then function. Portrait
+    // coordinates (x'=18-y, y'=x). Tags on one side must keep their leader
+    // spans (part row to tag row) disjoint so no two leaders share the column.
+    const tags=[['J1',-5,2.4,'J1','Cable holes'],['U3',-5,10.5,'U3','5 V buck'],['U1',-5,23,'U1','Processor'],
+      ['U4',-5,36,'U4','Power monitor'],['TH3',-5,73,'TH3','Left needle'],
+      ['J2',24,13,'J2','Programming clip'],['Q1',24,30,'Q1','Heater switch'],['TH4',24,44,'TH4','Board temp.'],
+      ['RH4',24,57,'RH1–RH17','Heater, 17 × 3.3 Ω'],['TH1',24,73,'TH1','Right needle'],['TH2',24,98,'TH2','Heater tip']];
     for(const [ref,x,y,label,role] of tags) {
-      const p=at(ref),px=18-p[1],py=p[0],right=x>18;
+      if(!parts[ref])continue;
+      const right=x>18,[bx0,by0,bx1,by1]=bodyBox(parts[ref]);
+      // Start at the body edge facing the tag, so leaders never cross the part's
+      // own label or, for J1 and J2, run over a hole.
+      const py=(bx0+bx1)/2,px=right?18-by0:18-by1;
       const tag=node('g',{class:'board-tag', 'data-component':ref});selectable(tag,ref);
       tag.append(node('path',{d:`M${px},${py} L${right?21:-3},${py} L${right?21:-3},${y} L${x+(right?-.6:.6)},${y}`,class:'tag-line'}));
       tag.append(node('text',{x,y:y+.7,'text-anchor':right?'start':'end',class:'tag-label'},label));
@@ -218,8 +279,9 @@
       };
       flight=requestAnimationFrame(step);
     }
-    function focus(refs,{pad=3,maxZoom=8,ms=900}={}) {
-      const els=(refs||[]).map(r=>partEls[r]).filter(Boolean);
+    // include: optional CSS selector for drawing elements to frame with the parts (e.g. the cable wires).
+    function focus(refs,{pad=3,maxZoom=8,ms=900,include=null}={}) {
+      const els=[...(refs||[]).map(r=>partEls[r]).filter(Boolean),...(include?svg.querySelectorAll(include):[])];
       if(!els.length){flyTo({...fit},ms);return;}
       const inv=svg.getScreenCTM().inverse();let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
       for(const el of els){const b=el.getBoundingClientRect();
@@ -244,11 +306,14 @@
         const showActivity=state.stage!=='idle';
         for(const [ref,g] of Object.entries(partEls))g.classList.toggle('active',showActivity&&state.activeRefs.includes(ref));
         const on=(id,value)=>flows[id].classList.toggle('on',showActivity&&!!value);
-        on('heat',state.heaterOn);on('return',state.heaterOn);on('logic',state.logicValid);
+        // USB only: the clip's 5 V feeds +5V through D5; the battery, buck and heater supply are dead.
+        const usbOnly=!!(run&&run.config&&run.config.fault==='usb-only');
+        on('heat',state.heaterOn);on('return',state.heaterOn);
+        on('logic',state.logicValid&&!usbOnly);on('usb',state.logicValid&&usbOnly);
         on('gate',state.d9);on('excitation',state.d4);
         on('i2c',['baseline','pulse','cooldown'].includes(state.stage));
         on('thermistors',state.d4);
-        on('heaterTracks',state.heaterOn);on('supply',state.logicValid);on('ground',state.logicValid);
+        on('heaterTracks',state.heaterOn);on('supply',state.logicValid&&!usbOnly);on('ground',state.logicValid);
         for(const id of ['supply','ground']) {
           flows[id].classList.toggle('heater',state.heaterOn);
           flows[id].classList.toggle('logic',!state.heaterOn);
@@ -256,7 +321,10 @@
         const activeNets=new Map();
         const mark=(nets,color)=>nets.forEach(net=>activeNets.set(net,color));
         if(showActivity) {
-          if(state.logicValid){mark(powerNets,'power');mark([...supplyNets,'GND'],state.heaterOn?'heater':'power');}
+          if(state.logicValid){
+            mark(usbOnly?usbNets:powerNets,'power');
+            mark(usbOnly?['GND']:[...supplyNets,'GND'],state.heaterOn?'heater':'power');
+          }
           if(state.heaterOn)mark(heaterNets,'heater');
           if(state.d9)mark(gateNets,'signal');
           if(state.d4)mark([...excitationNets,...senseNets],'signal');

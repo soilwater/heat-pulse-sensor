@@ -16,7 +16,7 @@
   <header class="header">
     <div class="identity">
       <svg class="mark" viewBox="0 0 28 28" aria-hidden="true"><rect x="5" y="2.5" width="18" height="7" rx="1.6"/><path d="M8.5 9.5v11M14 9.5v16M19.5 9.5v11"/></svg>
-      <div><h1>Heat pulse sensor</h1><p>HP-SDI12-NANO r2 <span>·</span> Digital twin <span>·</span> 12 V · 17 × 3.3 Ω</p></div>
+      <div><h1>Heat pulse sensor</h1><p>HP-SDI12-NANO <span>·</span> Digital twin <span>·</span> 12 V · 17 × 3.3 Ω</p></div>
     </div>
     <div class="header-meta">
       <button id="tourButton" class="tour-button" title="Step through one measurement, part by part"><i aria-hidden="true"></i>Guided tour</button>
@@ -68,7 +68,7 @@
           <button id="view-components" role="tab" aria-selected="true" aria-controls="sensor-view" data-board-view="components">Parts</button>
           <button id="view-top" role="tab" aria-selected="false" aria-controls="sensor-view" data-board-view="top" tabindex="-1" title="Top copper · F.Cu">Top</button>
           <button id="view-inner1" role="tab" aria-selected="false" aria-controls="sensor-view" data-board-view="inner1" tabindex="-1" title="Inner copper 1 · ground plane">In1</button>
-          <button id="view-inner2" role="tab" aria-selected="false" aria-controls="sensor-view" data-board-view="inner2" tabindex="-1" title="Inner copper 2 · +5 V plane">In2</button>
+          <button id="view-inner2" role="tab" aria-selected="false" aria-controls="sensor-view" data-board-view="inner2" tabindex="-1" title="Inner copper 2 · +5 V plane and heater feed">In2</button>
           <button id="view-bottom" role="tab" aria-selected="false" aria-controls="sensor-view" data-board-view="bottom" tabindex="-1" title="Bottom copper · B.Cu">Bot</button>
         </div>
         <div class="board-tools" role="group" aria-label="Sensor zoom"><button id="zoomOut" aria-label="Zoom out" title="Zoom out" disabled>−</button><output id="zoomLevel" aria-live="polite">100%</output><button id="zoomIn" aria-label="Zoom in" title="Zoom in">+</button><button id="zoomFit" title="Fit the whole sensor">Fit</button></div></div>
@@ -100,8 +100,8 @@
           <table class="readings">
             <thead><tr><th scope="col">Temperature</th><th scope="col">Now</th><th scope="col">Rise</th></tr></thead>
             <tbody>
-              <tr><th scope="row"><button data-component="TH1">TH1 <small>left needle</small></button></th><td id="temp-TH1">22.000 °C</td><td id="rise-TH1">+0.000</td></tr>
-              <tr><th scope="row"><button data-component="TH3">TH3 <small>right needle</small></button></th><td id="temp-TH3">22.000 °C</td><td id="rise-TH3">+0.000</td></tr>
+              <tr><th scope="row"><button data-component="TH1">TH1 <small>right needle</small></button></th><td id="temp-TH1">22.000 °C</td><td id="rise-TH1">+0.000</td></tr>
+              <tr><th scope="row"><button data-component="TH3">TH3 <small>left needle</small></button></th><td id="temp-TH3">22.000 °C</td><td id="rise-TH3">+0.000</td></tr>
               <tr><th scope="row"><button data-component="TH2">TH2 <small>heater tip</small></button></th><td id="temp-TH2">22.000 °C</td><td id="rise-TH2">+0.000</td></tr>
               <tr><th scope="row"><button data-component="thermal">Soil <small>beside heater</small></button></th><td id="tempHeatedZone">22.00 °C</td><td id="rise-heatedZone">+0.00</td></tr>
             </tbody>
@@ -116,11 +116,11 @@
           <table class="readings">
             <thead><tr><th scope="col">Power</th><th scope="col">Now</th><th scope="col"></th></tr></thead>
             <tbody>
-              <tr><th scope="row"><button data-component="wiring">Battery <small>12 V input</small></button></th><td id="batteryPower">0.120 W</td><td id="batteryCurrent">10.0 mA</td></tr>
+              <tr><th scope="row"><button data-component="wiring">Battery <small>12 V input</small></button></th><td id="batteryPower">—</td><td id="batteryCurrent">—</td></tr>
               <tr><th scope="row"><button data-component="RH1">Heater <small>RH1–RH17</small></button></th><td id="power-heaters">0.000 W</td><td id="eachHeater">0.0 mW each</td></tr>
               <tr><th scope="row"><button data-component="RH1">Heater energy</button></th><td id="heatEnergy">0.00 J</td><td></td></tr>
-              <tr><th scope="row"><button data-component="U3">Regulator <small>U3</small></button></th><td id="power-regulator">—</td><td></td></tr>
-              <tr><th scope="row"><button data-component="logic">Logic <small>MCU, monitor</small></button></th><td id="power-logic">—</td><td></td></tr>
+              <tr><th scope="row"><button data-component="U3">Buck regulator <small>U3</small></button></th><td id="power-regulator">—</td><td></td></tr>
+              <tr><th scope="row"><button data-component="logic">Logic <small>U1 + U4</small></button></th><td id="power-logic">—</td><td></td></tr>
               <tr><th scope="row"><button data-component="diodes">Diodes <small>D1 + D7</small></button></th><td id="power-diodes">—</td><td></td></tr>
               <tr><th scope="row"><button data-component="R5">Shunt <small>R5</small></button></th><td id="power-shunt">—</td><td></td></tr>
               <tr><th scope="row"><button data-component="Q1">Switch <small>Q1</small></button></th><td id="power-switch">—</td><td></td></tr>

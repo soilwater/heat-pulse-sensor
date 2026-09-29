@@ -61,7 +61,7 @@ test('the twin reproduces a stored KD2 Pro curve', () => {
 test('the same core gives a larger side-needle rise when dry than when saturated', () => {
   const core = K.samples.find(s => s.readings.sat && s.readings.od40);
   const peak = r => { const run = M.simulate({soilLambda: r.lambda, soilC: r.C * 1e6}, T);
-    return Math.max(...run.series.map(p => p.tempL)) - run.config.ambientC; };
+    return Math.max(...run.series.map(p => p.tempTH1)) - run.config.ambientC; };
   assert.ok(peak(core.readings.od40) > peak(core.readings.sat));
 });
 

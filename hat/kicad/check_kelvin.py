@@ -167,7 +167,7 @@ def check_kelvin(board, checks=CHECKS):
 
 def self_test():
     # A simplified copper union can have an exactly horizontal edge while the
-    # subtracted rotated-pad polygon differs by one integer nanometre. Test
+    # subtracted rotated-pad polygon differs by one integer nanometer. Test
     # that boundary case directly, independent of Boolean-union ordering.
     def polygon(points):
         result = pcb.SHAPE_POLY_SET()
@@ -181,8 +181,8 @@ def self_test():
     left = polygon([(-2, -.5), (-1, -.5), (-1, .5), (-2, .5)])
     right = polygon([(1, -.5), (2, -.5), (2, .5), (1, .5)])
     contacts = connected_components({pcb.F_Cu: copper}, [], [(pcb.F_Cu, shunt)])
-    assert not contacts([(pcb.F_Cu, left)]) & contacts([(pcb.F_Cu, right)]), "one-nanometre subtraction rim created a false bypass"
-    print("PASS one_nanometre_boolean_rim")
+    assert not contacts([(pcb.F_Cu, left)]) & contacts([(pcb.F_Cu, right)]), "one-nanometer subtraction rim created a false bypass"
+    print("PASS one_nanometer_boolean_rim")
 
     def fixture(mode):
         board = pcb.BOARD()

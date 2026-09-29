@@ -100,18 +100,35 @@ const assert = require('node:assert/strict');
       check(result.wrongTracks === 0 && result.leakedRoutes === 0,
         view + ' exposes only the selected copper layer and its activity');
       check(result.visibleVias === result.expectedVias, view + ' preserves all through-vias');
-      check(result.visibleParts === (view === 'components' ? 72 : 0), view + ' shows the appropriate component bodies');
+      check(result.visibleParts === (view === 'components' ? 70 : 0), view + ' shows the appropriate component bodies');
       check(result.visibleZones === result.expectedZones && result.visiblePads === result.expectedPads,
         view + ' shows exactly its native filled regions and pad polygons');
       return result;
     };
 
-    check(await page.locator('.part').count() === 72, 'all actual components are drawn');
+    check(await page.locator('.part').count() === 70 && await page.evaluate(() => SensorBoard.footprints.length) === 70,
+      'all 68 fitted parts and the J1 and J2 hole rows are drawn');
     check(await page.evaluate(() => SensorBoard.footprints.filter(part => /^RH\d+$/.test(part.ref)).length) === 17,
-      'latest r2 board has exactly 17 heater resistors');
+      'board has exactly 17 heater resistors');
+    check(await page.evaluate(() => ['Q2', 'R12', 'R17', 'Y1', 'C5', 'C6', 'J5'].every(ref => !document.getElementById('part-' + ref)) &&
+      ['C3', 'C18', 'C19', 'C20', 'L1', 'R11'].every(ref => document.getElementById('part-' + ref))),
+      'drawing holds the buck regulator parts and no removed parts');
+    const header = await page.locator('.identity p').innerText();
+    check(header.includes('HP-SDI12-NANO') && header.includes('17 × 3.3 Ω') && !/\br\d\b/.test(header),
+      'header names the sensor without a revision label');
+    const tourRefs = await page.evaluate(() => (window.TwinTourSteps || []).flatMap(step => step.focus || [])
+      .filter(ref => !SensorBoard.footprints.some(part => part.ref === ref)));
+    check(tourRefs.length === 0, 'every guided-tour focus part exists on the board: ' + tourRefs.join(', '));
+    check((await page.locator('#partsSummary').innerText()).includes('68 parts + 2 hole rows'),
+      'parts summary counts fitted parts and the two bare hole rows');
+    await page.locator('#partsButton').click();
+    check(await page.locator('#partsTable tbody tr').count() === 29, 'parts list shows 27 BOM lines and the J1 and J2 hole rows');
+    check((await page.locator('#partsTable').innerText()).includes('Bootstrap capacitor'), 'parts list names each buck regulator part');
+    await page.keyboard.press('Escape');
+    check(!(await page.locator('#partsDialog').evaluate(element => element.open)), 'Escape closes the parts list');
     check(/rotate\(\s*90(?:\s|,|\))/.test(await page.locator('#rotatedBoard').getAttribute('transform')),
       'actual PCB geometry is rotated into the vertical view');
-    check(await page.locator('select').count() === 0, 'dashboard has no dropdowns');
+    check(await page.locator('.app select').count() === 0, 'dashboard has no dropdowns outside the soil dialog');
     check(await page.locator('input[type=number]').count() === 4, 'three timings and one heater duty are editable');
     check(await page.locator('#scenario,#fault,#exportScenario,a[href="thermal-lab.html"]').count() === 0,
       'removed scenario, fault, export, and legacy controls stay absent');
@@ -151,16 +168,22 @@ const assert = require('node:assert/strict');
     // Every logic/signal highlight must reproduce an exported copper segment or
     // via, including the layer and net. This catches invented connecting chords.
     const copper = await page.evaluate(() => {
-      const groups = {logic: ['5V_LDO', '+5V', 'VREF'], gate: ['D9_HEAT', 'HEAT_GATE'],
-        excitation: ['D4_EXC', 'EXC_GATE'], i2c: ['A4_SDA', 'A5_SCL'],
-        thermistors: ['TH_RTN', 'A0_TH1', 'A1_TH2', 'A2_TH3', 'A3_TH4'],
+      // Logic power is the buck output and the +5V rail; VREF is powered only through pin D4 and R11,
+      // so it belongs to the excitation group. SW (U3 to L1) may be drawn with the logic group.
+      const groups = {logic: ['5V_BUCK', '+5V'], gate: ['D9_HEAT', 'HEAT_GATE'],
+        excitation: ['D4_EXC', 'VREF'], i2c: ['A4_SDA', 'A5_SCL'],
+        thermistors: ['A0_TH3', 'A1_TH2', 'A2_TH1', 'A3_TH4'],
         heaterTracks: ['HEAT_P', ...Array.from({length: 16}, (_, index) => 'H_' + (index + 1)), 'HEAT_RTN'],
         supply: ['VIN', 'VIN_P'], ground: ['GND']};
+      const optional = {logic: ['SW']};
       const failures = [], counts = {}, logicLayers = new Set();
       const equal = (a, b) => a.length === b.length && a.every((value, index) => Math.abs(value - b[index]) < 1e-8);
-      for (const [id, nets] of Object.entries(groups)) {
+      for (const [id, required] of Object.entries(groups)) {
         const group = document.getElementById('flow-' + id);
         const shapes = [...group.querySelectorAll('.route-segment,.route-via')];
+        const drawnNets = new Set(shapes.map(shape => shape.dataset.net));
+        const nets = [...required, ...(optional[id] || []).filter(net => drawnNets.has(net))];
+        if (required.some(net => !SensorBoard.tracks.some(track => track.net === net))) failures.push(id + ': net missing from the board');
         const expected = SensorBoard.tracks.map((track, index) => ({track, index})).filter(({track}) => nets.includes(track.net));
         const indices = shapes.map(shape => Number(shape.dataset.trackIndex));
         counts[id] = shapes.length;
@@ -191,8 +214,14 @@ const assert = require('node:assert/strict');
       return {failures, counts, logicLayers: [...logicLayers]};
     });
     check(copper.failures.length === 0, 'routed overlays preserve actual copper: ' + copper.failures.join('; '));
-    check(copper.logicLayers.includes('top') && copper.logicLayers.includes('bottom'),
-      'logic highlight follows both copper layers');
+    check(copper.logicLayers.length === 1 && copper.logicLayers[0] === 'top',
+      'logic highlight follows the top-layer copper (the +5 V rail is the In2 plane)');
+    const clipOutline = await page.evaluate(() => {
+      const outline = document.querySelector('#part-J2 .part-outline'), pads = SensorBoard.footprints.find(part => part.ref === 'J2').pads;
+      const [x, y, width, height] = ['x', 'y', 'width', 'height'].map(name => Number(outline.getAttribute(name)));
+      return {pads: pads.length, covers: pads.every(pad => pad.xy[0] >= x && pad.xy[0] <= x + width && pad.xy[1] >= y && pad.xy[1] <= y + height)};
+    });
+    check(clipOutline.pads === 5 && clipOutline.covers, 'J2 outline spans all five programming-clip holes');
     const polygonGeometry = await page.evaluate(() => {
       const failures = [];
       function matches(element, polygons) {
@@ -245,32 +274,38 @@ const assert = require('node:assert/strict');
         key + ' moves focus and selection together in the PCB tabs');
     }
 
-    const connectorContext = await page.evaluate(() => {
-      const connector = SensorBoard.footprints.find(part => part.ref === 'J1');
+    const cableContext = await page.evaluate(() => {
+      const cableHoles = SensorBoard.footprints.find(part => part.ref === 'J1');
       const expected = {1: 'VIN', 2: 'SDI_LINE', 3: 'GND'}, failures = [];
       for (const [pin, net] of Object.entries(expected)) {
         const wire = document.querySelector(`.external-wire[data-pin="${pin}"]`);
-        const pad = connector.pads.find(item => item.pin === pin);
+        const pad = cableHoles.pads.find(item => item.pin === pin);
         const end = wire.getPointAtLength(wire.getTotalLength());
         const endpoint = new DOMPoint(end.x, end.y).matrixTransform(wire.getScreenCTM());
         if (pad.net !== net || Math.abs(end.x - (18 - pad.xy[1])) > .001 ||
             Math.abs(end.y-pad.xy[0]) > .001)
-          failures.push(pin + ': wire does not meet the correct connector entry');
+          failures.push(pin + ': wire does not meet the correct cable hole');
       }
       const context = document.querySelector('.sensor-context').getBBox();
-      return {failures, housing: document.querySelectorAll('#part-J1 .wago-housing, #part-J1 .part-body').length,
+      return {failures, body: document.querySelectorAll('#part-J1 .part-body').length,
+        outline: document.querySelectorAll('#part-J1 .part-outline').length,
         wires: document.querySelectorAll('.external-wire').length,
         dimensions: [...document.querySelectorAll('.pcb-dimensions text')].map(element => element.textContent),
         context: [context.x, context.y, context.x + context.width, context.y + context.height]};
     });
-    check(connectorContext.housing === 0 && connectorContext.wires === 3, 'three soldered wires without connector housing');
-    check(connectorContext.failures.length === 0, 'external wires meet correct power/signal/ground ports: ' +
-      connectorContext.failures.join('; '));
-    check(connectorContext.dimensions.includes('99.86 mm') && connectorContext.dimensions.includes('17.78 mm'),
+    check(cableContext.body === 0 && cableContext.outline === 1 && cableContext.wires === 3,
+      'three soldered wires into cable holes drawn as an outline, with no package body');
+    check(await page.evaluate(() => {
+      const pads = SensorBoard.footprints.find(part => part.ref === 'J1').pads, pad = pin => pads.find(item => item.pin === pin);
+      return pad('1').xy[1] === 9 && pad('2').xy[1] !== 9 && pad('3').xy[1] !== 9;
+    }), '+12 V enters through the middle cable hole on the center line');
+    check(cableContext.failures.length === 0, 'external wires meet correct power/signal/ground ports: ' +
+      cableContext.failures.join('; '));
+    check(cableContext.dimensions.includes('99.86 mm') && cableContext.dimensions.includes('17.78 mm'),
       'outline dimensions reflect the actual PCB rather than the incoming wires');
-    check(connectorContext.context[0] >= fitView[0] && connectorContext.context[1] >= fitView[1] &&
-      connectorContext.context[2] <= fitView[0] + fitView[2] && connectorContext.context[3] <= fitView[1] + fitView[3],
-      'whole-board fit includes connector wiring and dimension annotations');
+    check(cableContext.context[0] >= fitView[0] && cableContext.context[1] >= fitView[1] &&
+      cableContext.context[2] <= fitView[0] + fitView[2] && cableContext.context[3] <= fitView[1] + fitView[3],
+      'whole-board fit includes the cable wiring and dimension annotations');
 
     check(await page.locator('#zoomIn,#zoomOut,#zoomFit,#zoomLevel').count() === 4, 'zoom controls are present');
     await checkFit('initial fit');
@@ -306,8 +341,8 @@ const assert = require('node:assert/strict');
     near(anchored.y, anchor.y, .001, 'wheel zoom holds the pointer anchor vertically');
     near(anchored.scrollY, anchor.scrollY, 1, 'wheel zoom does not scroll the document');
     const beforePan = await viewBox();
-    const controller = await page.locator('#part-U1').boundingBox();
-    const dragX = controller.x + controller.width / 2, dragY = controller.y + controller.height / 2;
+    const processor = await page.locator('#part-U1').boundingBox();
+    const dragX = processor.x + processor.width / 2, dragY = processor.y + processor.height / 2;
     await page.mouse.move(dragX, dragY);
     await page.mouse.down();
     await page.mouse.move(dragX + 24, dragY + 35, {steps: 8});
@@ -373,7 +408,7 @@ const assert = require('node:assert/strict');
     near(heating.state.currentA, heating.state.onCurrentA * .85, 1e-12, 'current readout is a PWM cycle average');
     near(heating.power.heaterW, heating.state.onHeaterPowerW * .85, 1e-12, 'heater power uses ON power times duty');
     check((await page.locator('#boardStatus').innerText()).includes('85% duty'), 'board status identifies average PWM activity');
-    check(await displayWatts('heaterPower') > 1 && await displayWatts('power-heaters') > 1,
+    check(await displayWatts('batteryPower') > 1 && await displayWatts('power-heaters') > 1,
       'live power cards reflect the on state');
     await seek(15);
     heating = await snapshot();
@@ -395,7 +430,7 @@ const assert = require('node:assert/strict');
       check(await page.locator('#board').evaluate(element => element.classList.contains('paused')),
         view + ' preserves paused playback state');
       check(layer.symbolicHeaterVisible === (view === 'components') && layer.copperHeaterVisible === (view !== 'components'),
-        view + ' uses only the intended simplified or actual-copper heater overlay');
+        view + ' shows only the Parts-view heater path or the copper-view heater overlay');
       check(layer.visibleRoutes > 0, view + ' retains visible powered routes during a paused pulse');
       if (view === 'inner1' || view === 'inner2') {
         check(await page.locator(`.copper-zone[data-copper-layers="${view}"]`).evaluate(element =>
@@ -407,9 +442,10 @@ const assert = require('node:assert/strict');
       await checkFlows('paused pulse in ' + view);
     }
     await page.locator('#zoomFit').click();
-    for (const ref of ['TH1', 'TH2', 'TH3', 'TH4'])
+    for (const ref of ['TH1', 'TH2', 'TH3'])
       check(Number.isFinite(await displayNumber('temp-' + ref)), ref + ' temperature is visible');
-    near(await displayNumber('temp-TH4'), 22, 0.0001, 'board thermistor stays at unmodeled ambient');
+    check(await page.locator('#temp-TH4').count() === 0, 'board thermistor is drawn but not reported');
+    near((await snapshot()).state.temperaturesC[3], 22, 0.0001, 'board thermistor stays at unmodeled ambient');
     await seek(24.99);
     check((await snapshot()).state.heaterOn, 'heater stays on until pulse end');
     await seek(25);
@@ -418,7 +454,7 @@ const assert = require('node:assert/strict');
     await checkFlows('heater off during cooling');
     near(cooling.power.heaterW, 0, 1e-12, 'cooling heater power is zero');
     check(await page.locator('#thermalField').getAttribute('opacity') === '1', 'warm soil remains visible after power switches off');
-    near(await displayNumber('heaterPower'), 0, 1e-12, 'cooling card is instantaneous rather than on-state potential');
+    near(await displayNumber('power-heaters'), 0, 1e-12, 'cooling card is instantaneous rather than on-state potential');
     near(await displayNumber('power-shunt'), 0, 1e-12, 'cooling shunt dissipation is zero');
     check(cooling.power.logicRailW > 0 && cooling.power.U3dissipationW > 0,
       'logic and regulator power remain positive while sensing the cooling curve');
@@ -450,16 +486,19 @@ const assert = require('node:assert/strict');
     }
     check(speeds.join(',') === '4×,10×,1×,4×', 'speed cycles 4×, 10×, 1×');
 
-    await page.locator('#part-Q2').click();
+    await page.locator('#part-R11').click();
     check(await dialogOpen(), 'PCB component opens a native dialog');
-    check((await page.locator('#dialogRef').innerText()).includes('Q2'), 'component identity in dialog');
-    check((await page.locator('#dialogDescription').innerText()).includes('VREF'), 'correct ground-switch explanation');
-    check((await page.locator('#dialogReadings').innerText()).trim().length > 0, 'component details include live readings');
+    check((await page.locator('#dialogRef').innerText()).includes('R11'), 'component identity in dialog');
+    const excitation = await page.locator('#dialogDescription').innerText();
+    check(excitation.includes('pin D4') && excitation.includes('VREF') && excitation.includes('1.5 kΩ'),
+      'correct thermistor-excitation explanation');
+    check((await page.locator('#dialogReadings').innerText()).includes('VREF and dividers'), 'component details include live readings');
     await page.keyboard.press('Escape');
     check(!(await dialogOpen()), 'Escape closes details');
     await page.locator('[data-component="TH1"]').first().click();
     check(await dialogOpen() && (await page.locator('#dialogTitle').innerText()).toLowerCase().includes('thermistor'),
       'thermistor readout opens its explanation');
+    check((await page.locator('#dialogReadings').innerText()).includes('A2 · U1 pin 63'), 'TH1 is read on A2, U1 pin 63');
     await page.locator('#closeDialog').click();
     check(!(await dialogOpen()), 'close button closes details');
     await seek(15);
@@ -490,7 +529,7 @@ const assert = require('node:assert/strict');
         id + ' opens model assumptions');
       await page.keyboard.press('Escape');
     }
-    for (const selector of ['.heated-zone-reading', '.thermal-legend']) {
+    for (const selector of ['.readings [data-component="thermal"]', '.thermal-legend']) {
       await page.locator(selector).click();
       check(await dialogOpen() && (await page.locator('#dialogTitle').innerText()).includes('Heated section'),
         selector + ' opens heat-transfer details');
@@ -578,8 +617,8 @@ const assert = require('node:assert/strict');
       const layout = await page.evaluate(() => {
         const board = document.querySelector('.sensor-panel').getBoundingClientRect();
         const readouts = document.querySelector('.readouts').getBoundingClientRect();
-        const ids = ['baselineS', 'pulseS', 'cooldownS', 'dutyPct', 'start', 'phase', 'temp-TH1', 'temp-TH2', 'temp-TH3', 'temp-TH4', 'tempHeatedZone',
-          'batteryPower', 'heaterPower', 'heatEnergy', 'power-heaters', 'power-regulator',
+        const ids = ['baselineS', 'pulseS', 'cooldownS', 'dutyPct', 'start', 'phase', 'temp-TH1', 'temp-TH2', 'temp-TH3', 'tempHeatedZone',
+          'batteryPower', 'batteryCurrent', 'heatEnergy', 'power-heaters', 'power-regulator',
           'power-logic', 'power-diodes', 'power-shunt', 'power-switch', 'power-wiring'];
         const outside = ids.filter(id => {
           const box = document.getElementById(id).getBoundingClientRect();

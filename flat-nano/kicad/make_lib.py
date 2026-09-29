@@ -43,8 +43,74 @@ for col, nums, x, ang in (("L", left, -25.4, 0), ("R", right, 25.4, 180)):
         name, typ = PINS[n]
         body.append(f"    (pin {typ} line (at {x} {top - i * 2.54:.2f} {ang}) (length 5.08) (name \"{name}\" {FONT}) (number \"{n}\" {FONT}))")
 body += ["  )", ")"]
+
+# TI LMR36503R5 (5 V fixed, 0.3 A, 3-65 V buck), RPE0009A. Pin functions from datasheet SNVSBB4B table 6-1.
+BUCK = {1: ("RT", "input"), 2: ("PGOOD", "open_collector"), 3: ("EN", "input"), 4: ("VIN", "power_in"),
+        5: ("SW", "power_out"), 6: ("BOOT", "passive"), 7: ("VCC", "power_out"), 8: ("VOUT", "input"), 9: ("GND", "power_in")}
+body += ["(symbol \"LMR36503R5\" (exclude_from_sim no) (in_bom yes) (on_board yes)",
+         f"  (property \"Reference\" \"U\" (at -7.62 8.89 0) {FONT})",
+         f"  (property \"Value\" \"LMR36503R5RPER\" (at 0 -8.89 0) {FONT})",
+         "  (property \"Footprint\" \"hp_sensor:TI_RPE0009A_VQFN-HR-9_2x2mm\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))",
+         "  (property \"Datasheet\" \"https://www.ti.com/lit/ds/symlink/lmr36503.pdf\" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))",
+         "  (symbol \"LMR36503R5_0_1\"",
+         "    (rectangle (start -7.62 7.62) (end 7.62 -7.62) (stroke (width 0.254) (type default)) (fill (type background))))",
+         "  (symbol \"LMR36503R5_1_1\""]
+for n, (x, y, ang) in {4: (-10.16, 5.08, 0), 3: (-10.16, 2.54, 0), 1: (-10.16, -2.54, 0), 2: (-10.16, -5.08, 0),
+                       5: (10.16, 5.08, 180), 6: (10.16, 2.54, 180), 8: (10.16, 0, 180), 7: (10.16, -2.54, 180), 9: (0, -10.16, 90)}.items():
+    name, typ = BUCK[n]
+    body.append(f"    (pin {typ} line (at {x} {y} {ang}) (length 2.54) (name \"{name}\" {FONT}) (number \"{n}\" {FONT}))")
+body += ["  )", ")"]
 open("hp_sensor.kicad_sym", "w", encoding="utf8").write(
     "(kicad_symbol_lib (version 20231120) (generator \"make_lib\")\n" + "\n".join(body) + "\n)\n")
+
+# ---------------- TI RPE0009A (VQFN-HR, 2 x 2 mm) ----------------
+# Pads = TI "EXAMPLE BOARD LAYOUT" 4224447/C (datasheet page 49), exposed metal, non-solder-mask-defined.
+# Drawing coordinates have +y up; KiCad has +y down, so every y below is negated. Corner pads are L-shaped.
+RPE_PADS = {  # pin -> list of rectangles (x0, y0, x1, y1) in drawing coordinates (mm), union = pad copper
+    1: [(-1.2, 0.625, -0.45, 0.85), (-0.85, 0.625, -0.45, 1.2)],
+    2: [(-1.2, 0.125, -0.6, 0.375)],
+    3: [(-1.2, -0.375, -0.6, -0.125)],
+    4: [(-1.2, -0.85, -0.5, -0.625), (-0.85, -1.2, -0.5, -0.625)],
+    5: [(0.5, -0.85, 1.2, -0.625), (0.5, -1.2, 0.85, -0.625)],
+    6: [(0.6, -0.375, 1.2, -0.125)],
+    7: [(0.6, 0.125, 1.2, 0.375)],
+    8: [(0.45, 0.625, 1.2, 0.85), (0.45, 0.625, 0.85, 1.2)],
+    9: [(-0.175, -0.1, 0.175, 1.2)],
+}
+
+
+def l_outline(rects):
+    """Outline (drawing coords) of one rectangle or of an L made of two rectangles sharing a corner region."""
+    if len(rects) == 1:
+        x0, y0, x1, y1 = rects[0]
+        return [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
+    from itertools import product
+    xs = sorted({v for r in rects for v in (r[0], r[2])}); ys = sorted({v for r in rects for v in (r[1], r[3])})
+    inside = lambda px, py: any(r[0] < px < r[2] and r[1] < py < r[3] for r in rects)
+    cells = {(i, j) for i, j in product(range(len(xs) - 1), range(len(ys) - 1)) if inside((xs[i] + xs[i + 1]) / 2, (ys[j] + ys[j + 1]) / 2)}
+    edges = set()                                   # boundary edges of the union of grid cells, walked into one loop
+    for i, j in cells:
+        for (a, b), nb in ((((i, j), (i + 1, j)), (i, j - 1)), (((i + 1, j), (i + 1, j + 1)), (i + 1, j)),
+                           (((i + 1, j + 1), (i, j + 1)), (i, j + 1)), (((i, j + 1), (i, j)), (i - 1, j))):
+            if nb not in cells: edges.add((a, b))
+    start = next(iter(sorted(edges))); loop = [start[0]]; nxt = {a: b for a, b in edges}; cur = start[1]
+    while cur != loop[0]: loop.append(cur); cur = nxt[cur]
+    pts = [(xs[i], ys[j]) for i, j in loop]
+    return [p for k, p in enumerate(pts) if not ((pts[k - 1][0] == p[0] == pts[(k + 1) % len(pts)][0]) or (pts[k - 1][1] == p[1] == pts[(k + 1) % len(pts)][1]))]
+
+
+rpe = ["(footprint \"TI_RPE0009A_VQFN-HR-9_2x2mm\" (version 20240108) (generator \"make_lib\") (layer \"F.Cu\")",
+       "  (descr \"TI RPE0009A VQFN-HR 9 pin 2x2 mm (LMR36503), land pattern per TI 4224447/C example board layout\")",
+       "  (attr smd)",
+       "  (property \"Reference\" \"REF**\" (at 0 -2.2 0) (layer \"F.SilkS\") (effects (font (size 0.6 0.6) (thickness 0.1))))",
+       "  (property \"Value\" \"LMR36503\" (at 0 2.2 0) (layer \"F.Fab\") (effects (font (size 0.6 0.6) (thickness 0.1))))"]
+for pin, rects in RPE_PADS.items():
+    pts = [(x, -y) for x, y in l_outline(rects)]                       # to KiCad y-down
+    ax = sum(p[0] for p in pts) / len(pts); ay = sum(p[1] for p in pts) / len(pts)
+    x0, y0, x1, y1 = rects[0]; ax, ay = (x0 + x1) / 2, -(y0 + y1) / 2   # anchor inside the first rectangle
+    poly = " ".join(f"(xy {px - ax:.4f} {py - ay:.4f})" for px, py in pts)
+    rpe.append(f"  (pad \"{pin}\" smd custom (at {ax:.4f} {ay:.4f}) (size 0.2 0.2) (layers \"F.Cu\" \"F.Paste\" \"F.Mask\")"
+               f" (options (clearance outline) (anchor rect)) (primitives (gr_poly (pts {poly}) (width 0) (fill yes))))")
 
 # ---------------- WAGO 2060-453 footprint ----------------
 # Data sheet land pattern, per pole: one 6.0 x 2.0 mm pad and one 3.5 x 2.0 mm pad, 14.0 mm over both, poles on a 4.0 mm pitch.
@@ -92,9 +158,14 @@ cable = ["(footprint \"CableSolder_1x03\" (version 20240108) (generator \"make_l
          "  (attr through_hole exclude_from_pos_files exclude_from_bom)",
          "  (property \"Reference\" \"REF**\" (at 0 -6 0) (layer \"F.SilkS\") (effects (font (size 1 1) (thickness 0.15))))",
          "  (property \"Value\" \"CableSolder_1x03\" (at 0 6 0) (layer \"F.Fab\") (effects (font (size 1 1) (thickness 0.15))))"]
-for k, y in enumerate((-4.0, 0.0, 4.0), 1):
+# Pad 1 (VIN, square) sits on the board axis so the heater supply runs straight down the center line;
+# ground is on the -y side, SDI-12 on the +y side. Thermal spokes are 0.5 mm: no narrower copper in the supply path.
+for k, y in ((1, 0.0), (2, 4.0), (3, -4.0)):
     shape = "rect" if k == 1 else "circle"
-    cable.append(f'  (pad "{k}" thru_hole {shape} (at 0 {y}) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask") (zone_connect 1) (thermal_bridge_angle 45) (thermal_bridge_width 0.3) (thermal_gap 0.25))')
+    cable.append(f'  (pad "{k}" thru_hole {shape} (at 0 {y}) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask") (zone_connect 1) (thermal_bridge_angle 45) (thermal_bridge_width 0.5) (thermal_gap 0.25))')
 cable += rect("F.CrtYd", -1.5, -5.5, 1.5, 5.5, 0.05) + [")"]
 open("hp_sensor.pretty/CableSolder_1x03.kicad_mod", "w", encoding="utf8").write("\n".join(cable) + "\n")
-print("wrote compact-variant symbol library, programming footprints, and CableSolder_1x03")
+rpe += rect("F.Fab", -1.0, -1.0, 1.0, 1.0, 0.1) + rect("F.CrtYd", -1.45, -1.45, 1.45, 1.45, 0.05)
+rpe += ["  (fp_circle (center -1.25 -1.25) (end -1.15 -1.25) (stroke (width 0.1) (type solid)) (fill yes) (layer \"F.SilkS\"))", ")"]
+open("hp_sensor.pretty/TI_RPE0009A_VQFN-HR-9_2x2mm.kicad_mod", "w", encoding="utf8").write("\n".join(rpe) + "\n")
+print("wrote compact-variant symbol library, programming footprints, CableSolder_1x03 and TI_RPE0009A")

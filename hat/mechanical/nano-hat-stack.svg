@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1480" height="1050" viewBox="0 0 1480 1050" role="img" aria-labelledby="title description">
   <title id="title">Compact Nano R4 and heat-pulse HAT assembly</title>
-  <desc id="description">Both populated faces point inward across a 4 millimeter gap. Two Samtec HTSW-115-07-T-S male strips are soldered to both boards. Sixty solder joints in total; outside solid pin ends are trimmed to at most half a millimeter. The nominal potted board and header budget is 9.44 millimeters, increasing to 9.74 millimeters with separate flat bare wire terminations. The target body thickness is 10.5 millimeters; the actual cable exit needs a separate fit check and possible local mold relief.</desc>
+  <desc id="description">Both populated faces point inward across a 4 millimeter gap. Two Samtec HTSW-115-07-T-S male strips are soldered to both boards. Sixty solder joints in total; outside solid pin ends are trimmed to at most half a millimeter. The HAT carries parts on both faces: its outer face holds parts up to 1.55 millimeters tall, which sets that face's exterior allowance. The nominal potted stack with 1 millimeter cover per face is 10.49 millimeters. The target body thickness is 10.5 millimeters; the actual cable exit needs a separate fit check and possible local mold relief.</desc>
   <defs>
     <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M0 0 L8 4 L0 8 Z" fill="#435565"/></marker>
     <style>
@@ -16,10 +16,10 @@
   <text x="56" y="170" class="small">Board and gap dimensions are proportional. Component shapes and wire positions are illustrative; header detail below.</text>
 
   <!-- Scale 20 SVG units/mm. PCB x = 250 ... 1113.6 (43.18 mm). -->
-  <!-- Nominal solid stack including exterior solder: y = 210 ... 358.736. -->
+  <!-- Nominal solid stack: Nano outer pin allowance y = 210 ... HAT outer-face parts 379.736 (1.55 mm). -->
   <!-- Nominal cover adds 20 units per face; target mold adds tolerance. -->
-  <rect x="207.76" y="179.368" width="1068" height="210" rx="12" fill="#f1eee7" stroke="#9e927a" stroke-width="1.5" stroke-dasharray="8 5"/>
-  <text x="540" y="203" class="small">Epoxy envelope · 10.5 mm thickness target</text>
+  <rect x="207.76" y="189.868" width="1068" height="210" rx="12" fill="#f1eee7" stroke="#9e927a" stroke-width="1.5" stroke-dasharray="8 5"/>
+  <text x="540" y="212" class="small">Epoxy envelope · 10.5 mm thickness target</text>
   <rect x="250" y="220" width="863.6" height="32.736" class="pcb"/>
   <text x="625" y="243" class="strong">Nano R4 · 1.637 mm PCB</text>
   <rect x="227.76" y="252.736" width="136" height="63.4" rx="3" class="shell"/>
@@ -35,7 +35,15 @@
   <rect x="750" y="309.736" width="85" height="23" rx="2" class="part"/>
   <rect x="944" y="312.736" width="35" height="20" rx="2" class="part"/>
   <rect x="250" y="332.736" width="863.6" height="16" class="pcb"/>
-  <text x="655" y="373" class="strong">HAT · 0.800 mm PCB</text>
+  <!-- HAT outer-face (bottom-side) parts: input diode/TVS, capacitors, divider bank, INA226, MOSFET; tallest 1.55 mm. -->
+  <rect x="440" y="348.736" width="62" height="22" rx="2" class="part"/>
+  <rect x="512" y="348.736" width="40" height="31" rx="2" class="part"/>
+  <rect x="566" y="348.736" width="124" height="12" rx="2" class="part"/>
+  <rect x="700" y="348.736" width="36" height="31" rx="2" class="part"/>
+  <rect x="770" y="348.736" width="126" height="22" rx="2" class="part"/>
+  <rect x="906" y="348.736" width="44" height="25" rx="2" class="part"/>
+  <text x="960" y="373" class="strong">HAT · 0.800 mm PCB</text>
+  <text x="440" y="420" class="small">HAT outer face: power stage, INA226 and dividers, ≤1.55 mm tall</text>
   <path d="M770 351 L770 357" class="lead"/>
   <path d="M1120 341 L1223 341" stroke="#287a62" stroke-width="3" fill="none"/>
   <text x="1130" y="328" class="small">Needles →</text>
@@ -53,10 +61,10 @@
   <path d="M1190 252.736 L1190 332.736" class="dim"/>
   <text x="1205" y="286" class="strong">4.00 mm</text>
   <text x="1205" y="307" class="small">face-to-face</text>
-  <path d="M1280 179.368 L1350 179.368 M1280 389.368 L1350 389.368" class="ext"/>
-  <path d="M1330 179.368 L1330 389.368" class="dim"/>
-  <text x="1360" y="257" class="strong" transform="rotate(90 1360 257)">~10.5 mm mold</text>
-  <path d="M250 401 L250 457 M1113.6 401 L1113.6 457" class="ext"/>
+  <path d="M1280 189.868 L1350 189.868 M1280 399.868 L1350 399.868" class="ext"/>
+  <path d="M1330 189.868 L1330 399.868" class="dim"/>
+  <text x="1360" y="267" class="strong" transform="rotate(90 1360 267)">~10.5 mm mold</text>
+  <path d="M250 406 L250 457 M1113.6 406 L1113.6 457" class="ext"/>
   <path d="M250 445 L1113.6 445" class="dim"/>
   <text x="572" y="471" class="label">43.18 mm body PCB · width 17.78 mm</text>
   <text x="350" y="494" class="small">Separate bare wire lanes under HAT: ≤0.80 mm projection. Insulation begins beyond PCB; cable exit may need local relief.</text>
@@ -96,8 +104,8 @@
 
   <rect x="72" y="847" width="1335" height="87" rx="8" fill="#edf4f7"/>
   <text x="94" y="875" class="strong">2 rows × 15 pins × 2 boards = 60 solder joints</text>
-  <text x="94" y="901" class="label">Potted board/header budget: 9.437 mm · with ≤0.80 mm flat wire terminations: 9.737 mm nominal</text>
-  <text x="94" y="923" class="small">10.5 mm body target. No insulated bundle under the PCB. Cable strain relief is outside the verified component-clearance model.</text>
+  <text x="94" y="901" class="label">Potted stack: 10.487 mm nominal with 1 mm cover per face; the HAT's 1.55 mm outer-face parts set its exterior allowance</text>
+  <text x="94" y="923" class="small">10.5 mm body target, verify on the first assembly. Flat wires (≤0.80 mm) and pin tails (≤0.50 mm) stay below the outer-face parts. No insulated bundle under the PCB.</text>
 
   <text x="48" y="992" class="label">Program and test before encapsulation. Keep resin out of USB/Qwiic cavities; the finished head does not provide an exposed USB port.</text>
   <text x="48" y="1019" class="small">Dimensions: official Arduino ABX00142 STEP model and Samtec TSW/HTSW catalog. See ASSEMBLY.md for sources and assembly limits.</text>

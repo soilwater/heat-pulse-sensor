@@ -49,38 +49,16 @@ for key, name in sch_pins.items():
 for key, got in pcb_pins.items():
     if key not in sch_pins and got != {""}: errors.append(f"{key[0]}.{key[1]}: board pad on {sorted(got)} but schematic has the pin unconnected")
 
-# Explicit r2 changes: seventeen 3.3-ohm Vishay 0603 heater resistors in one
-# series chain, plus 1.5-kohm 0402 R9/R12 gate resistors. J1 stays bare cable
-# solder pads. Every other original part and electrical connection is retained.
-original_path = os.path.abspath(os.path.join(HERE, "..", "..", "flat", "kicad", "netlist.json"))
-original = json.load(open(original_path, encoding="utf8"))["parts"]
+# The generator's netlist.json must agree with KiCad's own schematic export.
 variant = json.load(open("netlist.json", encoding="utf8"))["parts"]
-old_heaters = {f"RH{i}" for i in range(1, 23)}
-new_heaters = {f"RH{i}" for i in range(1, 18)}
-expected_refs = (set(original) - old_heaters) | new_heaters
-if expected_refs != set(variant): errors.append("Variant component references differ from the reviewed r2 circuit.")
-for ref in original.keys() & variant.keys():
-    expected_pins = original[ref]["pins"]
-    if ref in new_heaters:
-        index = int(ref[2:])
-        expected_pins = {"1": "HEAT_P" if index == 1 else f"H_{index - 1}",
-                         "2": "HEAT_RTN" if index == 17 else f"H_{index}"}
-    if expected_pins != variant[ref]["pins"]: errors.append(f"{ref}: electrical pin/net assignments differ from the reviewed r2 circuit")
-    if ref != "J1":
-        for field in ("value", "footprint"):
-            expected = original[ref][field]
-            if ref in new_heaters:
-                expected = "3.3" if field == "value" else "hp_sensor:R_0603_Vishay_HP"
-            elif ref in {"R9", "R12"} and field == "value":
-                expected = "1.5k"
-            if expected != variant[ref][field]: errors.append(f"{ref}: {field} differs from the reviewed r2 circuit")
+if set(variant) != {r for r in sch_fp if not r.startswith("#")}: errors.append("netlist.json and the schematic have different component references")
+for ref in variant.keys() & sch_values.keys():
     if sch_values.get(ref) != variant[ref]["value"]: errors.append(f"{ref}: exported schematic value differs from generator netlist")
     for pin, expected in variant[ref]["pins"].items():
         got = sch_pins.get((ref, pin), "")
         if expected is None:
-            if got and not got.startswith("unconnected-"): errors.append(f"{ref}.{pin}: expected no-connect in variant source")
-        elif got != expected: errors.append(f"{ref}.{pin}: exported schematic net differs from variant source")
-print("Reviewed r2 circuit preserved: 17-part heater chain, two gate resistors, bare J1; all other components/connections unchanged." if not errors else "Variant preservation/parity needs correction.")
+            if got and not got.startswith("unconnected-"): errors.append(f"{ref}.{pin}: expected no-connect in generator netlist")
+        elif got != expected: errors.append(f"{ref}.{pin}: exported schematic net differs from generator netlist")
 print(f"schematic: {len([r for r in sch_fp if not r.startswith('#')])} components, {len(sch_pins)} connected pins | board: {len(pcb_fp)} footprints")
 print("PARITY OK - board matches schematic" if not errors else "PARITY ERRORS:\n  " + "\n  ".join(errors))
 sys.exit(1 if errors else 0)

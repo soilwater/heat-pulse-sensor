@@ -1,6 +1,6 @@
 # Compact Nano R4 assembly
 
-Use a headerless **Arduino Nano R4 ABX00142** with its populated face toward the HAT's populated face. Join the boards permanently with **two Samtec HTSW-115-07-T-S male headers**, soldered into both boards, while a fixture holds the facing PCB surfaces **4.00 mm apart**. Both outside PCB surfaces remain accessible for soldering. This arrangement avoids tall sockets and keeps the electronics compact for potting.
+Use a headerless **Arduino Nano R4 ABX00142** with its populated face toward the HAT's top face. The HAT is exactly the Nano's outline (43.18 × 17.78 mm) with the Nano's pin positions, and carries parts on both faces: low parts on the top face inside the gap, and the power stage, INA226 and thermistor dividers on its outer (bottom) face, which the potting covers. Join the boards permanently with **two Samtec HTSW-115-07-T-S male headers**, soldered into both boards, while a fixture holds the facing PCB surfaces **4.00 mm apart**. Both outside PCB surfaces remain accessible for soldering. This arrangement avoids tall sockets and keeps the electronics compact for potting.
 
 These are soldered electrical joints. Sliding ordinary pins into bare plated holes and relying on epoxy does not provide a reliable electrical connection.
 
@@ -29,11 +29,12 @@ The [official Arduino STEP model](https://docs.arduino.cc/resources/models/ABX00
 | HAT PCB | 0.800 mm |
 | Facing gap | 4.000 mm |
 | Nano PCB from nominal CAD | 1.637 mm |
-| Maximum outer pin/solder allowance, both faces | 1.000 mm |
+| Nano outer face: pin/solder allowance | 0.500 mm |
+| HAT outer face: tallest part envelope (10 µF 0805 C17, 1.45 mm maximum + 0.10 mm solder; the check budgets every other outer-face part at 1.50 mm) | 1.550 mm |
 | Epoxy cover target, 1 mm on each face | 2.000 mm |
-| **Nominal board/header total, before field wires** | **9.437 mm** |
+| **Nominal potted stack** | **10.487 mm** |
 
-Use **10.5 mm as the potting mold body thickness target**, leaving allowance for board thickness, solder and assembly variation. A guaranteed 10.0 mm maximum has not been established. The field wires need their own allowance: three separate bare 22-AWG conductors (about 0.64 mm diameter) bent flat underneath the HAT, with **no more than 0.80 mm total wire/insulation/solder projection**, increase the nominal body budget to **9.737 mm**. Route them in separate parallel lanes toward the USB end, maintaining their separation from the 4 mm terminal pitch; do not cross or stack them. A thin insulating strip underneath the bare conductors prevents contact with exposed copper or damaged solder mask. Include that strip in the 0.80 mm limit.
+The HAT's outer-face parts, not its 0.50 mm pin tails or the field wires, set that face's exterior allowance. **The 10.5 mm potting mold target is therefore met only nominally with a full 1 mm cover on both faces.** Tolerance has to come out of the cover (0.75 mm over the tallest HAT outer-face part gives 10.24 mm), or the mold must be made thicker; decide this from the first assembled unit. A guaranteed 10.0 mm maximum is not possible with parts on both HAT faces. The field wires lie on the HAT's outer face between the cable end and the cable holes, where there are no parts: three separate bare 22-AWG conductors (about 0.64 mm diameter) bent flat, with **no more than 0.80 mm total wire/insulation/solder projection**, stay below the 1.55 mm part allowance. Route them in separate parallel lanes toward the USB end, maintaining their separation from the 4 mm terminal pitch; do not cross or stack them. A thin insulating strip underneath the bare conductors prevents contact with exposed copper or damaged solder mask. Include that strip in the 0.80 mm limit.
 
 Start the full wire insulation beyond the PCB edge and bring the three insulated leads out side-by-side. A bundle of insulated wires underneath the board does **not** fit this thickness budget. The cable transition and strain relief may need a local relief in the mold; size it from the actual cable. The 10.5 mm target applies to the main head body, not a verified cable gland envelope. Clean, inspect and test the terminations before potting; encapsulate the separated conductors completely. Solder mask is not a waterproof seal.
 
@@ -42,7 +43,7 @@ The body PCB remains 43.18 × 17.78 mm. The finished epoxy head is longer and wi
 ## Assembly sequence
 
 1. Inspect and program the Nano through its USB-C connector before final assembly. Use the headerless ABX00142; the factory-header version is not the intended stack.
-2. Put the two header strips on the HAT component face, with short tails through the HAT and long posts toward the Nano. Insert the Nano populated face downward, USB at the cable end.
+2. Put the two header strips on the HAT's top face (the face toward the Nano), with short tails through the HAT and long posts toward the Nano. Insert the Nano populated face downward, USB at the cable end. On the HAT's outer face the nearest parts (the divider capacitors) sit about 0.9 mm from the header pads; use a fine soldering tip there.
 3. Hold a measured 4.00 mm gap with a removable fixture that does not press on components. Align both board outlines and tack opposing corner pins. Check the gap and squareness before completing all 60 header solder joints.
 4. Trim the solid exterior pin ends to the stated limit without stressing solder joints. Inspect the joints and confirm no pin bridges or protrusions exceed the envelope.
 5. Solder and strain-relieve the field wires using the separate flat-conductor routing above. Measure the exterior projection and check the actual insulated cable exit against the mold. Program and run the complete sensor, including a heater pulse, before encapsulation.

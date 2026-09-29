@@ -1,7 +1,7 @@
 """Builds the hat project's own KiCad library parts from datasheet numbers:
   hp_sensor.kicad_sym                        - Renesas R7FA4M1AB3CFM (RA4M1, 64-LQFP); pinout = Renesas datasheet R01DS0355 Fig. 1.5
   hp_sensor.pretty/WAGO_2060-453.kicad_mod   - WAGO 2060-453/998-404 3-pole SMD push-in terminal; pads = WAGO data sheet land pattern
-  hp_sensor.pretty/CablePads_1x03_P4mm.kicad_mod - bare cable solder pads, geometry shared with flat-nano
+  hp_sensor.pretty/CableSolder_1x03.kicad_mod - bare cable solder pads, identical to flat-nano
 The retained MCU/WAGO/clip library definitions are not fitted on the compact hat.
 The Nano_SolderStack_1x15 footprint is maintained separately in hp_sensor.pretty.
 Run:  D:\KiCAD\bin\python.exe make_lib.py
@@ -89,14 +89,16 @@ open("hp_sensor.pretty/ClipRow_1x05_P2.54mm.kicad_mod", "w", encoding="utf8").wr
 # Same physical cable-pad geometry as the released flat-nano board. No part is
 # fitted here: solder the wires into the plated holes and anchor their jackets.
 # Pad-level thermal relief keeps a ground-plane connection hand-solderable.
-cable = ['(footprint "CablePads_1x03_P4mm" (version 20240108) (generator "make_lib") (layer "F.Cu")',
+cable = ['(footprint "CableSolder_1x03" (version 20240108) (generator "make_lib") (layer "F.Cu")',
          '  (descr "Three cable solder holes: 1=VIN, 2=SDI-12, 3=GND; 1.2 mm drill, 2.4 mm pad, 4 mm pitch; no fitted connector")',
          '  (attr through_hole exclude_from_pos_files exclude_from_bom)',
          '  (property "Reference" "REF**" (at 0 -6 0) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))',
-         '  (property "Value" "CablePads_1x03_P4mm" (at 0 6 0) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))']
-for k, y in enumerate((-4.0, 0.0, 4.0), 1):
+         '  (property "Value" "CableSolder_1x03" (at 0 6 0) (layer "F.Fab") (effects (font (size 1 1) (thickness 0.15))))']
+# Pad 1 (VIN, square) sits on the board axis so the supply runs straight down the center line; ground is on the -y
+# side, SDI-12 on the +y side. Thermal spokes are 0.5 mm: no narrower copper in the supply path.
+for k, y in ((1, 0.0), (2, 4.0), (3, -4.0)):
     shape = "rect" if k == 1 else "circle"
-    cable.append(f'  (pad "{k}" thru_hole {shape} (at 0 {y}) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask") (zone_connect 1) (thermal_bridge_angle 45) (thermal_bridge_width 0.3) (thermal_gap 0.25))')
-cable += rect("F.CrtYd", -1.5, -5.5, 1.5, 5.5, 0.05) + [")"]
-open("hp_sensor.pretty/CablePads_1x03_P4mm.kicad_mod", "w", encoding="utf8").write("\n".join(cable) + "\n")
-print("wrote hat symbol library, retained library footprints, and CablePads_1x03_P4mm")
+    cable.append(f'  (pad "{k}" thru_hole {shape} (at 0 {y}) (size 2.4 2.4) (drill 1.2) (layers "*.Cu" "*.Mask") (zone_connect 1) (thermal_bridge_angle 45) (thermal_bridge_width 0.5) (thermal_gap 0.25))')
+cable += rect("F.CrtYd", -1.5, -5.5, 1.5, 5.5, 0.05) + rect("B.CrtYd", -1.5, -5.5, 1.5, 5.5, 0.05) + [")"]
+open("hp_sensor.pretty/CableSolder_1x03.kicad_mod", "w", encoding="utf8").write("\n".join(cable) + "\n")
+print("wrote hat symbol library, retained library footprints, and CableSolder_1x03")

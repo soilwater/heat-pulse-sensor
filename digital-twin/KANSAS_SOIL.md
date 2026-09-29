@@ -22,7 +22,7 @@ The **Select soil** dialog picks any of the 316 cores (texture triangle, texture
 any of its water states; the twin then runs on that single reading's measured λ and C, and the dialog shows
 the reading's KD2 Pro curve beside the twin's prediction for it. The dashboard opens on the unflagged 33 kPa
 reading closest to the 33 kPa medians (Hodgeman, 20 cm, silty clay loam: λ 1.28, C 2.35). After each run,
-the Readings table's *Sensor estimate* shows the λ, C and θ the r2 sensor itself would report for that
+the Readings table's *Sensor estimate* shows the λ, C and θ the flat-nano sensor itself would report for that
 soil (Check 2's line-source bias, computed live). See the README for how to use it.
 
 Particle size was measured on one core of each station-depth pair (core 2) and organic matter on the
@@ -58,9 +58,9 @@ overestimate is consistent with what the model leaves out (needle heat capacity,
 When the finite model is fitted freely to the raw curves, C agrees with the KD2 value within ~2% (median),
 but λ comes out ~9% higher. The instrument's λ is probably biased low, so treat KD2 λ as ±10%.
 
-## Check 2 — what will the r2 sensor see in Kansas soils?
+## Check 2 — what will the flat-nano sensor see in Kansas soils?
 
-The default r2 pulse (1.99 W average, 15 s, 8 mm spacing), run through all 1,448 measured (λ, C) pairs:
+The default pulse (1.99 W average, 15 s, 8 mm spacing), run through all 1,448 measured (λ, C) pairs:
 
 | Quantity (p5 · median · p95) | Value |
 |---|---|
@@ -73,7 +73,7 @@ The default r2 pulse (1.99 W average, 15 s, 8 mm spacing), run through all 1,448
 
 Implications:
 
-- **Wet soils give the smallest signal.** About 0.4 °C is the design case, not 0.6 °C (λ 1.5, C 2.0, the dashboard's former reference soil).
+- **Wet soils give the smallest signal.** About 0.4 °C is the design case, not 0.6 °C (λ 1.5, C 2.0, the model's generic default soil).
   At 0.0063 °C per 14-bit code that is roughly 60–70 codes before noise, so noise and drift, not
   quantization, will limit C resolution. This makes the case for averaging or a longer/stronger pulse in wet soil.
 - **Dry soil runs hot.** Oven-dry cores push the needle-surface soil to about +16 °C (up to +22 °C) with
@@ -87,12 +87,12 @@ Implications:
 
 Against 1,398 measurements with texture, bulk density and water content: λ RMSE 0.20 W/(m·K) (refitting its
 constants to Kansas data improved this only to ~0.18 with leave-one-station-out validation), C biased +0.12 MJ/(m³·K) overall. It
-underestimates oven-dry λ by 0.18. It was left unchanged because the dashboard now uses measured
+underestimates oven-dry λ by 0.18. It is not refitted because the dashboard uses measured
 values directly; refit it before using it to predict properties from texture and water content.
 
 ## Limits
 
 - KD2 Pro properties come from a 60 s heat pulse on a 30 mm, 6 mm-spaced probe. λ and C are soil
-  properties and transfer to the r2 geometry; the KD2 *curves* do not reproduce a 15 s, 8 mm measurement.
+  properties and transfer to the flat-nano geometry; the KD2 *curves* do not reproduce a 15 s, 8 mm measurement.
 - The readings are on small intact cores in the lab. Field contact resistance, layering and water
   redistribution around the heater are not represented.

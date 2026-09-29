@@ -1,4 +1,4 @@
-"""Compact flat heat-pulse sensor, HP-SDI12-NANO r2 - schematic generator.
+"""Compact flat heat-pulse sensor, HP-SDI12-NANO - schematic generator.
 Higher-power heater with PWM control capability; J1 is three hand-soldered cable holes.
 
 Run:  D:\KiCAD\bin\python.exe gen_schematic.py
@@ -45,19 +45,25 @@ def flag(n, net, x, y):
 
 # ------------------------------------------------------------------ POWER ------------------------------------------------------------------
 X, Y = 40, 60
-text("HP-SDI12-NANO r2 / COMPACT FLAT   -   11.5-14.4 V battery supply over the 3-wire SDI-12 cable. J1 has three bare cable solder holes (VIN, data, ground); no connector is fitted. "
-     "Asleep the board draws only the regulator (2.5 uA) plus MCU standby current.", 30, 25, 2.0, right=300)
+text("HP-SDI12-NANO / COMPACT FLAT   -   11.5-14.4 V battery supply over the 3-wire SDI-12 cable. J1 has three bare cable solder holes (VIN, data, ground); no connector is fitted. "
+     "5 V comes from a buck converter (TI LMR36503R5, 5 V fixed, ~4 uA no-load, 2.2 MHz with RT tied to GND), which wastes several times less heat than a linear regulator.", 30, 25, 2.0, right=300)
 part("J1", "Connector_Generic:Conn_01x03", "Hand-soldered cable (3 wires)", "hp_sensor:CableSolder_1x03", X, Y, {1: "VIN", 2: "SDI_LINE", 3: "GND"},
-     Note="1 = 12V, 2 = SDI-12 data, 3 = GND; hand-solder after assembly, add cable strain relief")
+     Note="1 = 12V (center hole, square), 2 = SDI-12 data, 3 = GND; hand-solder after assembly, add cable strain relief")
 two("D2", "Device:D_TVS", "SMF16CA 16V bidir TVS", "Diode_SMD:D_SOD-123F", X + 40, Y, "VIN", "GND")
-two("D1", "Device:D_Schottky", "1A 40V Schottky (SOD-123F)", "Diode_SMD:D_SOD-123F", X + 75, Y, "VIN_P", "VIN", Note="reverse-polarity protection")
-two("C1", "Device:C", "4.7u 50V", FP["C0805"], X + 100, Y, "VIN_P", "GND")
-part("U3", "Regulator_Linear:HT75xx-1-SOT89", "HT7550-1", "Package_TO_SOT_SMD:SOT-89-3", X + 130, Y, {1: "GND", 2: "VIN_P", 3: "5V_LDO"},
-     Note="5 V LDO, 30 V max input, 2.5 uA quiescent")
-two("C2", "Device:C", "10u 10V", FP["C0805"], X + 160, Y, "5V_LDO", "GND")
-two("D7", "Device:D_Schottky", "1A 40V Schottky (SOD-123F)", "Diode_SMD:D_SOD-123F", X + 228, Y, "+5V", "5V_LDO", Note="keeps USB power out of the regulator (as on the Nano R4)")
-two("C17", "Device:C", "10u 10V", FP["C0805"], X + 252, Y, "+5V", "GND")
-two("D5", "Device:D_Schottky", "1A 40V Schottky (SOD-123F)", "Diode_SMD:D_SOD-123F", X + 195, Y, "+5V", "VUSB", Note="bench power from the USB pads")
+two("D1", "Device:D_Schottky", "1A 40V Schottky (SOD-323)", "Diode_SMD:D_SOD-323", X + 75, Y, "VIN_P", "VIN", Note="reverse-polarity protection")
+two("C1", "Device:C", "4.7u 50V", FP["C0805"], X + 100, Y, "VIN_P", "GND", Note="buck input capacitor (datasheet minimum 4.7 uF)")
+two("C3", "Device:C", "22u 25V", "Capacitor_SMD:C_1206_3216Metric", X + 100, Y + 20, "VIN_P", "GND", Note="bulk: supplies the heater switching edges locally")
+two("C18", "Device:C", "100n 50V", FP["C0402"], X + 115, Y + 20, "VIN_P", "GND", Note="high-frequency input bypass at U3 VIN/GND")
+part("U3", "hp_sensor:LMR36503R5", "LMR36503R5RPER", "hp_sensor:TI_RPE0009A_VQFN-HR-9_2x2mm", X + 135, Y + 5,
+     {1: "GND", 2: None, 3: "VIN_P", 4: "VIN_P", 5: "SW", 6: "BOOT", 7: "VCC_BUCK", 8: "5V_BUCK", 9: "GND"},
+     Note="5 V fixed buck; RT to GND = 2.2 MHz; EN tied to VIN; PGOOD unused")
+two("C19", "Device:C", "100n", FP["C0402"], X + 165, Y - 10, "BOOT", "SW", Note="bootstrap capacitor")
+two("C20", "Device:C", "1u", FP["C0402"], X + 165, Y + 20, "VCC_BUCK", "GND", Note="internal LDO capacitor")
+two("L1", "Device:L", "22uH", "Inductor_SMD:L_Sunlord_SWPA4020S", X + 180, Y - 10, "SW", "5V_BUCK", Note="Sunlord SWPA4020S220MT, 0.62 A saturation")
+two("C2", "Device:C", "22u 25V", "Capacitor_SMD:C_1206_3216Metric", X + 180, Y + 20, "5V_BUCK", "GND", Note="buck output capacitor (22 uF rated)")
+two("D7", "Device:D_Schottky", "1A 40V Schottky (SOD-323)", "Diode_SMD:D_SOD-323", X + 228, Y, "+5V", "5V_BUCK", Note="keeps USB power out of the regulator (as on the Nano R4)")
+two("C17", "Device:C", "10u 25V", FP["C0805"], X + 252, Y, "+5V", "GND")
+two("D5", "Device:D_Schottky", "1A 40V Schottky (SOD-323)", "Diode_SMD:D_SOD-323", X + 195, Y, "+5V", "VUSB", Note="bench power from the USB pads")
 for i, net in enumerate(["VIN", "VIN_P", "GND", "VUSB", "+5V"]):
     flag(i + 1, net, X + 40 + 25 * i, Y + 35)
 
@@ -73,21 +79,18 @@ two("D4", "Device:D_TVS", "bidir ESD diode 6-7V (SOD-323)", "Diode_SMD:D_SOD-323
 # ------------------------------------------------------------------ MCU ------------------------------------------------------------------
 X, Y = 95, 215
 text("MICROCONTROLLER   -   Renesas RA4M1 (R7FA4M1AB3CFM), the Arduino UNO R4 / Nano R4 chip, wired exactly like the UNO R4 Minima so the stock board "
-     "package and Arduino pin names apply (nets D2, D4, D9, A0-A5). Runs at 5 V. Support circuit (NMI, USB sense, VCC_USB, VCL) follows Arduino's Nano R4 schematic.", 30, 118, 2.0, right=300)
+     "package and Arduino pin names apply (nets D2, D4, D9, A0-A5). Runs at 5 V. Support circuit (NMI, USB sense, VCC_USB, VCL) follows Arduino's Nano R4 schematic. "
+     "No 32.768 kHz crystal: the stock Arduino core clocks the CPU and USB from the internal HOCO and the RTC from LOCO.", 30, 118, 2.0, right=300)
 part("U1", "hp_sensor:R7FA4M1AB3CFM", "R7FA4M1AB3CFM", "Package_QFP:LQFP-64_10x10mm_P0.5mm", X, Y, {
-    1: None, 2: None, 3: None, 4: "+5V", 5: "VCL", 6: "XCIN", 7: "XCOUT", 8: "GND", 9: None, 10: None, 11: "+5V", 12: None, 13: None, 14: None, 15: None, 16: "VBUS_SENSE",
+    1: None, 2: None, 3: None, 4: "+5V", 5: "VCL", 6: None, 7: None, 8: "GND", 9: None, 10: None, 11: "+5V", 12: None, 13: None, 14: None, 15: None, 16: "VBUS_SENSE",
     17: "GND", 18: "USB_DM", 19: "USB_DP", 20: "VCC_USB", 21: "+5V", 22: None, 23: None, 24: None, 25: "RESET", 26: "MD", 27: "NMI", 28: None,
-    29: "D9_HEAT", 30: None, 31: None, 32: "SWCLK", 33: "SWDIO", 34: None, 35: None, 36: None, 37: None, 38: None, 39: "+5V", 40: "GND",
+    29: "D9_HEAT", 30: None, 31: None, 32: None, 33: None, 34: None, 35: None, 36: None, 37: None, 38: None, 39: "+5V", 40: "GND",
     41: None, 42: None, 43: "D2_SDI12", 44: None, 45: "D4_EXC", 46: None, 47: "A4_SDA", 48: "A5_SCL", 49: None, 50: None, 51: None, 52: None,
-    53: "A0_TH1", 54: None, 55: None, 56: "+5V", 57: "GND", 58: "GND", 59: "VREF", 60: None, 61: None, 62: "A3_TH4", 63: "A2_TH3", 64: "A1_TH2"})
+    53: "A0_TH3", 54: None, 55: None, 56: "+5V", 57: "GND", 58: "GND", 59: "VREF", 60: None, 61: None, 62: "A3_TH4", 63: "A2_TH1", 64: "A1_TH2"})
 PX, PY = 175, 150
 for i, (ref, val, a, note) in enumerate([("C7", "100n", "+5V", "VCC pin 11"), ("C8", "100n", "+5V", "VCC pin 39"), ("C9", "100n", "+5V", "AVCC0"),
                                          ("C10", "4.7u", "VCL", "core regulator (required value)"), ("C16", "4.7u", "VCC_USB", "USB regulator output (Arduino uses 4.7u)")]):
     two(ref, "Device:C", val, FP["C0402"] if val != "4.7u" else FP["C0603"], PX + 22 * i, PY, a, "GND", Note=note)
-part("Y1", "Device:Crystal", "32.768kHz 12.5pF 3215", "Crystal:Crystal_SMD_3215-2Pin_3.2x1.5mm", PX, PY + 50, {1: "XCIN", 2: "XCOUT"},
-     Note="accurate pulse timing: heat = power x time")
-two("C5", "Device:C", "18p", FP["C0402"], PX + 30, PY + 50, "XCIN", "GND")
-two("C6", "Device:C", "18p", FP["C0402"], PX + 44, PY + 50, "XCOUT", "GND")
 two("R1", "Device:R", "10k", FP["R0402"], PX + 62, PY + 50, "+5V", "RESET")
 two("C11", "Device:C", "100n", FP["C0402"], PX + 76, PY + 50, "RESET", "GND")
 two("R2", "Device:R", "10k", FP["R0402"], PX + 92, PY + 50, "+5V", "MD", Note="normal boot")
@@ -97,11 +100,9 @@ two("R16", "Device:R", "10k", FP["R0402"], PX + 140, PY + 50, "VBUS_SENSE", "GND
 
 text("FIRMWARE ACCESS (no soldering)   -   J2 is a row of five holes for an off-the-shelf 2.54 mm 5-pin pogo clip. Holes 1-4 carry USB (5V, D-, D+, GND): "
      "plug a 'USB to 4-pin Dupont' cable onto the clip and the board is an 'Arduino UNO R4 Minima' in the IDE. Hole 5 = BOOT: only for the very first load of the "
-     "Arduino bootloader, put a jumper cap across clip pins 4-5 while plugging in. J5 = a second five-hole row (GND, 5V, SWDIO, SWCLK, RESET) for a debug probe if a board ever needs recovery.", 30, 310, 2.0, right=300)
+     "Arduino bootloader, put a jumper cap across clip pins 4-5 while plugging in. Recovery never needs a programmer: with the BOOT jumper fitted, the chip's built-in USB boot mode reloads the bootloader over the same clip.", 30, 310, 2.0, right=300)
 part("J2", "Connector_Generic:Conn_01x05", "programming clip holes", "hp_sensor:ClipRow_1x05_P2.54mm", 45, 345,
      {1: "VUSB", 2: "USB_DM", 3: "USB_DP", 4: "GND", 5: "MD"}, Note="1 = 5V, 2 = D-, 3 = D+, 4 = GND, 5 = BOOT")
-part("J5", "Connector_Generic:Conn_01x05", "recovery clip holes (SWD)", "hp_sensor:ClipRow_1x05_P2.54mm", 170, 345,
-     {1: "GND", 2: "+5V", 3: "SWDIO", 4: "SWCLK", 5: "RESET"}, Note="1 = GND, 2 = 5V, 3 = SWDIO, 4 = SWCLK, 5 = RESET")
 
 # ------------------------------------------------------------------ HEATER ------------------------------------------------------------------
 X, Y = 440, 60
@@ -117,27 +118,24 @@ part("Q1", "Transistor_FET:AO3400A", "AO3400A", "Package_TO_SOT_SMD:SOT-23", X +
 two("R9", "Device:R", "1.5k", FP["R0402"], X + 48, Y + 65, "D9_HEAT", "HEAT_GATE", Note="1%; limits RA4M1 gate charging current below 4 mA")
 two("R10", "Device:R", "100k", FP["R0402"], X + 63, Y + 65, "HEAT_GATE", "GND", Note="gate pull-down")
 
-text(f"HEATER RESISTOR CHAIN (top of centre prong)   -   {N_HEAT} x {R_HEAT} ohm 1% 0603 in series, {PITCH} mm pitch. EXACT Vishay CRCW06033R30FKEAHP, 0.33 W at 70 C; no ordinary 0.1 W substitutes. "
+text(f"HEATER RESISTOR CHAIN (top of center prong)   -   {N_HEAT} x {R_HEAT} ohm 1% 0603 in series, {PITCH} mm pitch. EXACT Vishay CRCW06033R30FKEAHP, 0.33 W at 70 C; no ordinary 0.1 W substitutes. "
      "Return is on bottom copper. Nominal full-ON power 2.34 W at 12 V, 3.41 W at 14.4 V with specified cable losses. PWM controls average energy; instantaneous ratings still apply. Qualify the potted needle thermally.", 30, 365, 2.0)
 for i in range(N_HEAT):
     two(f"RH{i + 1}", "Device:R", R_HEAT, "hp_sensor:R_0603_Vishay_HP", 40 + 16.5 * i, 395, "HEAT_P" if i == 0 else f"H_{i}", "HEAT_RTN" if i == N_HEAT - 1 else f"H_{i + 1}")
 
 # ------------------------------------------------------------------ THERMISTORS ------------------------------------------------------------------
 X, Y = 470, 215
-text("THERMISTORS   -   required firmware: 14-bit ADC, external VREF (AR_EXTERNAL), 64 readings averaged; actual noise and accuracy require measurement. The dividers and ADC reference share VREF. "
-     "D4 switches thermistor ground through Q2 to reduce self-heating. Sequence: D4 HIGH, wait 10 ms, read, D4 LOW. "
+text("THERMISTORS   -   pin map (same on flat-nano and hat): A2 = TH1 right needle, A1 = TH2 heater-needle tip, A0 = TH3 left needle, A3 = TH4 board body (left/right seen on the top face, cable end up, needles down). Required firmware: 14-bit ADC, external VREF (AR_EXTERNAL), 64 readings averaged; actual noise and accuracy require measurement. The dividers and ADC reference share VREF. "
+     "D4 powers the dividers AND the ADC reference through R11, so they are off between readings (no self-heating) and the reading stays ratiometric. Sequence: D4 HIGH, wait 10 ms, read, D4 LOW. "
      "R_ntc = Rref * code / (full scale - code). NTC = Murata NCP15XH103F03RC (10k, 1%); Rref = 10k 0.1% 25 ppm.", 430, 160, 2.0)
-two("R11", "Device:R", "10", FP["R0402"], X, Y + 15, "+5V", "VREF", Note="filters the reference node")
-two("C13", "Device:C", "1u", FP["C0402"], X + 14, Y + 15, "VREF", "GND")
-part("Q2", "Transistor_FET:AO3400A", "AO3400A", "Package_TO_SOT_SMD:SOT-23", X + 45, Y + 20, {1: "EXC_GATE", 2: "GND", 3: "TH_RTN"}, Note="switches the thermistor ground")
-two("R12", "Device:R", "1.5k", FP["R0402"], X + 75, Y + 15, "D4_EXC", "EXC_GATE", Note="1%; limits gate charging current below 4 mA")
-two("R17", "Device:R", "100k", FP["R0402"], X + 90, Y + 15, "EXC_GATE", "GND")
-names = {1: ("left prong", "A0_TH1"), 2: ("heater prong tip", "A1_TH2"), 3: ("right prong", "A2_TH3"), 4: ("board body (diagnostic)", "A3_TH4")}
+two("R11", "Device:R", "1.5k", FP["R0402"], X, Y + 15, "D4_EXC", "VREF", Note="limits pin D4 (RA4M1 P103) to 3.3 mA while C13 charges; the datasheet allows 4 mA per pin")
+two("C13", "Device:C", "1u", FP["C0402"], X + 80, Y + 15, "VREF", "GND")   # right of R11's note
+names = {1: ("right prong", "A2_TH1"), 2: ("heater prong tip", "A1_TH2"), 3: ("left prong", "A0_TH3"), 4: ("board body (diagnostic)", "A3_TH4")}
 for i in range(1, 5):
     x = X - 30 + 36 * (i - 1)
     node = names[i][1]
     two(f"R2{i}", "Device:R", "10k 0.1%", FP["R0603"], x, Y + 85, "VREF", node, Note="reference resistor")
-    two(f"TH{i}", "Device:Thermistor_NTC", "10k NTC 1%", FP["R0402"], x, Y + 125, node, "TH_RTN", Note=names[i][0])
+    two(f"TH{i}", "Device:Thermistor_NTC", "10k NTC 1%", FP["R0402"], x, Y + 125, node, "GND", Note=names[i][0])
     two(f"C2{i}", "Device:C", "100n", FP["C0402"], x + 18, Y + 125, node, "GND")
 
 # =============================================================== writer ===============================================================
@@ -173,7 +171,7 @@ def build():
         if p["lib"].startswith("Connector:TestPoint"): rx, ry, vx, vy = p["x"] + 2.5, p["y"] - 3, p["x"] + 2.5, p["y"] - 0.8
         power = p["ref"].startswith("#")
         inst = [Sym("symbol"), [Sym("lib_id"), p["lib"]], [Sym("at"), p["x"], p["y"], 0], [Sym("unit"), 1], [Sym("exclude_from_sim"), Sym("no")],
-                [Sym("in_bom"), Sym("no" if power or p["ref"] in {"J1", "J2", "J5"} else "yes")], [Sym("on_board"), Sym("no" if power else "yes")], [Sym("dnp"), Sym("no")], [Sym("uuid"), uid()],
+                [Sym("in_bom"), Sym("no" if power or p["ref"] in {"J1", "J2"} else "yes")], [Sym("on_board"), Sym("no" if power else "yes")], [Sym("dnp"), Sym("no")], [Sym("uuid"), uid()],
                 [Sym("property"), "Reference", p["ref"], [Sym("at"), rx, ry, 0], EFF(just=just, hide=power)],
                 [Sym("property"), "Value", p["value"], [Sym("at"), vx, vy, 0], EFF(just=just, hide=power and False)],
                 [Sym("property"), "Footprint", p["fp"], [Sym("at"), p["x"], p["y"], 0], EFF(hide=True)],
@@ -203,7 +201,7 @@ def build():
     for s, x, y, size in TEXTS:
         items.append([Sym("text"), s.replace("\n", chr(92) + "n"), [Sym("exclude_from_sim"), Sym("no")], [Sym("at"), x, y, 0], EFF(size=size, just=["left", "bottom"]), [Sym("uuid"), uid()]])
     sch = [Sym("kicad_sch"), [Sym("version"), 20250114], [Sym("generator"), "eeschema"], [Sym("generator_version"), "9.0"], [Sym("uuid"), ROOT], [Sym("paper"), "A2"],
-           [Sym("title_block"), [Sym("title"), "Compact heat-pulse soil sensor, SDI-12 (HP-SDI12-NANO r2)"], [Sym("company"), "K-State Soil Water Processes Lab"], [Sym("comment"), 1, "Generated by gen_schematic.py - edit the script, not this file"]],
+           [Sym("title_block"), [Sym("title"), "Compact heat-pulse soil sensor, SDI-12 (HP-SDI12-NANO)"], [Sym("company"), "K-State Soil Water Processes Lab"], [Sym("comment"), 1, "Generated by gen_schematic.py - edit the script, not this file"]],
            [Sym("lib_symbols")] + list(lib_syms.values())] + items + [[Sym("sheet_instances"), [Sym("path"), "/", [Sym("page"), "1"]]], [Sym("embedded_fonts"), Sym("no")]]
     return sch, netlist
 
