@@ -8,9 +8,9 @@ Three durations and one heater-duty setting are editable, and the soil is chosen
 
 | Setting | Range | Default |
 |---|---:|---:|
-| Background sensing | 1–60 s | 10 s |
+| Background (sensing before heating) | 1–60 s | 10 s |
 | Heating | 8–15 s | 15 s |
-| Cooling sensing | 1–600 s | 90 s |
+| Cooling (sensing after heating) | 1–600 s | 90 s |
 | Heater duty | 0–100% | 85% |
 
 ## Choose a soil

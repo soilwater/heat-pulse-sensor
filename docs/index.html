@@ -42,9 +42,9 @@
   </section>
   <section class="experiment" aria-label="Measurement controls">
     <form id="timingForm" class="timing" novalidate>
-      <div class="timing-field" data-phase="baseline"><label for="baselineS">Background sensing</label><div class="number-field"><input id="baselineS" type="number" min="1" max="60" step="1" value="10" inputmode="numeric" required><span>s</span></div></div>
+      <div class="timing-field" data-phase="baseline"><label for="baselineS" title="Background sensing: temperatures recorded before heating">Background</label><div class="number-field"><input id="baselineS" type="number" min="1" max="60" step="1" value="10" inputmode="numeric" required><span>s</span></div></div>
       <div class="timing-field" data-phase="pulse"><label for="pulseS">Heating</label><div class="number-field"><input id="pulseS" type="number" min="8" max="15" step="1" value="15" inputmode="numeric" required><span>s</span></div></div>
-      <div class="timing-field" data-phase="cooldown"><label for="cooldownS">Cooling sensing</label><div class="number-field"><input id="cooldownS" type="number" min="1" max="600" step="1" value="90" inputmode="numeric" required><span>s</span></div></div>
+      <div class="timing-field" data-phase="cooldown"><label for="cooldownS" title="Cooling sensing: temperatures recorded after the heater switches off">Cooling</label><div class="number-field"><input id="cooldownS" type="number" min="1" max="600" step="1" value="90" inputmode="numeric" required><span>s</span></div></div>
       <div class="timing-field" data-phase="pulse"><label for="dutyPct">Heater duty</label><div class="number-field"><input id="dutyPct" type="number" min="0" max="100" step="1" value="85" inputmode="numeric" required><span>%</span></div></div>
     </form>
     <div class="run-controls">

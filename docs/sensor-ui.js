@@ -55,7 +55,7 @@
   function applyTiming() {
     playing=false;
     const next=fixedConfig();
-    const names={baselineS:'Background sensing',pulseS:'Heating',cooldownS:'Cooling sensing',dutyPct:'Heater duty'};
+    const names={baselineS:'Background',pulseS:'Heating',cooldownS:'Cooling',dutyPct:'Heater duty'};
     try {
       for(const key of Object.keys(names)) {
         const input=$(key),value=Number(input.value);
