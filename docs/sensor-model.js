@@ -60,7 +60,7 @@
       // buckEfficiency: assumed U3 efficiency at the electronics load. 0.83 matches the
       // ~10 mW loss at 50 mW output quoted for this board; it is not a measurement.
       logicMa: 10, buckEfficiency: 0.83, ambientC: 22,
-      soilLambda: 1.5, soilC: 2e6, spacingMm: 8, baselineS: 10, cooldownS: 90,
+      soilLambda: 1.5, soilC: 2e6, spacingMm: 8, baselineS: 10, cooldownS: 150,
       sampleS: 1, settlingMs: 10, acquisitionMs: 10, averages: 64,
       // minBatteryV/maxBatteryV: proposed firmware heating policy, not regulator limits.
       adcReference: 'external', minBatteryV: 7, maxBatteryV: 14.4, fault: 'none'};
@@ -430,7 +430,6 @@
    * per interval after the heater turns on; pulsed infinite-line-source fit (engine.fitILS)
    * with q' = average heater power / heated length and the nominal needle spacing.
    * The error against the soil's true lambda and C is the geometry + quantization bias. */
-  const RESISTOR_LENGTH_MM = 1.6; // 0603 body; heated length = first to last resistor end
   function soilEstimate(run) {
     const c = run.config, e = run.electrical, engine = run._thermalEngine;
     if (!engine || !engine.fitILS || blocked(c) || !(e.heaterPowerW > 0) || c.fault !== 'none') return null;
@@ -442,10 +441,19 @@
     for (let s = c.sampleS; s <= c.pulseS + c.cooldownS + 1e-9; s += c.sampleS) { t.push(s); rise.push(th1(start + s)); }
     const baseline = base.reduce((a, b) => a + b, 0) / base.length;
     if (!base.length || !Number.isFinite(baseline) || rise.some(v => !Number.isFinite(v))) return null;
-    const heatedLengthM = ((c.heaterCount - 1) * c.heaterPitchMm + RESISTOR_LENGTH_MM) / 1000;
+    // Effective line length: each resistor stands for one pitch of an evenly heated line (17 x 2.6 mm = 44.2 mm).
+    const heatedLengthM = c.heaterCount * c.heaterPitchMm / 1000;
     const qPrime = e.heaterPowerW / heatedLengthM;
-    const fit = engine.fitILS(t, rise.map(v => v - baseline), qPrime, c.spacingMm / 1000, c.pulseS, {lambda: 1, C: 2e6});
-    return {lambda: fit.lambda, C: fit.C, alpha: fit.alpha, rmseC: fit.rmse, qPrimeWm: qPrime, samples: t.length,
+    // Fit from heater-on to 1.5 x the measured peak time (or the end of the record). The peak's size and timing
+    // carry the information; the tail is where the ideal line agrees least with the finite heater (and with
+    // needle, contact and drift effects), so fitting it biases lambda and alpha upward. Samples recorded after
+    // the window are kept but not fitted.
+    const rel = rise.map(v => v - baseline);
+    let ip = 0; rel.forEach((v, i) => { if (v > rel[ip]) ip = i; });
+    const WINDOW = 1.5, windowS = Math.min(t[t.length - 1], WINDOW * t[ip]), n = t.filter(x => x <= windowS + 1e-9).length;
+    const fit = engine.fitILS(t.slice(0, n), rel.slice(0, n), qPrime, c.spacingMm / 1000, c.pulseS, {lambda: 1, C: 2e6});
+    return {lambda: fit.lambda, C: fit.C, alpha: fit.alpha, rmseC: fit.rmse, qPrimeWm: qPrime, samples: n, peakS: t[ip], windowS,
+      peakCaptured: ip < t.length - 1, fullWindow: WINDOW * t[ip] <= t[t.length - 1] + 1e-9,
       lambdaErrPct: 100 * (fit.lambda / c.soilLambda - 1), CErrPct: 100 * (fit.C / c.soilC - 1)};
   }
 

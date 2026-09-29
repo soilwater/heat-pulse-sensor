@@ -69,7 +69,7 @@ The default pulse (1.99 W average, 15 s, 8 mm spacing), run through all 1,448 me
 | Oven-dry soils only | 0.71 · 0.94 · 1.37 °C |
 | Time of peak after heater on | 28 · 39 · 64 s |
 | Soil beside heated section (needle surface) | 5.4 · 7.1 · 17.6 °C rise |
-| Line-source analysis bias, λ / C (geometry only, no noise) | +3.7% / +2.7% (median) |
+| Line-source analysis error, λ / C (finite heater only, no noise; effective length 17 × 2.6 mm, fit to 1.5 × the peak time) | λ +0.1 · +0.2 · +0.3% / C +0.0 · +0.1 · +0.1% |
 
 Implications:
 
@@ -79,9 +79,14 @@ Implications:
 - **Dry soil runs hot.** Oven-dry cores push the needle-surface soil to about +16 °C (up to +22 °C) with
   the same energy. That is a steep gradient that can drive water away from the heater in moist soil,
   and it is the hotter environment for the heater resistors.
-- The 90 s cooling window covers the peak in every case (latest ≈ 64 s).
-- The line-source analysis bias is small and fairly stable (+2.4 to +2.9% for C) across Kansas soils,
-  so a single calibration factor should remove most of it.
+- **Record length.** The latest peak in the Kansas data (an oven-dry core, 15 s pulse) comes 98 s after the heater
+  switches on; the median is 39 s. The default 150 s cooling phase (165 s of record after heater-on) covers 1.5 × the
+  peak time for every state, with margin to locate the peak. A 90 s cooling phase would end only 7 s after that latest peak.
+- **Analysis error is small.** With the effective heated length (17 × 2.6 mm = 44.2 mm) and a fit from heater-on to
+  1.5 × the peak time, the finite-heater error is 0.3% or less for λ and 0.1% or less for C (5th–95th percentile)
+  across all Kansas states. Fitting further into the tail, where the ideal line and the finite heater agree least,
+  pulls λ up.
+  Needle spacing, needle heat capacity, contact and noise will dominate real-sensor errors.
 
 ## Check 3 — the engine's texture-based soil-property model (`engine.soilProps`, not used by the dashboard)
 

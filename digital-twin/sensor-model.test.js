@@ -576,13 +576,18 @@ test('invalid configurations fail explicitly; repeated calculations and browser 
   assert.ok(context.SensorModel.simulate().series.some(p => p.tempTH1 > 22));
 });
 
-test('sensor estimate recovers the simulated soil within the finite-heater bias', () => {
-  for (const soil of [{soilLambda: 1.283, soilC: 2.345e6}, {soilLambda: 0.43, soilC: 1.31e6}]) {
+test('sensor estimate fits to 1.5 x the peak time with the 17 x 2.6 mm effective heater length', () => {
+  for (const soil of [{soilLambda: 1.283, soilC: 2.345e6}, {soilLambda: 0.43, soilC: 1.31e6}, {soilLambda: 0.244, soilC: 1.349e6}, {soilLambda: 2.159, soilC: 1.944e6}]) {
     const e = M.soilEstimate(M.simulate(soil, T));
-    assert.ok(e.samples === 105, 'one sample per second through heating and cooling');
-    assert.ok(e.CErrPct > 1 && e.CErrPct < 5, 'C bias ' + e.CErrPct);
-    assert.ok(e.lambdaErrPct > 1 && e.lambdaErrPct < 6, 'lambda bias ' + e.lambdaErrPct);
+    near(e.qPrimeWm, M.electrical().heaterPowerW / 0.0442, 1e-9);
+    assert.ok(e.peakCaptured && e.fullWindow, 'the default record covers 1.5 x the peak time');
+    assert.equal(e.windowS, 1.5 * e.peakS, 'fit window is 1.5 x the peak time');
+    assert.equal(e.samples, Math.floor(e.windowS), 'one sample per second up to the window end');
+    assert.ok(Math.abs(e.CErrPct) < 0.5, 'C bias ' + e.CErrPct);
+    assert.ok(Math.abs(e.lambdaErrPct) < 1, 'lambda bias ' + e.lambdaErrPct);
   }
+  const short = M.soilEstimate(M.simulate({soilLambda: 0.244, soilC: 1.349e6, cooldownS: 60}, T));
+  assert.ok(!short.peakCaptured && short.windowS === 75, 'a record that ends before the peak is flagged and fitted to its end');
   assert.equal(M.soilEstimate(M.simulate({dutyPct: 0}, T)), null, 'no heat, no estimate');
   assert.equal(M.soilEstimate(M.simulate({fault: 'NTC-open'}, T)), null, 'a failed thermistor gives no estimate');
 });

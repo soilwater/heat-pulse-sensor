@@ -140,9 +140,9 @@ const assert = require('node:assert/strict');
     check((await phase()).trim() === 'Ready', 'initial phase is ready');
     check(await noOverflow(), 'no desktop horizontal overflow');
     let initial = await snapshot();
-    check(initial.config.baselineS === 10 && initial.config.pulseS === 15 && initial.config.dutyPct === 85 && initial.config.cooldownS === 90,
+    check(initial.config.baselineS === 10 && initial.config.pulseS === 15 && initial.config.dutyPct === 85 && initial.config.cooldownS === 150,
       'default timings');
-    near(initial.duration, 115, 1e-10, 'visible duration excludes synthetic model idle/report');
+    near(initial.duration, 175, 1e-10, 'visible duration excludes synthetic model idle/report');
     near(initial.power.heaterW, 0, 1e-12, 'heater is initially off');
     check(await page.locator('#thermalField').getAttribute('opacity') === '0', 'soil colormap is neutral at reset');
     near(await displayNumber('tempHeatedZone'), 22, .001, 'heated-zone soil estimate starts at ambient');
@@ -466,7 +466,7 @@ const assert = require('node:assert/strict');
     check((await snapshot()).state.temperaturesC[0] > cooling.state.temperaturesC[0],
       'heat continues arriving at the side needle after heater cutoff');
     near((await snapshot()).state.energyJ, cooling.state.energyJ, 1e-9, 'heater energy is held through cooling');
-    await seek(115);
+    await seek(175);
     check((await phase()).trim() === 'Complete', 'total duration completes the measurement');
     check(!(await snapshot()).state.heaterOn, 'heater remains off at completion');
     await checkFlows('complete');
@@ -546,7 +546,7 @@ const assert = require('node:assert/strict');
     await setTiming('pulseS', 8);
     const e8 = await page.evaluate(() => SensorTwin.run.deliveredHeaterEnergyJ);
     check((await phase()).trim() === 'Ready' && (await snapshot()).time === 0, 'valid change resets playback');
-    near((await snapshot()).duration, 108, 1e-10, '8-second duration');
+    near((await snapshot()).duration, 168, 1e-10, '8-second duration');
     await setTiming('pulseS', 15);
     const e15 = await page.evaluate(() => SensorTwin.run.deliveredHeaterEnergyJ);
     near(e15 / e8, 15 / 8, 1e-10, '15 versus 8 seconds scales delivered heater energy');
@@ -610,7 +610,7 @@ const assert = require('node:assert/strict');
     check(!(await page.locator('#start').isDisabled()) && !(await page.locator('#inputError').isVisible()),
       'valid timing recovers from validation errors');
     await setTiming('baselineS', 10);
-    await setTiming('cooldownS', 90);
+    await setTiming('cooldownS', 150);
     await seek(18);
     if (process.env.TWIN_SCREENSHOT_DIR)
       await page.screenshot({path: path.join(process.env.TWIN_SCREENSHOT_DIR, 'flat-twin-pulse.png'), fullPage: true});

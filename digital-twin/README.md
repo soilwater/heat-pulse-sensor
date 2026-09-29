@@ -10,7 +10,7 @@ Three durations and one heater-duty setting are editable, and the soil is chosen
 |---|---:|---:|
 | Background (sensing before heating) | 1–60 s | 10 s |
 | Heating | 8–15 s | 15 s |
-| Cooling (sensing after heating) | 1–600 s | 90 s |
+| Cooling (sensing after heating) | 1–600 s | 150 s |
 | Heater duty | 0–100% | 85% |
 
 ## Choose a soil
@@ -26,7 +26,7 @@ The twin applies the choice immediately and uses that single reading's measured 
 
 Press **Run measurement**, pause/resume, reset, or run again. Drag the time slider to inspect any moment. Playback speed cycles through **1×, 4×, and 10×**; this changes animation speed, not the simulated pulse duration. Changing a timing or duty value resets the measurement. Duty is the fraction of each 100 Hz PWM cycle that the heater switch is ON. At 0%, the measurement sequence still runs but the heater stays off.
 
-Displayed time **0 starts background sensing**. The default cycle lasts **115 seconds** and contains exactly the three phases above. The underlying model's initial idle and final reporting intervals are not displayed.
+Displayed time **0 starts background sensing**. The default cycle lasts **175 seconds** and contains exactly the three phases above. The underlying model's initial idle and final reporting intervals are not displayed.
 
 The vertical sensor view uses the actual PCB outline, component positions, and copper snapshot. Scroll over the board to zoom at the pointer, or use **+ / −**; drag to pan and press **Fit** to restore the whole board. Zoom ranges from 100% to 600%. Clicking a component, a callout, or a Readings row opens its role and current values in a detail dialog; dragging does not open a dialog.
 
@@ -46,7 +46,7 @@ The tour is two self-contained files: `tour.js`, a generic engine (spotlight, bl
 
 The **Readings** table updates with the time slider: TH1, TH3 and TH2 temperatures and rises, the soil beside the heated section, battery draw and current, heater power and energy, and the component losses. TH4 (board) stays on the drawing but is not reported, because board heating is not modeled. Click any row for details.
 
-**Sensor estimate** answers "what would this sensor report in this soil?". When cooling ends, the simulated TH1 record (14-bit ADC, 64 readings averaged, one sample per second) is baseline-corrected and fitted with the pulsed infinite-line-source model, as simple firmware would, using q′ = average heater power ÷ heated length and the nominal 8 mm spacing. The table shows the sensor's λ and C next to the soil's KD2 Pro values, with the difference. Water content is then derived from C with the de Vries relation θ = (C − ρb·0.75)/4.18 and the core's bulk density, and compared with the measured θ. The λ and C differences are the sensor-and-analysis bias, about +2.5–4%, mostly from the finite heater length. The θ difference also contains the de Vries relation's own error, since measured C scatters about ±10% around it.
+**Sensor estimate** answers "what would this sensor report in this soil?". When cooling ends, the simulated TH1 record (14-bit ADC, 64 readings averaged, one sample per second) is baseline-corrected and fitted with the pulsed infinite-line-source model, as simple firmware would: from heater-on to 1.5 times the time of the measured peak (readings after that are kept but not fitted), using q′ = average heater power ÷ effective heated length (17 resistors × 2.6 mm = 44.2 mm) and the nominal 8 mm spacing. If the record ends before the peak, the estimate is flagged. The table shows the sensor's λ and C next to the soil's KD2 Pro values, with the difference. Water content is then derived from C with the de Vries relation θ = (C − ρb·0.75)/4.18 and the core's bulk density, and compared with the measured θ. The λ and C differences are the model error of the sensor and analysis, mostly from the finite heater length: about 1% or less for λ and 0.3% or less for C across Kansas soils with the default settings. The θ difference also contains the de Vries relation's own error: in the wetter states, measured C averages about 6–9% below the relation, with ±11–14% scatter.
 
 ## Parts list
 

@@ -140,13 +140,15 @@ function kd2Check() {
 // ---------- check 2: flat-nano sensor response over the measured Kansas range ----------
 function sensorEnvelope() {
   const run = S.simulate({}, T), c = run.config, e = run.electrical, src = run._thermalSources;
-  const heatedLen = (c.heaterCount - 1) * c.heaterPitchMm / 1000 + 0.0016, qP = e.heaterPowerW / heatedLen;
+  // Same analysis as soilEstimate: effective length 17 x 2.6 mm, fit from heater-on to 1.5 x the peak time.
+  const heatedLen = c.heaterCount * c.heaterPitchMm / 1000, qP = e.heaterPowerW / heatedLen;
   const rows = pulses.filter(p => Number.isFinite(p.thermal_cond) && Number.isFinite(p.heat_capacity)).map(p => {
     const soil = {lambda: p.thermal_cond, C: p.heat_capacity * 1e6, alpha: p.thermal_cond / (p.heat_capacity * 1e6)};
     const t = Array.from({length: c.pulseS + c.cooldownS}, (_, i) => i + 1);
     const y = t.map(x => T.dTpoint(src, c.spacingMm / 1000, 0.0298, x, c.pulseS, soil)), peak = Math.max(...y);
     let hot = 0; for (let x = 0.5; x <= c.pulseS + 3; x += 0.5) hot = Math.max(hot, T.dTpoint(src, 0.001385, 0.0298, x, c.pulseS, soil));
-    const fit = T.fitILS(t, y, qP, c.spacingMm / 1000, c.pulseS, {lambda: 1, C: 2e6});
+    const n = Math.min(t.length, Math.floor(1.5 * t[y.indexOf(peak)]));
+    const fit = T.fitILS(t.slice(0, n), y.slice(0, n), qP, c.spacingMm / 1000, c.pulseS, {lambda: 1, C: 2e6});
     return {state: stateBySheet.get(p.water_state).id, peak, tPeak: t[y.indexOf(peak)], hot,
       eL: 100 * (fit.lambda / soil.lambda - 1), eC: 100 * (fit.C / soil.C - 1)};
   });
@@ -154,6 +156,7 @@ function sensorEnvelope() {
   console.log(''.padEnd(34) + '     p5  median     p95');
   row('side-needle peak rise (C)', rows.map(o => o.peak));
   row('time of peak after heater on (s)', rows.map(o => o.tPeak), 0);
+  console.log(`${'  latest peak; record after heater on'.padEnd(34)} ${Math.max(...rows.map(o => o.tPeak))} s; ${c.pulseS + c.cooldownS} s`);
   row('heated-zone soil rise (C)', rows.map(o => o.hot), 1);
   row('line-source fit lambda error (%)', rows.map(o => o.eL), 1);
   row('line-source fit C error (%)', rows.map(o => o.eC), 1);
