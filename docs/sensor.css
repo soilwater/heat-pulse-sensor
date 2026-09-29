@@ -4,7 +4,10 @@
 .board-tools{display:flex;align-items:center;gap:5px;color:#738878}.board-tools button{width:25px;height:25px;border:1px solid #e0e7de;background:#fff;font-size:16px;line-height:1;padding:0}.board-tools button:hover{background:#eef4ed;border-color:#b6caba}.board-tools #zoomFit{width:auto;padding:0 8px;margin-left:3px;font-size:10px}.board-tools output{min-width:38px;text-align:center;font-size:10px;font-variant-numeric:tabular-nums}.sensor-canvas{position:relative;overflow:hidden}#board{overflow:hidden;user-select:none}#board.zoomed{cursor:grab}#board.is-panning,#board.is-panning *{cursor:grabbing!important}.board-legend{gap:15px}.board-legend .legend-signal:before{background:var(--flow-signal)}
 /* Suppress browser SVG focus rings; use a thin rectangular border on the part itself. */
 .part:focus,.part:focus-visible,.board-tag:focus,.board-tag:focus-visible{outline:none!important;filter:none}.part-outline{fill:none!important;stroke-width:1px;vector-effect:non-scaling-stroke;rx:0;ry:0}.heater-part.active .part-outline{stroke-width:1.1px}.part:hover .part-outline,.part:focus .part-outline,.part:focus-visible .part-outline,.part.selected .part-outline{fill:none!important;stroke:#f5d48a;stroke-width:1.6px;filter:none}.board-tag.selected .tag-label{fill:#2d6b4c;font-weight:650}
-.flow.logic{--route-color:var(--flow-power)}.flow.signal,.flow.sense{--route-color:var(--flow-signal)}.route-segment{stroke:var(--route-color);stroke-width:var(--trace-width)}.route-via{fill:var(--route-color);stroke:none}.flow.activity-only{stroke-dasharray:none;animation:trace-activity 1.25s ease-in-out infinite}.flow.activity-only .route-segment{stroke-dasharray:none}@keyframes trace-activity{0%,100%{stroke-opacity:.5;fill-opacity:.5}50%{stroke-opacity:1;fill-opacity:1}}
+.flow.logic{--route-color:var(--flow-power)}.flow.signal,.flow.sense{--route-color:var(--flow-signal)}.route-segment{stroke:var(--route-color);stroke-width:var(--trace-width)}.route-via{fill:var(--route-color);stroke:none}.flow.activity-only{stroke-dasharray:none;animation:trace-activity 1.25s ease-in-out infinite}.flow.activity-only .route-segment{stroke-dasharray:none}
+.flow.on.sampling{opacity:.3;animation-name:none;stroke-opacity:1}
+.flow.on.reading{opacity:1;animation-name:none;stroke-opacity:1}
+.flow.reading .route-segment{stroke-width:calc(var(--trace-width) * 1.8)}@keyframes trace-activity{0%,100%{stroke-opacity:.5;fill-opacity:.5}50%{stroke-opacity:1;fill-opacity:1}}
 .route-segment.undirected{stroke-dasharray:none}
 .paused .flow{animation-play-state:paused}
 body{min-width:1024px}
@@ -93,6 +96,13 @@ body{min-width:1024px}
 /* Dialogs */
 .wide-dialog{width:min(1140px,calc(100vw - 40px));max-height:90vh;padding:22px 26px 22px}
 .wide-dialog .dialog-header{margin-bottom:6px}
+.references-dialog{width:min(760px,calc(100vw - 40px))}
+.references{margin:0;padding-left:20px;display:grid;gap:13px;font-size:12.5px;line-height:1.55}
+.references a{color:#3f7a5a;word-break:break-all}
+.references .ref-use{display:block;margin-top:2px;font-size:11.5px;color:#80977e}
+.link-button{padding:0;border:0;border-bottom:1px solid currentColor;background:none;color:#3f7a5a;font-size:inherit}
+:root[data-theme=dark] .references a,:root[data-theme=dark] .link-button{color:var(--neon-mint)}
+:root[data-theme=dark] .references .ref-use{color:var(--muted)}
 .dialog-actions{display:flex;justify-content:flex-end;margin-top:14px}.dialog-actions .start-button{min-width:110px}
 .parts-scroll{max-height:68vh;overflow:auto;border:1px solid var(--line);border-radius:6px;margin-top:10px}
 .parts-table{width:100%;border-collapse:collapse;font-size:11.5px}

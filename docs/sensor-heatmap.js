@@ -1,6 +1,8 @@
 /* Temperature of ideal soil around the heater, not resistor/steel temperature.
  * A fixed logarithmic rise scale reveals the small side-needle signal without
  * changing scale as a pulse cools. The needle interior has no soil-model value.
+ * The field runs from the sensor head (end of the PCB body) past the needle tips; like the
+ * rest of the model it treats everything outside the needles as uniform soil.
  */
 (() => {
   'use strict';
@@ -16,11 +18,11 @@
   function mount(parent,board) {
     const image=document.createElementNS(NS,'image');
     const heater=board.footprints.find(p=>p.ref==='RH1');
-    const left=board.bodyLengthMm+8,top=heater.xy[1]-16,width=59,height=32;
+    const left=board.bodyLengthMm,top=heater.xy[1]-16,width=67,height=32;
     for(const [key,value] of Object.entries({id:'thermalField',x:left,y:top,width,height,
       'pointer-events':'none',preserveAspectRatio:'none',opacity:0}))image.setAttribute(key,value);
     parent.append(image);
-    const canvas=document.createElement('canvas');canvas.width=100;canvas.height=56;
+    const canvas=document.createElement('canvas');canvas.width=114;canvas.height=56;
     const context=canvas.getContext('2d'),pixels=context.createImageData(canvas.width,canvas.height);
     let previousRun=null,previousTime=null,previousStops=null;
     return {

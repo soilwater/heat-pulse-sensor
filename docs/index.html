@@ -131,7 +131,7 @@
       </section>
     </div>
   </main>
-  <footer>Scroll over the sensor to zoom · drag to pan · click a part or a reading for details. <button id="modelNotes">Model assumptions</button></footer>
+  <footer>Scroll over the sensor to zoom · drag to pan · click a part or a reading for details. <button id="modelNotes">Model assumptions</button> · <button id="referencesButton">References</button></footer>
 </div>
 
 <dialog id="componentDialog" aria-labelledby="dialogTitle">
@@ -141,6 +141,24 @@
   <p id="dialogDescription"></p>
   <div id="dialogReadings" class="dialog-readings"></div>
   <div id="dialogExtra"></div>
+</dialog>
+
+<dialog id="referencesDialog" class="wide-dialog references-dialog" aria-labelledby="referencesTitle">
+  <div class="dialog-header"><h2 id="referencesTitle">References</h2><button class="close-button" data-close aria-label="Close references">×</button></div>
+  <p class="dialog-part">Methods and data behind the thermal model, the sensor estimate and the soil library. The twin uses these solutions in their ideal form: uniform soil, perfect contact, and no heat stored in the needles, epoxy or board.</p>
+  <ol class="references">
+    <li>Blackwell, J. H. (1954). A transient-flow method for determination of thermal constants of insulating materials in bulk. Part I—Theory. <i>Journal of Applied Physics</i>, 25, 137–144. <a href="https://doi.org/10.1063/1.1721592" target="_blank" rel="noopener">doi:10.1063/1.1721592</a><span class="ref-use">The line-source theory behind transient needle probes: a long, thin heater warming the surrounding material.</span></li>
+    <li>Carslaw, H. S., &amp; Jaeger, J. C. (1959). <i>Conduction of heat in solids</i> (2nd ed.). Oxford University Press.<span class="ref-use">The temperature field around the heater. Each of the 17 heater resistors is a point source in uniform soil, switched on for the heating time; summing them gives the soil colormap and the TH1, TH2 and TH3 curves.</span></li>
+    <li>Campbell, G. S., Calissendorff, C., &amp; Williams, J. H. (1991). Probe for measuring soil specific heat using a heat-pulse method. <i>Soil Science Society of America Journal</i>, 55, 291–293. <a href="https://doi.org/10.2136/sssaj1991.03615995005500010052x" target="_blank" rel="noopener">doi:10.2136/sssaj1991.03615995005500010052x</a><span class="ref-use">The dual-probe idea: a heater needle and a temperature needle a fixed distance apart.</span></li>
+    <li>Kluitenberg, G. J., Ham, J. M., &amp; Bristow, K. L. (1993). Error analysis of the heat pulse method for measuring soil volumetric heat capacity. <i>Soil Science Society of America Journal</i>, 57, 1444–1451. <a href="https://doi.org/10.2136/sssaj1993.03615995005700060008x" target="_blank" rel="noopener">doi:10.2136/sssaj1993.03615995005700060008x</a><span class="ref-use">The pulsed infinite line-source solution for a heat pulse of finite length, and why the needle spacing dominates the heat-capacity error.</span></li>
+    <li>Bristow, K. L., Kluitenberg, G. J., &amp; Horton, R. (1994). Measurement of soil thermal properties with a dual-probe heat-pulse technique. <i>Soil Science Society of America Journal</i>, 58, 1288–1294. <a href="https://doi.org/10.2136/sssaj1994.03615995005800050002x" target="_blank" rel="noopener">doi:10.2136/sssaj1994.03615995005800050002x</a><span class="ref-use">The sensor estimate: conductivity and heat capacity from the side-needle temperature rise.</span></li>
+    <li>Kluitenberg, G. J., Bristow, K. L., &amp; Das, B. S. (1995). Error analysis of heat pulse method for measuring soil heat capacity, diffusivity, and conductivity. <i>Soil Science Society of America Journal</i>, 59, 719–726. <a href="https://doi.org/10.2136/sssaj1995.03615995005900030013x" target="_blank" rel="noopener">doi:10.2136/sssaj1995.03615995005900030013x</a><span class="ref-use">How errors in needle spacing, timing and heat input carry into all three properties that the sensor estimate reports.</span></li>
+    <li>Bristow, K. L., Bilskie, J. R., Kluitenberg, G. J., &amp; Horton, R. (1995). Comparison of techniques for extracting soil thermal properties from dual-probe heat-pulse data. <i>Soil Science</i>, 160, 1–7. <a href="https://doi.org/10.1097/00010694-199507000-00001" target="_blank" rel="noopener">doi:10.1097/00010694-199507000-00001</a><span class="ref-use">How the properties are extracted: the twin fits the whole temperature-rise curve by nonlinear least squares.</span></li>
+    <li>Knight, J. H., &amp; Kluitenberg, G. J. (2004). Simplified computational approach for dual-probe heat-pulse method. <i>Soil Science Society of America Journal</i>, 68, 447–449. <a href="https://doi.org/10.2136/sssaj2004.4470" target="_blank" rel="noopener">doi:10.2136/sssaj2004.4470</a><span class="ref-use">Simplified calculation of the pulsed line-source solution used to analyze dual-probe data.</span></li>
+    <li>Knight, J. H., Kluitenberg, G. J., Kamai, T., &amp; Hopmans, J. W. (2012). Semianalytical solution for dual-probe heat-pulse applications that accounts for probe radius and heat capacity. <i>Vadose Zone Journal</i>, 11(2). <a href="https://doi.org/10.2136/vzj2011.0112" target="_blank" rel="noopener">doi:10.2136/vzj2011.0112</a><span class="ref-use">What the ideal line source leaves out: the needles' own radius and heat capacity, which the twin neglects.</span></li>
+    <li>de Vries, D. A. (1963). Thermal properties of soils. In W. R. van Wijk (Ed.), <i>Physics of plant environment</i> (pp. 210–235). North-Holland.<span class="ref-use">Converting heat capacity to water content: C = ρ<sub>b</sub>·c<sub>s</sub> + θ·C<sub>w</sub>.</span></li>
+    <li>Parker, N., Kluitenberg, G. J., Redmond, C., &amp; Patrignani, A. (2022). A database of soil physical properties for the Kansas Mesonet. <i>Soil Science Society of America Journal</i>, 86, 1495–1508. <a href="https://doi.org/10.1002/saj2.20465" target="_blank" rel="noopener">doi:10.1002/saj2.20465</a><span class="ref-use">The Kansas Mesonet soil cores and their KD2 Pro readings in Select soil.</span></li>
+  </ol>
 </dialog>
 
 <dialog id="partsDialog" class="wide-dialog" aria-labelledby="partsTitle">

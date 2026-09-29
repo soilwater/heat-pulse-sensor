@@ -22,6 +22,11 @@
   function mount(svg, board, onSelect) {
     const fit={x:-29,y:-24,w:76,h:Math.ceil(Math.max(...board.outline.flat().map(p=>p[0]))+40)};
     let view={...fit},zoom=1,gesture=null,suppressClick=false,layerView='components';
+    // A real reading powers the thermistors for only 20 ms each second, too short to see during playback.
+    // Each reading is held on screen for 15% of the sample interval as played back (150 ms at 1x), and at
+    // least one redraw, so it stays a quick pulse at every speed; between readings the copper stays dim pink.
+    const READING_REFS=['R11','C13','R21','R22','R23','R24','C21','C22','C23','C24','TH1','TH2','TH3','TH4'];
+    let lastSample=null,lastSampleAt=0,sampleGapMs=1000,flashUntil=0;
     function setLayerView(value) {
       if(!['components','top','inner1','inner2','bottom'].includes(value))return;
       layerView=value;svg.dataset.view=value;
@@ -310,9 +315,19 @@
         const usbOnly=!!(run&&run.config&&run.config.fault==='usb-only');
         on('heat',state.heaterOn);on('return',state.heaterOn);
         on('logic',state.logicValid&&!usbOnly);on('usb',state.logicValid&&usbOnly);
-        on('gate',state.d9);on('excitation',state.d4);
+        const sampling=state.logicValid&&['baseline','pulse','cooldown'].includes(state.stage);
+        const sample=sampling&&state.sampleStartS!=null?state.sampleStartS:null,now=(typeof performance!=="undefined"?performance:Date).now();
+        if(playing&&sample!==null&&sample!==lastSample){
+          if(lastSample!==null)sampleGapMs=now-lastSampleAt;
+          lastSampleAt=now;flashUntil=now+.15*sampleGapMs;
+        }
+        lastSample=playing?sample:null;
+        const reading=showActivity&&(state.d4||(playing&&sample!==null&&now<flashUntil));
+        for(const ref of READING_REFS)if(partEls[ref]&&reading)partEls[ref].classList.add('active');
+        on('gate',state.d9);on('excitation',sampling);
         on('i2c',['baseline','pulse','cooldown'].includes(state.stage));
-        on('thermistors',state.d4);
+        on('thermistors',sampling);
+        for(const id of ['excitation','thermistors']){flows[id].classList.toggle('reading',reading);flows[id].classList.toggle('sampling',sampling&&!reading);}
         on('heaterTracks',state.heaterOn);on('supply',state.logicValid&&!usbOnly);on('ground',state.logicValid);
         for(const id of ['supply','ground']) {
           flows[id].classList.toggle('heater',state.heaterOn);
@@ -327,7 +342,7 @@
           }
           if(state.heaterOn)mark(heaterNets,'heater');
           if(state.d9)mark(gateNets,'signal');
-          if(state.d4)mark([...excitationNets,...senseNets],'signal');
+          if(reading)mark([...excitationNets,...senseNets],'signal');
           if(['baseline','pulse','cooldown'].includes(state.stage))mark(busNets,'signal');
         }
         for(const {element,net} of [...copperPads,...copperZones]) {

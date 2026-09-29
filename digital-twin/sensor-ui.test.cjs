@@ -52,8 +52,12 @@ const assert = require('node:assert/strict');
       const result = await page.evaluate(() => {
         const state = SensorTwin.state;
         const visible = state.stage !== 'idle';
+        // Thermistor copper is dim pink while sampling; paused, it is bright exactly while pin D4 is HIGH.
+        const sampling = state.logicValid && ['baseline', 'pulse', 'cooldown'].includes(state.stage);
+        const readingShown = document.getElementById('flow-thermistors').classList.contains('reading');
+        if (!SensorTwin.playing && readingShown !== (visible && state.d4)) return ['thermistor reading flash'];
         const expected = {heat: state.heaterOn, return: state.heaterOn, logic: state.logicValid,
-          gate: state.d9, excitation: state.d4, thermistors: state.d4,
+          gate: state.d9, excitation: sampling, thermistors: sampling,
           heaterTracks: state.heaterOn, supply: state.logicValid, ground: state.logicValid,
           i2c: ['baseline', 'pulse', 'cooldown'].includes(state.stage)};
         return Object.entries(expected).filter(([id, active]) =>
