@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How the heat-pulse sensor works</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}]});document.body.dataset.ready='1'"></script>
+<style>
+  @page { size: Letter; margin: 18mm 17mm 18mm 17mm;
+    @bottom-center { content: counter(page); font-family: "Segoe UI", Arial, sans-serif; font-size: 9pt; color: #7a867e; } }
+  @page landscape { size: Letter landscape; margin: 12mm 15mm 14mm 15mm;
+    @bottom-center { content: counter(page); font-family: "Segoe UI", Arial, sans-serif; font-size: 9pt; color: #7a867e; } }
+  .appendix { page: landscape; break-before: page; }
+  .appendix h2 { margin: 0 0 4px; padding-top: 0; border-top: none; font-size: 14pt; }
+  .appendix p.small { margin: 0 0 6px; }
+  table.parts { width: 100%; font-size: 8.6pt; line-height: 1.3; table-layout: fixed; break-inside: auto; }
+  table.parts th, table.parts td { padding: 2px 6px; }
+  table.parts td.mono { font-family: Consolas, monospace; font-size: 8.2pt; }
+  .panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; margin: 8px 0 4px; }
+  .panel-grid div { break-inside: avoid; }
+  .panel-grid b { display: block; font-size: 9pt; margin-bottom: 2px; }
+  .panel-grid img { width: 100%; }
+  :root { --ink:#1f2a24; --muted:#5c6b62; --green:#2a7d5f; --blue:#3b73b9; --orange:#e08a1e; --line:#d9e1dc; --soft:#f3f7f4; }
+  body { font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; color: var(--ink); font-size: 10.6pt; line-height: 1.55; margin: 0; }
+  h1 { font-size: 24pt; line-height: 1.15; margin: 0 0 6px; letter-spacing: -0.5px; }
+  h2 { font-size: 15.5pt; margin: 26px 0 8px; padding-top: 6px; border-top: 2px solid var(--green); color: var(--green); break-after: avoid; }
+  h3 { font-size: 12pt; margin: 18px 0 6px; break-after: avoid; }
+  p { margin: 7px 0; }
+  .subtitle { color: var(--muted); font-size: 12pt; margin-bottom: 18px; }
+  .chapter-page { break-after: page; }
+  .box { background: var(--soft); border-left: 4px solid var(--green); padding: 8px 12px; margin: 10px 0; break-inside: avoid; }
+  .box.analogy { border-left-color: var(--orange); background: #fdf6ec; }
+  .box.warn { border-left-color: #c9463d; background: #fcf1f0; }
+  .box b.tag { color: var(--green); } .analogy b.tag { color: #a8620d; } .warn b.tag { color: #a2352d; }
+  figure { margin: 12px 0; text-align: center; break-inside: avoid; }
+  figure img { max-width: 100%; }
+  figcaption { font-size: 9pt; color: var(--muted); margin-top: 4px; text-align: left; }
+  table { border-collapse: collapse; margin: 8px 0; font-size: 9.6pt; break-inside: avoid; }
+  th, td { border-bottom: 1px solid var(--line); padding: 4px 8px; text-align: left; vertical-align: top; }
+  th { background: var(--soft); }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .toc { columns: 2; font-size: 10pt; }
+  .toc div { break-inside: avoid; margin: 2px 0; }
+  .katex-display { margin: 8px 0; }
+  code { font-family: Consolas, monospace; font-size: 9.5pt; background: #eef2ef; padding: 0 3px; border-radius: 3px; }
+  svg text { font-family: "Segoe UI", Arial, sans-serif; }
+  .small { font-size: 9pt; color: var(--muted); }
+  ol.refs li { margin: 4px 0; font-size: 9.6pt; }
+
+  .toc a { color: inherit; text-decoration: none; }
+  .toc a:hover { color: var(--green); text-decoration: underline; }
+  @media screen {
+    html { background: #fff; }
+    body { max-width: 820px; margin: 0 auto; padding: 40px 32px 72px; }
+    h2, h3 { scroll-margin-top: 16px; }
+  }
+  @media screen and (max-width: 600px) {
+    body { padding: 20px 16px 48px; }
+    .katex-display { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+    table { display: block; overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+
+<section class="chapter-page">
+<p class="small">HP-SDI12-NANO heat-pulse sensor · background chapter · September 2026</p>
+<h1>How the heat-pulse sensor works</h1>
+<p class="subtitle">An introductory chapter on the electronics and the heat-transfer model behind the digital twin, written for a first-year electrical-engineering student and for anyone coming from agronomy or soil science.</p>
+
+<div class="box"><b class="tag">What you will learn</b>
+<ul style="margin:4px 0 4px 0">
+<li>How a heat-pulse sensor measures soil thermal properties</li>
+<li>Basic electricity: voltage, current, resistance and capacitors</li>
+<li>How the sensor turns temperature into a number</li>
+<li>How a heat-flow model estimates thermal properties and water content</li>
+<li>How design choices affect the measurement</li>
+</ul>
+All numbers come from the current sensor design and its digital twin.</div>
+
+<h3>Contents</h3>
+<div class="toc">
+<div><a href="#sec-1">1. The measurement in one page</a></div>
+<div><a href="#sec-2">2. Electricity for soil scientists</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-2-1">2.1 Voltage, current, resistance</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-2-2">2.2 Ohm's law and power, with the heater</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-2-3">2.3 Series resistors and the voltage divider</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-2-4">2.4 Capacitors and the RC time constant</a></div>
+<div><a href="#sec-3">3. The thermistor circuit, part by part</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-3-1">3.1 The thermistor</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-3-2">3.2 Why a reference resistor</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-3-3">3.3 From voltage to a number: the ADC</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-3-4">3.4 Why the thermistors are switched on only to read</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-3-5">3.5 Why R11</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-3-6">3.6 Why C13 and C21–C24</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-3-7">3.7 One reading, millisecond by millisecond</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-3-8">3.8 Where the parts sit on the board</a></div>
+<div><a href="#sec-4">4. Heat in soil</a></div>
+<div><a href="#sec-5">5. The line-source model</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-5-1">5.1 The heat equation</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-5-2">5.2 Assumptions and boundary conditions</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-5-3">5.3 Continuous and pulsed line source</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-5-4">5.4 Reading soil properties from the peak</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-5-5">5.5 Worked example</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-5-6">5.6 From heat capacity to water content</a></div>
+<div><a href="#sec-6">6. The digital twin's model</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-6-1">6.1 Seventeen point sources</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-6-2">6.2 "Grid" resolution and time steps</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-6-3">6.3 Why the estimate differs from the soil</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-6-4">6.4 A real KD2 Pro curve</a></div>
+<div><a href="#sec-7">7. What if...? Design choices, one at a time</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-7-1">7.1 How to read this section</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-7-2">7.2 Two rules of thumb</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-7-3">7.3 Needle spacing</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-7-4">7.4 Heating time</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-7-5">7.5 Longer needles</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-7-6">7.6 How much of the curve to fit</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-7-7">7.7 All cases in two tables</a></div>
+<div>&nbsp;&nbsp;<a href="#sec-7-8">7.8 Choosing settings</a></div>
+<div><a href="#sec-8">8. The whole chain in one table</a></div>
+<div><a href="#sec-9">9. Glossary</a></div>
+<div><a href="#sec-10">10. References</a></div>
+<div><a href="#appendix-a">Appendix A. Parts list</a></div>
+</div>
+
+<h2 id="sec-1">1. The measurement in one page</h2>
+<p>The sensor has a small circuit board (the "head") and three thin needles that go into the soil. The <b>center needle is a heater</b>: seventeen tiny 3.3 Ω resistors in a row. The <b>two side needles carry thermometers</b> (thermistors TH1 and TH3), 8 mm away from the heater. A third thermistor, TH2, sits at the tip of the heater needle, and TH4 sits on the board to report the board's own temperature.</p>
+
+<figure><img src="fig/sensor_sketch.png" style="width:78%"><figcaption>Figure 1. The sensor, drawn to scale (millimeters): cable end up, needles down, seen from the board's top face, the way the website draws it. The 12-gauge steel needles (2.77 mm across) slide over the board's three prongs. TH1 and TH3 sit halfway along the heated section, 8 mm from the heater; TH2 sits just past the last heater resistor. Left and right are as seen in this view.</figcaption></figure>
+
+<p>A data logger asks for each measurement over a single data wire, using SDI-12, a standard way for environmental sensors to talk to loggers. One measurement goes like this (Figure 1 shows where each part sits):</p>
+<ol>
+<li><b>Background (10 s).</b> Record the soil temperature before heating, so we can subtract it later.</li>
+<li><b>Heating (15 s).</b> Push about 2 W through the heater. That is roughly the power of a small flashlight bulb, spread along 44 mm of needle.</li>
+<li><b>Cooling (150 s).</b> Keep recording while the heat spreads outward. The side needles warm up by about half a degree, peak about 23 s after the heater switches off, and slowly cool.</li>
+<li><b>Analysis.</b> How <i>high</i> the side-needle curve rises tells us how much heat the soil can store (its heat capacity). How <i>fast</i> the peak arrives tells us how fast a temperature change spreads through it (its diffusivity). Together they give the thermal conductivity, and the heat capacity gives the water content, because water stores far more heat than soil minerals or air.</li>
+</ol>
+
+<div class="box analogy"><b class="tag">Analogy.</b> Drop a spoonful of dye into still water and watch a spot 8 mm away. In thick syrup the color arrives late and stays concentrated; in water it arrives quickly and fades fast. The heat pulse is the dye, the soil is the liquid, and the side thermistor is your eye. The one difference: we know exactly how much "dye" (energy, in joules) we released, because we measure the heater power.</div>
+
+<p>Two pieces of engineering make this work: an electronic circuit that measures temperature to a few thousandths of a degree (Sections 2 and 3), and a physical model that converts the temperature curve into soil properties (Sections 4 to 6).</p>
+</section>
+
+<h2 id="sec-2">2. Electricity for soil scientists</h2>
+
+<h3 id="sec-2-1">2.1 Voltage, current, resistance</h3>
+<p>Three quantities describe almost everything on this board:</p>
+<table>
+<tr><th>Quantity</th><th>Symbol · unit</th><th>What it is</th><th>Water analogy</th></tr>
+<tr><td>Voltage</td><td>\(V\) · volt (V)</td><td>The "push" that drives charge, always measured <i>between two points</i></td><td>Water pressure (height difference between two tanks)</td></tr>
+<tr><td>Current</td><td>\(I\) · ampere (A)</td><td>How much charge flows per second</td><td>Flow rate (liters per second)</td></tr>
+<tr><td>Resistance</td><td>\(R\) · ohm (Ω)</td><td>How strongly a part opposes the flow</td><td>A narrow section of pipe</td></tr>
+<tr><td>Power</td><td>\(P\) · watt (W)</td><td>Energy converted per second (in a resistor: to heat)</td><td>Pressure × flow: the work the water does</td></tr>
+</table>
+<p>Figure 2 pictures these quantities with water. Handy prefixes: 1 mA = 0.001 A, 1 µA = 0.000001 A, 1 kΩ = 1000 Ω, 1 mW = 0.001 W. <b>Ground</b> (GND) is simply the point we call 0 V; every other voltage on the board is measured from it, just as elevations are measured from sea level.</p>
+
+<figure><img src="fig/water.png" style="width:96%"><figcaption>Figure 2. The water analogy, side by side with the circuit it stands for. The height difference between the tanks drives the flow, as the battery's voltage drives the current; the narrow pipe limits the flow and is where the energy is spent, as the resistor limits the current and turns energy into heat; the low tank is ground. This is exactly how the heater needle works.</figcaption></figure>
+
+<h3 id="sec-2-2">2.2 Ohm's law and power, with the heater</h3>
+<p>For a resistor, current is proportional to voltage:</p>
+$$ V = I\,R \qquad\Longleftrightarrow\qquad I = \frac{V}{R} \qquad\Longleftrightarrow\qquad R = \frac{V}{I}$$
+<p>and the power it turns into heat is</p>
+$$ P = V\,I = I^2 R = \frac{V^2}{R}. $$
+<p><b>Worked example: the heater.</b> Seventeen 3.3 Ω resistors in a row (in <i>series</i>, one after the other) add up: \(R_\text{heater} = 17 \times 3.3 = 56.1\ \Omega\). If the full 12 V battery sat across the heater, the current would be \(12/56.1 = 0.214\) A. In reality a few other things are in the same loop, and each takes its share:</p>
+<table>
+<tr><th>Part of the loop</th><th class="num">Resistance or drop</th></tr>
+<tr><td>Input diode D1 (protects against a reversed battery)</td><td class="num">≈ 0.35 V drop</td></tr>
+<tr><td>5 m of 22 AWG cable, out and back (10 m of wire)</td><td class="num">≈ 0.53 Ω</td></tr>
+<tr><td>Current-sense resistor R5 (the INA226 measures the current here)</td><td class="num">0.10 Ω</td></tr>
+<tr><td>Heater switch Q1 (a MOSFET, when on)</td><td class="num">≈ 0.03 Ω</td></tr>
+<tr><td>Board copper in the heater loop</td><td class="num">≈ 0.20 Ω</td></tr>
+<tr><td>Heater, 17 × 3.3 Ω</td><td class="num">56.10 Ω</td></tr>
+</table>
+$$ I = \frac{12\ \text{V} - 0.35\ \text{V}}{56.10 + 0.53 + 0.10 + 0.03 + 0.20\ \Omega} = \frac{11.65}{56.96} \approx 0.2045\ \text{A} $$
+<p>So the heater gets \(P = I^2R = 0.2045^2 \times 56.1 = 2.35\) W while it is on, and each little resistor gets \(0.2045^2 \times 3.3 = 0.138\) W, well under its 0.33 W rating.</p>
+
+<div class="box"><b class="tag">PWM: turning a heater "down" with a switch.</b> We cannot easily change the battery voltage, but we can switch the heater on and off very fast. The processor will switch Q1 100 times per second and keeps it on 85% of each cycle (the <i>duty cycle</i>). The soil cannot feel 100 flickers per second, so it sees the average: \(0.85 \times 2.35 = 1.99\) W. Over a 15 s pulse the energy is \(E = P\,t = 1.99 \times 15 \approx 29.9\) J. That energy divided by the heater's effective length, \(29.9\ \text{J} / 0.0442\ \text{m} \approx 677\) J per meter, is the key input to the soil model in Section 5.</div>
+
+<h3 id="sec-2-3">2.3 Series resistors and the voltage divider</h3>
+<p>Put two resistors in series between a voltage \(V_\text{top}\) and ground. The same current flows through both, \(I = V_\text{top}/(R_1+R_2)\), so the voltage at the point between them is</p>
+$$ V_\text{mid} = I\,R_2 = V_\text{top}\,\frac{R_2}{R_1 + R_2}. $$
+<p>This is the <b>voltage divider</b>, and it is the heart of the temperature measurement: if \(R_2\) changes with temperature, so does \(V_\text{mid}\). If \(R_1 = R_2\), the midpoint sits at exactly half of \(V_\text{top}\).</p>
+
+<div class="box analogy"><b class="tag">Analogy.</b> Water flows down a hill through two stretches of narrow pipe. The pressure halfway down depends on how the total "resistance" is split between the upper and lower stretch. Make the lower stretch narrower and more of the pressure drop happens there, so the midpoint pressure rises.</div>
+
+<h3 id="sec-2-4">2.4 Capacitors and the RC time constant</h3>
+<p>A <b>capacitor</b> stores electric charge, like a small bucket. Its size, the capacitance \(C\), is measured in farads (F); ours are 100 nF (0.0000001 F) and 1 µF. The charge it holds is \(Q = C\,V\): a bigger bucket, or a fuller one, holds more.</p>
+<p>A capacitor does two useful jobs: it <b>smooths</b> (it absorbs sudden spikes and fills in brief dips, like a water tower on a town's water line), and together with a resistor it sets a <b>delay</b>. If you fill a capacitor through a resistor \(R\) from a voltage \(V_0\), it charges along</p>
+$$ V(t) = V_0\left(1 - e^{-t/\tau}\right), \qquad \tau = R\,C. $$
+<p>The <b>time constant</b> \(\tau\) is the whole story: after one \(\tau\) the capacitor is 63% full, after 5\(\tau\) it is 99.3% full, and after 10\(\tau\) it is within 0.005% of its final value. Example: 1.5 kΩ and 1 µF give \(\tau = 1500 \times 0.000001 = 1.5\) ms.</p>
+
+<div class="box analogy"><b class="tag">Analogy.</b> Filling a bathtub through a garden hose. The tub is the capacitor, the hose is the resistor. A thinner hose (more R) or a bigger tub (more C) means a longer wait. The tub fills fast at first and slows as it nears full, because the pressure difference that drives the flow shrinks. That is the exponential curve above.</div>
+
+<h2 id="sec-3">3. The thermistor circuit, part by part</h2>
+
+<figure>
+<svg viewBox="0 0 640 330" width="96%" role="img" aria-label="Thermistor circuit">
+  <defs>
+    <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5"><circle cx="5" cy="5" r="5" fill="#1f2a24"/></marker>
+  </defs>
+  <g stroke="#1f2a24" stroke-width="1.6" fill="none">
+    <!-- D4 pin -->
+    <rect x="20" y="30" width="80" height="30" rx="3"/>
+    <line x1="100" y1="45" x2="130" y2="45"/>
+    <!-- R11 zigzag horizontal -->
+    <path d="M130,45 l6,-8 l8,16 l8,-16 l8,16 l8,-16 l8,16 l6,-8"/>
+    <line x1="182" y1="45" x2="300" y2="45"/>
+    <!-- C13 to ground -->
+    <line x1="240" y1="45" x2="240" y2="80"/><line x1="225" y1="80" x2="255" y2="80"/><line x1="225" y1="88" x2="255" y2="88"/><line x1="240" y1="88" x2="240" y2="110"/>
+    <path d="M228,110 h24 M232,115 h16 M236,120 h8"/>
+    <!-- VREF bus down to divider -->
+    <line x1="300" y1="45" x2="300" y2="90"/>
+    <line x1="300" y1="45" x2="470" y2="45"/>
+    <!-- R21 vertical zigzag -->
+    <path d="M300,90 l-8,6 l16,8 l-16,8 l16,8 l-16,8 l16,8 l-8,6"/>
+    <line x1="300" y1="142" x2="300" y2="180"/>
+    <!-- node to ADC -->
+    <line x1="300" y1="180" x2="470" y2="180"/>
+    <!-- NTC vertical -->
+    <line x1="300" y1="180" x2="300" y2="205"/>
+    <rect x="290" y="205" width="20" height="45"/>
+    <line x1="280" y1="255" x2="322" y2="200"/>
+    <line x1="300" y1="250" x2="300" y2="285"/>
+    <path d="M288,285 h24 M292,290 h16 M296,295 h8"/>
+    <!-- C21 across NTC -->
+    <line x1="300" y1="180" x2="380" y2="180"/>
+    <line x1="380" y1="180" x2="380" y2="222"/><line x1="365" y1="222" x2="395" y2="222"/><line x1="365" y1="230" x2="395" y2="230"/><line x1="380" y1="230" x2="380" y2="285"/>
+    <path d="M368,285 h24 M372,290 h16 M376,295 h8"/>
+    <!-- processor box -->
+    <rect x="470" y="25" width="150" height="180" rx="4"/>
+  </g>
+  <circle cx="300" cy="45" r="3.5" fill="#1f2a24"/><circle cx="240" cy="45" r="3.5" fill="#1f2a24"/><circle cx="300" cy="180" r="3.5" fill="#1f2a24"/><circle cx="380" cy="180" r="3.5" fill="#1f2a24"/>
+  <text x="60" y="50" text-anchor="middle" font-size="12">pin D4</text>
+  <text x="60" y="78" text-anchor="middle" font-size="10" fill="#5c6b62">5 V switch, HIGH</text><text x="60" y="91" text-anchor="middle" font-size="10" fill="#5c6b62">only while reading</text>
+  <text x="156" y="28" text-anchor="middle" font-size="12" fill="#c9463d">R11 1.5 kΩ</text>
+  <text x="200" y="85" font-size="12" fill="#3b73b9" text-anchor="end">C13 1 µF</text>
+  <text x="340" y="38" font-size="12" font-weight="600">VREF ≈ 3.5 V</text>
+  <text x="315" y="120" font-size="12" fill="#c9463d">R21 10 kΩ, 0.1 %</text><text x="315" y="134" font-size="10" fill="#5c6b62">(reference)</text>
+  <text x="228" y="232" font-size="12" fill="#2a7d5f" text-anchor="end">TH1</text><text x="228" y="246" font-size="10" fill="#5c6b62" text-anchor="end">NTC 10 kΩ</text>
+  <text x="400" y="232" font-size="12" fill="#3b73b9">C21 100 nF</text>
+  <text x="310" y="172" font-size="11" fill="#1f2a24">node A2 ≈ 1.87 V</text>
+  <text x="545" y="50" text-anchor="middle" font-size="12" font-weight="600">processor (RA4M1)</text>
+  <text x="545" y="80" text-anchor="middle" font-size="11">AREF: the ADC's ruler</text>
+  <text x="545" y="185" text-anchor="middle" font-size="11">A2: the ADC input</text>
+  <text x="545" y="130" text-anchor="middle" font-size="11" fill="#5c6b62">14-bit ADC:</text><text x="545" y="145" text-anchor="middle" font-size="11" fill="#5c6b62">code = 16384 × A2 / AREF</text>
+  <text x="300" y="318" text-anchor="middle" font-size="10.5" fill="#5c6b62">the same divider is repeated four times: R21–R24, TH1–TH4, C21–C24 (A2, A1, A0, A3)</text>
+</svg>
+<figcaption>Figure 3. One of the four thermistor channels. Pin D4 powers VREF through R11; C13 holds VREF steady. VREF feeds the reference resistor R21 on top and the thermistor TH1 below it, and the same VREF is the processor's measuring "ruler" (AREF). C21 steadies the node that the processor reads.</figcaption>
+</figure>
+
+<h3 id="sec-3-1">3.1 The thermistor</h3>
+<p>A <b>thermistor</b> is a resistor made to change its resistance with temperature. Ours are "NTC" (negative temperature coefficient): warmer means <i>lower</i> resistance. At 25 °C it is nominally 10 kΩ (±1%). The standard "beta" equation describes it:</p>
+$$ R(T) = R_{25}\,\exp\!\left[\beta\left(\frac{1}{T} - \frac{1}{298.15\ \text{K}}\right)\right], \qquad R_{25} = 10\ \text{k}\Omega,\ \beta = 3380\ \text{K}, $$
+<p>with \(T\) in kelvin (°C + 273.15). Near room temperature the resistance changes by about \(\beta/T^2 \approx 3.8\%\) per degree, which is large; that is why thermistors are good at sensing small temperature changes (Figure 4, left).</p>
+<figure><img src="fig/thermistor.png" style="width:92%"><figcaption>Figure 4. Left: resistance of the thermistor. At 22 °C it is 11.22 kΩ. Right: the number the processor sees after the divider and the analog-to-digital converter (Sections 3.2 and 3.3).</figcaption></figure>
+
+<h3 id="sec-3-2">3.2 Why a reference resistor (R21–R24)?</h3>
+<p>The processor cannot measure resistance. It can only measure <b>voltage</b>. The reference resistor turns a resistance into a voltage by forming a divider with the thermistor (Section 2.3; Figure 3):</p>
+$$ V_\text{node} = V_\text{REF}\,\frac{R_\text{NTC}}{R_\text{ref} + R_\text{NTC}}. $$
+<p>Example at 22 °C: \(R_\text{NTC} = 11.22\) kΩ, \(R_\text{ref} = 10\) kΩ, \(V_\text{REF} = 3.53\) V, so the current is \(3.53/21.22\ \text{k}\Omega = 166\ \mu\text{A}\) and \(V_\text{node} = 3.53 \times 11.22/21.22 = 1.87\) V. Warm the soil and the thermistor's resistance drops, so the node voltage drops.</p>
+<p><b>Why 10 kΩ?</b> Choosing the reference equal to the thermistor's nominal value puts the node near half of VREF, where the divider is most sensitive to small changes. <b>Why 0.1% precision and 25 ppm/°C?</b> Any error in the reference resistor looks exactly like a temperature error. A 1% resistor would shift the reading by about 1%/3.8% ≈ 0.26 °C; the 0.1% part keeps that below 0.03 °C, and its low temperature coefficient keeps it from drifting as the board warms or cools. For the soil properties, what matters is the temperature <i>rise</i>, and a fixed offset cancels when the background is subtracted: a 1% reference error changes the rise by only about 0.2%. The thermistor's \(\beta\) value is different: an error in \(\beta\) scales every rise, and therefore \(\lambda\) and \(C\), one for one.</p>
+<p><b>Does the divider linearize the thermistor?</b> Only as a side effect. The right panel of Figure 4 is not an approximation of the left one: it is the exact result, code = 16384 × R / (R + 10 kΩ). The fraction R / (R + R<sub>ref</sub>) flattens toward 1 when the thermistor resistance is large and toward 0 when it is small, which counteracts the thermistor’s steep exponential curve. The result is an S-shaped curve that is nearly straight around the temperature where the thermistor equals the reference resistor (25 °C here) and bends more toward cold and hot temperatures. The processor never uses a straight-line approximation: it inverts the exact divider and beta equations (Section 3.3), which costs only a few lines of arithmetic. What the divider’s shape buys is nearly even resolution across the range of soil temperatures:</p>
+<table><tr><th class="num">Temperature</th><th class="num">Thermistor</th><th class="num">ADC code</th><th class="num">Codes per °C</th><th class="num">°C per code</th></tr><tr><td class="num">-10 °C</td><td class="num">45.2 kΩ</td><td class="num">13414</td><td class="num">119</td><td class="num">0.0084 °C</td></tr><tr><td class="num">0 °C</td><td class="num">28.2 kΩ</td><td class="num">12098</td><td class="num">143</td><td class="num">0.0070 °C</td></tr><tr><td class="num">10 °C</td><td class="num">18.2 kΩ</td><td class="num">10581</td><td class="num">158</td><td class="num">0.0063 °C</td></tr><tr><td class="num">22 °C</td><td class="num">11.2 kΩ</td><td class="num">8663</td><td class="num">158</td><td class="num">0.0063 °C</td></tr><tr><td class="num">25 °C</td><td class="num">10.0 kΩ</td><td class="num">8192</td><td class="num">156</td><td class="num">0.0064 °C</td></tr><tr><td class="num">40 °C</td><td class="num">5.8 kΩ</td><td class="num">6021</td><td class="num">131</td><td class="num">0.0076 °C</td></tr><tr><td class="num">50 °C</td><td class="num">4.2 kΩ</td><td class="num">4813</td><td class="num">110</td><td class="num">0.0091 °C</td></tr><tr><td class="num">60 °C</td><td class="num">3.0 kΩ</td><td class="num">3819</td><td class="num">89</td><td class="num">0.0112 °C</td></tr></table>
+<p>Near-surface soil can reach 50–60 °C in summer, especially while the heater is on. Even at 60 °C one code is about 0.011 °C, about 45 times finer than the half-degree signal. A smaller reference resistor would move the flattest part of the curve to warmer temperatures: with 6.8 kΩ, the value matching the thermistor at about 35 °C, resolution at 60 °C improves by about 20% but is about 13% worse at 10 °C, and the dividers draw more current, which lowers VREF and adds a little self-heating. Because noise, not the number of ADC steps, will limit the measurement, 10 kΩ remains a sound choice for the whole 0–60 °C range.</p>
+
+<h3 id="sec-3-3">3.3 From voltage to a number: the ADC</h3>
+<p>The processor's <b>analog-to-digital converter</b> (ADC) compares the input voltage with a reference voltage and reports a whole number, the <i>code</i>. With 14 bits there are \(2^{14} = 16384\) steps:</p>
+$$ \text{code} = 16384 \times \frac{V_\text{node}}{V_\text{AREF}}. $$
+<p>Here is the trick in this design: the ADC's reference (AREF) is connected to <b>the same VREF</b> that feeds the dividers. Substitute the divider equation and VREF cancels:</p>
+$$ \text{code} = 16384 \times \frac{R_\text{NTC}}{R_\text{ref}+R_\text{NTC}} \qquad\Rightarrow\qquad R_\text{NTC} = R_\text{ref}\,\frac{\text{code}}{16384 - \text{code}}. $$
+<div class="box analogy"><b class="tag">Analogy: a stretchy ruler.</b> Measure a rubber band with a ruler printed on the same rubber. If both stretch together, the reading does not change. This is called a <b>ratiometric</b> measurement: VREF can sag or drift a little and the temperature reading stays the same, because the "ruler" (AREF) and the "object" (the divider) move together.</div>
+<p><b>Worked example.</b> At 22 °C: code = 16384 × 11.22/21.22 = <b>8663</b>. Going back: \(R = 10\ \text{k}\Omega \times 8663/(16384-8663) = 11.22\) kΩ, and inverting the beta equation,</p>
+$$ T = \left[\frac{\ln(R/R_{25})}{\beta} + \frac{1}{298.15}\right]^{-1} - 273.15 = \left[\frac{\ln 1.122}{3380} + \frac{1}{298.15}\right]^{-1} - 273.15 = 22.0\ ^\circ\text{C}. $$
+<p><b>How fine is the measurement?</b> Near 22 °C the code changes by about <b>158 codes per °C</b>, so one code is about 0.006 °C. The planned firmware averages 64 readings per sample (the twin assumes this), which reduces random noise further. The signal we want, the side-needle rise, is about 0.5 °C, or roughly 80 codes. The real limits are noise, thermistor calibration and the reference resistor, not the number of steps.</p>
+
+<h3 id="sec-3-4">3.4 Why the thermistors are switched on only to read</h3>
+<p>Current through a thermistor heats it. This <b>self-heating</b> is a real problem when the signal is half a degree. During a reading the thermistor carries 166 µA with 1.87 V across it:</p>
+$$ P = V I = 1.87\ \text{V} \times 166\ \mu\text{A} \approx 0.31\ \text{mW}. $$
+<p>The maker quotes a "dissipation constant" of about 1 mW/°C in still air, so 0.31 mW would warm the thermistor by about 0.3 °C; in epoxy and soil heat escapes more easily, so the real warming is smaller. Left on all the time, that would be a steady warming comparable to the signal. A perfectly steady offset would cancel when the background is subtracted, but this one would not be steady: it depends on how well the thermistor is coupled to the soil, which changes with moisture, and it warms the very spot being measured. So pin D4 powers the whole thermistor network <b>only 20 ms out of every second</b> (2%). The average heating power drops to about 6 µW, and the self-heating to a few thousandths of a degree. It also saves battery.</p>
+<div class="box analogy"><b class="tag">Analogy.</b> Checking whether bread is done by touching it: a quick tap tells you the temperature; holding your hand on it warms the bread. The thermistors get a quick tap once per second.</div>
+
+<h3 id="sec-3-5">3.5 Why R11 (1.5 kΩ)?</h3>
+<p>Pin D4 is a processor output, and processor pins are delicate: the RA4M1 data sheet lists <b>4 mA</b> per pin for this port (Arduino's Nano R4 documentation quotes up to 8 mA; the design uses the more conservative data-sheet value). When D4 switches on, C13 is empty and behaves for an instant like a short circuit to ground. Without a resistor the pin would try to deliver a large current. R11 limits it by Ohm's law:</p>
+$$ I_\text{peak} = \frac{4.75\ \text{V}}{1500\ \Omega} = 3.2\ \text{mA} \;<\; 4\ \text{mA}. $$
+<p>(An earlier version used 330 Ω, which would have allowed about 14 mA; that is why it was changed.) Once C13 is charged, R11 carries the steady current of the four dividers plus the ADC reference, about 0.8 mA. That current makes a voltage drop across R11, \(1500\ \Omega \times 0.8\ \text{mA} \approx 1.2\) V, which is why VREF settles near 3.5 V rather than 4.75 V. Thanks to the ratiometric trick, that lower value does not matter.</p>
+
+<h3 id="sec-3-6">3.6 Why C13 and C21–C24?</h3>
+<p><b>C13 (1 µF) holds VREF steady.</b> The ADC draws small, quick sips of current from its reference while it converts. Without a local "bucket," each sip would dent VREF through R11. C13 supplies the sips and refills between them. With R11 it charges with a time constant of about 1.1 ms (R11 in parallel with the divider load, times 1 µF).</p>
+<p><b>C21–C24 (100 nF each) hold each thermistor node steady.</b> Three reasons:</p>
+<ol>
+<li><b>The ADC takes a gulp.</b> Inside the ADC, a tiny capacitor is connected to the input for a moment and must be charged to the input voltage. Through 5 kΩ of divider resistance, that gulp would pull the voltage down briefly. The 100 nF capacitor is thousands of times larger than the ADC's internal one, so it supplies the gulp with almost no change in voltage.</li>
+<li><b>The needle wires are antennas.</b> The thermistor wires run 30 to 55 mm down the needles, right next to a heater that switches 100 times per second. They pick up electrical noise. The capacitor, together with the divider resistance, forms a filter that smooths out fast disturbances while passing the slow temperature signal.</li>
+<li><b>A known, short settling time.</b> Each node settles with \(\tau = (10\ \text{k}\Omega \parallel R_\text{NTC}) \times 100\ \text{nF} \approx 5.3\ \text{k}\Omega \times 100\ \text{nF} = 0.53\) ms. The planned firmware waits 10 ms before reading. That is nearly 19 of the node's own time constants, but the node also follows VREF, which settles more slowly (about 9 of its time constants in 10 ms). The node-to-VREF ratio is within about one ADC step at the first reading and closer on average, and the small remainder is the same every second, so it cancels when the background is subtracted.</li>
+</ol>
+<div class="box"><b class="tag">Why not bigger capacitors?</b> Bigger capacitors would smooth more but take longer to charge, so pin D4 would have to stay on longer (more self-heating) and the network would need longer to discharge between readings. The values are a balance between steadiness and speed.</div>
+
+<h3 id="sec-3-7">3.7 One reading, millisecond by millisecond</h3>
+<p>This is the planned sequence that the twin simulates (Figure 5); the firmware is still to be written.</p>
+<figure><img src="fig/rc.png" style="width:90%"><figcaption>Figure 5. After pin D4 goes HIGH, VREF rises with a time constant of about 1.1 ms, and the thermistor node follows a little later through its own 0.53 ms filter. Both are flat long before the readings start at 10 ms. At 20 ms pin D4 goes LOW and everything discharges until the next second.</figcaption></figure>
+<table>
+<tr><th>Time</th><th>What happens</th></tr>
+<tr><td>0 ms</td><td>Pin D4 goes HIGH. R11 limits the inrush into C13 to 3.2 mA.</td></tr>
+<tr><td>0–10 ms</td><td>VREF and the four thermistor nodes charge and settle (about 9 and 19 time constants).</td></tr>
+<tr><td>10–20 ms</td><td>The ADC takes 64 readings of each of A0–A3 and averages them.</td></tr>
+<tr><td>20 ms</td><td>Pin D4 goes LOW; the network discharges. The thermistors rest for the remaining 980 ms.</td></tr>
+<tr><td>every 1 s</td><td>Repeat, through the background, heating and cooling phases.</td></tr>
+</table>
+
+
+<h3 id="sec-3-8">3.8 Where the parts sit on the board</h3>
+<p>Everything in Sections 2 and 3 is a real part you can find on the board. Figure 6 shows the whole sensor as KiCad renders it, turned the way the website draws it: cable end up, needles down, seen from the top face (so TH1 is on the right). Figure 7 zooms in on the head. Every part is marked with a dot and its name, each color is one job, and the text beside each group says in a sentence what it does and which section explains it. Appendix A lists every part with its manufacturer, part number and specifications.</p>
+<table>
+<tr><th>Color</th><th>Job</th><th>Where the theory is</th></tr>
+<tr><td style="color:#e08a1e;font-weight:600">Orange</td><td>Power coming in from the battery, and its protection</td><td>Section 2.2 (Ohm's law around the heater loop)</td></tr>
+<tr><td style="color:#c9a400;font-weight:600">Gold</td><td>Making and distributing the 5 V for the electronics</td><td>Section 2.4 (capacitors as buckets)</td></tr>
+<tr><td style="color:#3b73b9;font-weight:600">Blue</td><td>The processor and its programming holes</td><td>Section 3.3 (the ADC lives inside U1)</td></tr>
+<tr><td style="color:#1a9bb0;font-weight:600">Teal</td><td>The SDI-12 line to the data logger</td><td>Section 1; tour step 9 on the website</td></tr>
+<tr><td style="color:#d6409f;font-weight:600">Pink</td><td>Temperature measurement: the thermistor circuit of Figure 3</td><td>Sections 3.1–3.7</td></tr>
+<tr><td style="color:#c9463d;font-weight:600">Red</td><td>The heater: switching it and measuring the power it delivers</td><td>Sections 2.2 and 5.5 (\(q'\) comes from U4's measurement)</td></tr>
+</table>
+<figure><img src="fig/pcb_full.png" style="width:62%"><figcaption>Figure 6. The whole sensor (KiCad render of the current board). The heater's 17 resistors run down the center needle; TH1 and TH3 sit on the side needles halfway along the heated section, and TH2 sits just past the last resistor. The dashed box is the head, enlarged in Figure 7.</figcaption></figure>
+<figure style="break-before: page"><img src="fig/pcb_head.png" style="width:100%"><figcaption>Figure 7. The head, part by part. Every part is marked with a dot and its name (the names are the ones used throughout this chapter and in Appendix A). Dots of one color belong to one job (the colors follow the table in Section 3.8); the line from each description ends on the group's main part, the larger dot. TH1–TH3 and the heater resistors sit on the needles (Figure 6). The measurement parts (pink) sit together near the needles, away from the switching regulator at the cable end, and the parts that warm up in use (U1, U3, L1, D1, D7, R5, Q1) sit on the board’s center line, so they warm both side needles equally.</figcaption></figure>
+
+<h2 id="sec-4">4. Heat in soil</h2>
+<p>Three properties describe how a material handles heat:</p>
+<table>
+<tr><th>Property</th><th>Symbol · unit</th><th>Meaning</th><th>Analogy</th></tr>
+<tr><td>Thermal conductivity</td><td>\(\lambda\) · W m⁻¹ K⁻¹</td><td>How easily heat flows through it</td><td>How wide the pipes are</td></tr>
+<tr><td>Volumetric heat capacity</td><td>\(C\) · J m⁻³ K⁻¹ (MJ m⁻³ K⁻¹)</td><td>Energy needed to warm 1 m³ by 1 °C</td><td>How big each bucket is</td></tr>
+<tr><td>Thermal diffusivity</td><td>\(\alpha = \lambda/C\) · m² s⁻¹ (mm² s⁻¹)</td><td>How fast a temperature change spreads</td><td>Wide pipes into small buckets: news travels fast</td></tr>
+</table>
+<p>Soil is a mix of minerals, organic matter, water and air, and the mix sets the properties:</p>
+<table>
+<tr><th>Material</th><th class="num">\(\lambda\) (W m⁻¹ K⁻¹)</th><th class="num">\(C\) (MJ m⁻³ K⁻¹)</th></tr>
+<tr><td>Water</td><td class="num">0.6</td><td class="num">4.18</td></tr>
+<tr><td>Air</td><td class="num">0.025</td><td class="num">0.0012</td></tr>
+<tr><td>Quartz</td><td class="num">≈ 8</td><td class="num">≈ 2.0</td></tr>
+<tr><td>Other soil minerals</td><td class="num">≈ 2–3</td><td class="num">≈ 2.0</td></tr>
+<tr><td>Dry soil (typical)</td><td class="num">0.2–0.5</td><td class="num">1.0–1.4</td></tr>
+<tr><td>Moist soil (typical)</td><td class="num">1.0–2.0</td><td class="num">2.0–3.2</td></tr>
+</table>
+<p>The key fact for water content: <b>water has twice the heat capacity of minerals and three thousand times that of air.</b> When a soil gains water, the water replaces air, and the heat capacity climbs linearly with the water content. Measure \(C\), and you can back out the water content (Section 5.6).</p>
+
+<h2 id="sec-5">5. The line-source model</h2>
+
+<h3 id="sec-5-1">5.1 The heat equation</h3>
+<p>Heat flows from warm to cold at a rate proportional to the temperature gradient (Fourier's law), and energy is conserved. Combining the two gives the <b>heat equation</b>:</p>
+$$ \frac{\partial T}{\partial t} = \alpha\,\nabla^2 T, \qquad \alpha = \frac{\lambda}{C}. $$
+<p>In words: a spot warms up if it is colder than the average of its surroundings, and the rate is set by the diffusivity. For a long, straight heater it is natural to use distance from the heater, \(r\), as the coordinate; if nothing changes along the heater's length, the equation becomes</p>
+$$ \frac{\partial T}{\partial t} = \alpha\left(\frac{\partial^2 T}{\partial r^2} + \frac{1}{r}\frac{\partial T}{\partial r}\right). $$
+<p>The extra \(1/r\) term appears because heat spreads over ever-larger rings: a ring twice as far away has twice the circumference to warm.</p>
+
+<figure><img src="fig/linesource.png" style="width:96%"><figcaption>Figure 8. The idealized picture behind the line-source model. Left: temperature rise in a cross-section around the line at the end of a 15 s pulse (medium soil, rings at 0.1, 0.3 and 1 °C); the thermistor, 8 mm away, has warmed by about 0.13 °C so far and keeps warming after the heater stops. Right: the assumptions of Section 5.2 in one picture.</figcaption></figure>
+
+<h3 id="sec-5-2">5.2 Assumptions and boundary conditions</h3>
+<p>To solve the equation we must say what the world looks like (Figure 8). The classic dual-probe analysis (Campbell et al. 1991, who treated the heat pulse as instantaneous; Kluitenberg et al. 1993 and Bristow et al. 1994, who included its finite duration) assumes:</p>
+<ul>
+<li><b>Geometry:</b> the heater is an infinitely long, infinitely thin line.</li>
+<li><b>Medium:</b> the soil is uniform (homogeneous and the same in every direction) and extends forever in every direction.</li>
+<li><b>Initial condition:</b> everything starts at the same temperature; we work with the rise \(\Delta T = T - T_0\), which starts at zero everywhere.</li>
+<li><b>Far-field boundary condition:</b> far away the soil never feels the heater, \(\Delta T \to 0\) as \(r \to \infty\).</li>
+<li><b>Source condition:</b> the line releases a constant power per meter, \(q'\), from time 0 to time \(t_0\), then stops.</li>
+<li><b>Everything else is ignored:</b> the needles' own size and heat storage, the epoxy, contact resistance between needle and soil, the soil surface, water moving in response to heat, and properties changing with temperature.</li>
+</ul>
+
+<h3 id="sec-5-3">5.3 Continuous and pulsed line source</h3>
+<p>If the line heats forever, the solution (Carslaw and Jaeger 1959; Blackwell 1954) is</p>
+$$ \Delta T(r,t) = \frac{q'}{4\pi\lambda}\,E_1\!\left(\frac{r^2}{4\alpha t}\right), $$
+<p>where \(E_1\) is the <b>exponential integral</b>, \(E_1(x) = \int_x^\infty \frac{e^{-u}}{u}\,du\). You do not need to compute it by hand: it is built into scientific libraries (for example <code>scipy.special.exp1</code> in Python or <code>expint</code> in MATLAB), but not into common spreadsheets or data-logger function libraries; Knight and Kluitenberg (2004) give a simple polynomial approximation for those cases. All you need to know is that it is large for small arguments (long times, short distances) and falls quickly to zero for large ones. The group \(r^2/(4\alpha t)\) is a natural "clock": the heat front reaches a distance \(r\) at a time of order \(r^2/(4\alpha)\), which for our 8 mm and a typical soil is about 30 s.</p>
+<p><b>Switching off: superposition.</b> The heat equation is linear, so solutions can be added. Turning the heater off at \(t_0\) is the same as leaving it on and adding a second, <i>negative</i> heater that starts at \(t_0\):</p>
+$$ \Delta T(r,t) = \frac{q'}{4\pi\lambda}\left[E_1\!\left(\frac{r^2}{4\alpha t}\right) - E_1\!\left(\frac{r^2}{4\alpha (t - t_0)}\right)\right], \qquad t > t_0. $$
+<p>Figure 9 shows how the two pieces combine.</p>
+<div class="box analogy"><b class="tag">Analogy.</b> Stopping a faucet is equivalent to leaving it running and opening a drain of the same size underneath. Mathematically this is simpler, because both the faucet and the drain have the same, known behavior.</div>
+<figure><img src="fig/pulse.png" style="width:92%"><figcaption>Figure 9. The pulsed line source (blue) is the continuous solution (dotted) plus a negative source switched on at 15 s (dashed, already drawn negative). The green curve is what the digital twin computes with the real, finite heater (Section 6). With the heater's power spread over its effective length (Section 5.5), the two curves peak at the same height and time; they part only late in the tail (Section 6.3).</figcaption></figure>
+
+<h3 id="sec-5-4">5.4 Reading soil properties from the peak</h3>
+<p>The side-needle curve rises, peaks at a time \(t_m\) with height \(\Delta T_m\), and falls. Setting the time derivative of the pulsed solution to zero gives a formula for the diffusivity from the peak time alone (Bristow et al. 1994):</p>
+$$ \alpha = \frac{r^2}{4}\;\frac{\dfrac{1}{t_m - t_0} - \dfrac{1}{t_m}}{\ln\!\left(\dfrac{t_m}{t_m - t_0}\right)}. $$
+<p>Then the peak height gives the conductivity, and the ratio gives the heat capacity:</p>
+$$ \lambda = \frac{q'}{4\pi\,\Delta T_m}\left[E_1\!\left(\frac{r^2}{4\alpha t_m}\right) - E_1\!\left(\frac{r^2}{4\alpha (t_m - t_0)}\right)\right], \qquad C = \frac{\lambda}{\alpha}. $$
+<div class="box"><b class="tag">The intuition, from a very short pulse.</b> If all the energy \(Q' = q' t_0\) (joules per meter) were released at once, the solution would be \(\Delta T = \frac{Q'}{4\pi\lambda t}\exp\!\left(-\frac{r^2}{4\alpha t}\right)\); its peak comes at \(t_m = r^2/(4\alpha)\) and has height (Campbell et al. 1991)</div>
+$$ \Delta T_m = \frac{Q'}{e\,\pi\,r^2\,C} \qquad\Rightarrow\qquad C = \frac{Q'}{e\,\pi\,r^2\,\Delta T_m}. $$
+<p>Read it like this: the pulse of energy spreads into a cylinder of soil of roughly radius \(r\) (cross-section \(\pi r^2\)); the temperature rise is energy divided by (volume × heat capacity), and the factor \(1/e\) (with \(e \approx 2.718\)) is how far down the bell-shaped temperature profile the thermistor sits at that moment: at \(t_m\) the profile has \(\exp(-r^2/4\alpha t_m) = e^{-1}\) at distance \(r\). <b>A soil that stores more heat (wetter) shows a smaller peak.</b> The formula also shows why the spacing matters so much: \(C\) depends on \(r^2\), so a 1% error in spacing becomes a 2% error in heat capacity.</p>
+
+<h3 id="sec-5-5">5.5 Worked example: Hodgeman 20 cm, 33 kPa</h3>
+<p>This is the twin's default soil, a silty clay loam core from the Kansas Mesonet soil database (Parker et al. 2022) whose KD2 Pro readings are \(\lambda = 1.283\) W m⁻¹ K⁻¹ and \(C = 2.345\) MJ m⁻³ K⁻¹ (so \(\alpha = 0.547\) mm² s⁻¹).</p>
+<table>
+<tr><th>Step</th><th>Calculation</th><th class="num">Result</th></tr>
+<tr><td>Heater power (average)</td><td>\(0.85 \times 2.346\) W</td><td class="num">1.994 W</td></tr>
+<tr><td>Effective heated length</td><td>17 resistors × 2.6 mm (see the note below)</td><td class="num">44.2 mm</td></tr>
+<tr><td>Power per meter</td><td>\(q' = 1.994 / 0.0442\)</td><td class="num">45.11 W m⁻¹</td></tr>
+<tr><td>Energy per meter</td><td>\(Q' = q' t_0 = 45.11 \times 15\)</td><td class="num">677 J m⁻¹</td></tr>
+<tr><td>Predicted peak (ideal line)</td><td>pulsed equation, \(r\) = 8 mm</td><td class="num">0.522 °C at 38.0 s</td></tr>
+</table>
+<div class="box"><b class="tag">Why 44.2 mm and not 43.2 mm?</b> Measured from the first resistor's outer end to the last one's, the 17 resistors span 43.2 mm. But each resistor stands for one 2.6 mm stretch of an evenly heated line: seventeen stretches of 2.6 mm make 44.2 mm. That is the length the line-source model needs. Using 43.2 mm overstates \(q'\) by 2.3%, and \(\lambda\) and \(C\) come out 2.3% high (Section 6.3).</div>
+<p>Now pretend we measured that curve and want the soil back. With \(t_m = 38\) s, \(t_0 = 15\) s and \(r = 0.008\) m:</p>
+$$ \alpha = \frac{(0.008)^2}{4}\cdot\frac{\tfrac{1}{23} - \tfrac{1}{38}}{\ln(38/23)} = 1.6\times10^{-5}\cdot\frac{0.01716}{0.5021} = 5.47\times10^{-7}\ \text{m}^2\,\text{s}^{-1}. $$
+<p>The two \(E_1\) arguments are \(r^2/(4\alpha t_m) = 0.770\) and \(r^2/(4\alpha(t_m - t_0)) = 1.272\), with \(E_1\) values 0.3281 and 0.1415:</p>
+$$ \lambda = \frac{45.11}{4\pi \times 0.5221}\,(0.3281 - 0.1415) = 1.283\ \text{W m}^{-1}\text{K}^{-1}, \qquad C = \frac{1.283}{5.47\times10^{-7}} = 2.345\ \text{MJ m}^{-3}\text{K}^{-1}. $$
+<p>We recover the soil to within rounding, as we should when the data follow the model perfectly. The short-pulse shortcut gives \(C = 677/(2.718 \times \pi \times 0.008^2 \times 0.5221) = 2.37\) MJ m⁻³ K⁻¹, only 1% off, a good sanity check you can do on a calculator.</p>
+<div class="box warn"><b class="tag">How sensitive is this?</b> Two small errors, worked out for this example:
+<ul style="margin:4px 0 0 0">
+<li><b>Peak time off by 1 s</b> (37 or 39 s instead of 38 s): \(\alpha\) and \(\lambda\) change by about ±3.5%, but \(C\) changes by less than 0.1%. The peak time sets the diffusivity; the conductivity follows it, and the heat capacity, which depends mostly on the peak height, hardly moves.</li>
+<li><b>Spacing off by 0.1 mm</b> (analysis assumes 8.1 mm, needles really 8.0 mm): \(\alpha\) comes out 2.5% high and \(C\) 2.5% low; \(\lambda\) does not change at all, because both \(E_1\) arguments stay the same. In general \(C \propto 1/r^2\), so a spacing error of \(\varepsilon\) percent gives about \(2\varepsilon\) percent in \(C\). This is why needle spacing is the most important dimension of the sensor, and why bent needles matter (Kluitenberg et al. 1993; Kluitenberg et al. 1995).</li>
+</ul>
+Instead of using only the peak, one can fit the pulsed solution to the whole curve by nonlinear least squares, which uses every data point; Bristow et al. (1995) compared these approaches. The twin fits the curve, using the one-second TH1 readings from heater-on to 1.5 times the peak time (Section 7.6).</div>
+
+<h3 id="sec-5-6">5.6 From heat capacity to water content</h3>
+<p>Heat capacity adds up by volume (de Vries 1963):</p>
+$$ C = \rho_b\,c_s + \theta\,C_w \qquad\Rightarrow\qquad \theta = \frac{C - \rho_b\,c_s}{C_w}, $$
+<p>with bulk density \(\rho_b\) (Mg m⁻³), mineral specific heat \(c_s \approx 0.75\) MJ Mg⁻¹ K⁻¹, water \(C_w = 4.18\) MJ m⁻³ K⁻¹ and volumetric water content \(\theta\) (m³ m⁻³). Air adds essentially nothing. For the Hodgeman core, \(\rho_b = 1.363\):</p>
+$$ \theta = \frac{2.345 - 1.363 \times 0.75}{4.18} = \frac{2.345 - 1.022}{4.18} = 0.32\ \text{m}^3\,\text{m}^{-3}. $$
+<p>The core's measured water content is 0.39. The gap shows that the de Vries relation has its own scatter (organic matter, mineral mix, the KD2 reading itself); in the Kansas dataset's wetter states (saturated, 33 and 70 kPa), measured heat capacities average about 6–9% below this line, with a scatter of about ±11–14%, and drier states scatter more. This core sits 12% below it (2.345 measured against 2.665 predicted). A sensor-specific calibration against measured water contents would remove much of this.</p>
+
+<h2 id="sec-6">6. The digital twin's model</h2>
+
+<h3 id="sec-6-1">6.1 Seventeen point sources instead of a line</h3>
+<p>The real heater is not an infinite line. It is made of 17 separate resistors 2.6 mm apart (a 44.2 mm effective length), and it starts about 9 mm below the board. To predict what the real sensor would see, the twin treats <b>each resistor as a point source</b> in uniform soil. For a point releasing power \(P\) from time 0, the rise at distance \(d\) is (Carslaw and Jaeger 1959)</p>
+$$ \Delta T(d,t) = \frac{P}{4\pi\lambda\,d}\;\text{erfc}\!\left(\frac{d}{2\sqrt{\alpha t}}\right), $$
+<p>where erfc is the complementary error function (another standard function). The twin switches each source off at \(t_0\) by superposition, as in Section 5.3, and adds up all 17:</p>
+$$ \Delta T(r,z,t) = \sum_{i=1}^{17} \frac{P_i}{4\pi\lambda\,d_i}\left[\text{erfc}\!\left(\frac{d_i}{2\sqrt{\alpha t}}\right) - \text{erfc}\!\left(\frac{d_i}{2\sqrt{\alpha (t-t_0)}}\right)\right], \qquad d_i = \sqrt{r^2 + (z - z_i)^2}, $$
+<p>with the second term only after \(t_0\), \(P_i = 1.994/17 = 0.117\) W, and \(z_i = 8.8 + 2.6\,(i-1)\) mm the position of resistor \(i\) along the needle. TH1 and TH3 sit at \(z = 29.8\) mm, the middle of the heated section, and \(r = 8\) mm. TH2 sits on the heater needle, 3.68 mm past the last resistor. Figure 10 shows the resulting temperature field.</p>
+<figure><img src="fig/field.png" style="width:98%"><figcaption>Figure 10. Soil temperature rise around the heater (logarithmic color scale, like the website's colormap), at the end of heating and at the side-needle peak. The orange marks are the 17 resistors (the heater needle itself is blank, because the model gives no value inside it); the dashed lines are the side needles, which end about 32 mm below the board. Heat leaks past both ends of the heater, which an infinite line would never do.</figcaption></figure>
+
+<h3 id="sec-6-2">6.2 "Grid" resolution, time steps and boundary conditions in the twin</h3>
+<p>Many soil models divide the soil into a grid and step forward in time (finite differences or finite elements), and then grid spacing and time step control the accuracy. <b>The twin has no grid.</b> Both the line-source and the point-source solutions are exact formulas: the temperature at any point and time is computed directly, independently of every other point. So there is no numerical diffusion and no stability limit. What the twin does choose:</p>
+<table>
+<tr><th>Item</th><th>Value</th><th>Why</th></tr>
+<tr><td>Heater discretization</td><td>17 point sources, 2.6 mm apart</td><td>One per real resistor, at its real position</td></tr>
+<tr><td>Stored temperature series</td><td>every 0.25 s</td><td>Smooth chart lines</td></tr>
+<tr><td>Simulated readings</td><td>every 1 s, 64-reading averages, 14-bit codes</td><td>What the firmware would record</td></tr>
+<tr><td>Website colormap</td><td>114 × 56 pixels over 67 × 32 mm (about 0.6 mm per pixel), refreshed every 0.25 s</td><td>For display only; each pixel is computed exactly</td></tr>
+<tr><td>Special functions</td><td>erfc to 1.2 × 10⁻⁷; \(E_1\) by series and continued fraction</td><td>Errors far below a millikelvin</td></tr>
+</table>
+<p><b>Boundary and initial conditions</b> are those of Section 5.2, applied in three dimensions: uniform soil in every direction (no soil surface, no board or epoxy), uniform starting temperature, \(\Delta T \to 0\) far away, and zero-size needles that store no heat and touch the soil perfectly. The heater power is the PWM average; the 100 Hz flicker is not simulated (8 mm of soil smooths it out almost completely). TH4 on the board is held at the starting temperature because heat flow into the board is not modeled.</p>
+
+<h3 id="sec-6-3">6.3 Why the twin's estimate differs from the soil values</h3>
+<p>The twin runs the measurement in two directions, like a real experiment:</p>
+<ol>
+<li><b>Forward (the "truth"):</b> the 17-point-source soil of Section 6.1, plus the electronics: 14-bit codes, averaging, one sample per second, subtracting the background.</li>
+<li><b>Inverse (the "analysis"):</b> what simple firmware would do: fit the <i>ideal pulsed line source</i> (Section 5.3) to TH1's rise, with the nominal 8 mm spacing.</li>
+</ol>
+<p>Two analysis choices decide how close the answer comes. Take first a simple analysis that divides the power by the resistor-end-to-end length, 43.2 mm, and fits the whole 105 s record of a 90 s cooling phase. For the Hodgeman soil it reports \(\lambda = 1.331\) W m⁻¹ K⁻¹ (+3.7%) and \(C = 2.406\) MJ m⁻³ K⁻¹ (+2.6%). Three separate effects add up to that, and it is worth keeping them apart because they have different cures:</p>
+<table>
+<tr><th>Effect</th><th class="num">\(\lambda\)</th><th class="num">\(C\)</th><th>Cure</th></tr>
+<tr><td><b>1. Heated-length bookkeeping.</b> Dividing the power by 43.2 mm (resistor end to resistor end) instead of the effective 44.2 mm (Section 5.5) makes \(q'\) 2.3% too high. Both properties scale with \(q'\).</td><td class="num">+2.3%</td><td class="num">+2.3%</td><td>Use 17 × 2.6 mm, or calibrate</td></tr>
+<tr><td><b>2. Finite heater (end effect).</b> Heat also flows past the two ends of the heater. At the thermistor, midway along, the curve matches the ideal line through the peak, then falls below it late in the tail (Figure 11, right). Here the fit runs to 105 s. Late in the tail the ideal line depends on \(\lambda\) alone (\(\Delta T \approx Q'/(4\pi\lambda t)\)), so a lower tail pushes the fitted \(\lambda\) up; \(C\), set mainly by the peak height, barely moves, so \(\alpha = \lambda/C\) rises too.</td><td class="num">+1.5%</td><td class="num">+0.4%</td><td>Fit only to just past the peak (Section 7.6)</td></tr>
+<tr><td><b>3. Quantization, sampling and background subtraction.</b> One ADC step is 0.006 °C; the fit's RMS misfit is about 0.003 °C.</td><td class="num">≈ −0.1%</td><td class="num">≈ −0.1%</td><td>Small here. Without noise it can reach about ±0.8%, depending on where the baseline falls within one ADC step; real noise averages it out.</td></tr>
+</table>
+<p>The effects multiply: \(1.023 \times 1.015 \times 0.999 \approx 1.037\) for \(\lambda\) and \(1.023 \times 1.004 \times 0.999 \approx 1.026\) for \(C\), the +3.7% and +2.6% above. <b>The website uses the better choices</b>: the effective length and a fit from heater-on to 1.5 times the measured peak time. It reports \(\lambda = 1.285\) (+0.1%), \(C = 2.344\) (−0.0%) and \(\alpha = 0.548\) mm² s⁻¹ for this soil, from 57 one-second readings (Sections 7.6–7.8).</p>
+<figure><img src="fig/finite.png" style="width:98%"><figcaption>Figure 11. Left: peak temperature rise along the side needle for the current 44 mm heater (green) and a 65 mm heater (purple), with the ideal line for each (dashed). Near the middle of the heater, where the thermistors sit, the finite heater reaches the ideal peak. Right: the finite heater's curve divided by the ideal line's at the thermistor (medium soil). The two agree to better than 0.1% at the peak (38 s) and to 0.3% where the fit ends, at 1.5 times the peak time (57 s); by twice the peak time (76 s) the gap is 1%, and by 105 s the finite heater is 3% lower. The longer heater stays within 0.4% throughout.</figcaption></figure>
+<p>A real sensor adds more differences that the twin deliberately leaves out, because they need measurements to quantify: the needles' own radius and heat capacity, which shift and rescale the peak (earlier and higher, or later and lower, depending on whether the needles store less or more heat per volume than the soil; Knight et al. 2012); epoxy, contact resistance, and air gaps around the needles; the exact spacing after assembly and insertion; heater resistance changing slightly as it warms; and the soil not being uniform. That is why heat-pulse sensors are usually <b>calibrated</b>: measure a material with known properties (water stabilized with agar is common), and adjust the effective spacing until the sensor reads correctly. That absorbs a constant bias in \(C\), including the heated-length bookkeeping above, but not in \(\lambda\): in the line-source analysis \(\lambda\) does not depend on \(r\) at all. Getting \(\lambda\) right needs the correct \(q'\), or a second check against a material of known conductivity (water, about 0.6 W m⁻¹ K⁻¹).</p>
+<div class="box"><b class="tag">And the "true" soil values are measurements too.</b> The reference values come from a KD2 Pro SH-1, a commercial dual-needle probe with its own geometry, processing and uncertainty. Agreement within a few percent between two different instruments is good.</div>
+
+<h3 id="sec-6-4">6.4 A real KD2 Pro curve</h3>
+<p>The Kansas dataset stores the raw temperature rise that the KD2 Pro recorded for each reading. The SH-1 probe has two 30 mm needles 6 mm apart and heated this core for 60 s at 18.3 W m⁻¹.</p>
+<figure><img src="fig/kd2.png" style="width:90%"><figcaption>Figure 12. KD2 Pro SH-1 measurement for the twin's default soil (dots), a finite 30 mm heater with the soil values the KD2 reported (green), and an infinite line with the same values (dashed). Neither ideal model matches the measurement exactly: the data sit above both during heating and below both after the peak, though the finite heater comes closer.</figcaption></figure>
+<p>Figure 12 shows the curve. One point first: the KD2 computed its reported \(\lambda\) and \(C\) from this same curve with its own analysis, which we do not know in detail. So any gap between those values and our fit is first a difference between two analyses of identical data. With that in mind, here is what the curve teaches, with numbers checked by simulation:</p>
+<ul>
+<li><b>The finite length matters more with a long pulse on a short probe.</b> Simulate the SH-1 geometry (30 mm heater, 6 mm spacing, 60 s at 18.3 W m⁻¹) in the reported soil and fit the ideal line to that noise-free, finite-heater curve over the same 118 s: the fit returns \(\lambda = 1.407\) (+9.7%) and \(C = 2.342\) (−0.1%). The heat-capacity estimate is almost untouched; the conductivity is not.</li>
+<li><b>Finite length does not explain everything.</b> Fitting the ideal line to the <i>measured</i> curve gives \(\lambda \approx 1.56\) and \(C \approx 2.27\). The finite length accounts for about half of the conductivity difference and none of the heat-capacity difference. The rest comes from things neither ideal model includes, such as the needles' own radius and heat capacity (Knight et al. 2012), contact between needle and soil, and the instrument's own processing; this one curve cannot separate them.</li>
+<li><b>The peak comes only 4–6 s after the heater stops</b>, and the readings are 2 s apart, so single-point peak methods are fragile here: moving \(t_m\) from 64 s to 62 or 66 s moves \(\alpha\) by +67% or −25%.</li>
+</ul>
+
+
+<h2 id="sec-7">7. What if...? Design choices, one at a time</h2>
+<p>With the equations in hand we can ask design questions and answer them with numbers. Each question below changes one thing and keeps everything else as it is now.</p>
+
+<h3 id="sec-7-1">7.1 How to read this section</h3>
+<ul>
+<li><b>The "truth"</b> is the twin's finite-heater model (Section 6.1): 17 point sources (25 for the long-needle case) in uniform, ideal soil.</li>
+<li><b>The "analysis"</b> fits the ideal pulsed line source (Section 5.3) with \(q'\) = average power ÷ (number of resistors × 2.6 mm) and the nominal spacing, to one-second samples from heater-on to 1.5 times the peak time.</li>
+<li><b>Record length:</b> fitting to 1.5 times the peak time needs about 145 s of record after heater-on in the dry soil at 8 mm, and about 220 s at 10 mm (Table B, last column). That is why the default cooling phase is 150 s (Section 7.8).</li>
+<li><b>No noise is added.</b> The fitted values therefore show only the <i>model error</i>: what the ideal line misses about the real, finite heater. Real sensors add noise, spacing errors, needle heat capacity and contact effects (Section 6.3). The "ADC steps" column shows how big the signal is compared with the smallest step the electronics can resolve (about 0.0063 °C), which is a fair guide to how much noise will matter.</li>
+<li><b>Three measured Kansas soils</b> cover the range of diffusivities:</li>
+</ul>
+<table>
+<tr><th>Soil</th><th>Kansas Mesonet core and state</th><th class="num">\(\lambda\) (W m⁻¹ K⁻¹)</th><th class="num">\(C\) (MJ m⁻³ K⁻¹)</th><th class="num">\(\alpha\) (mm² s⁻¹)</th></tr>
+<tr><td>Dry</td><td>Miami 5 cm, oven-dry</td><td class="num">0.244</td><td class="num">1.349</td><td class="num">0.181</td></tr>
+<tr><td>Medium</td><td>Hodgeman 20 cm, 33 kPa (the twin's default)</td><td class="num">1.283</td><td class="num">2.345</td><td class="num">0.547</td></tr>
+<tr><td>Wet sandy</td><td>Lake City 5 cm, sandy loam, saturated</td><td class="num">2.159</td><td class="num">1.944</td><td class="num">1.111</td></tr>
+</table>
+<p>The heater power is the same in every case (1.994 W average, 85% duty at 12 V), except the long-needle case, which needs different resistors (Section 7.5).</p>
+
+<h3 id="sec-7-2">7.2 Two rules of thumb you can do on a calculator</h3>
+<p>From the short-pulse solution (Section 5.4), treating the pulse as if it were released all at once at its midpoint:</p>
+$$ t_m \approx \frac{r^2}{4\alpha} + \frac{t_0}{2}, \qquad \Delta T_m \approx \frac{Q'}{e\,\pi\,r^2\,C}, \qquad Q' = q'\,t_0. $$
+<p>These are approximations. They work within a few percent while the pulse is short compared with \(r^2/(4\alpha)\), and fail for long pulses (Section 7.4). The comparisons below use the full pulsed line-source solution of Section 5.3, which is what the rules approximate. <b>Check them on the present design</b> (medium soil, \(r\) = 8 mm, \(t_0\) = 15 s, \(Q'\) = 677 J m⁻¹):</p>
+$$ \frac{r^2}{4\alpha} = \frac{(0.008)^2}{4 \times 5.47\times10^{-7}} = 29.2\ \text{s} \;\Rightarrow\; t_m \approx 29.2 + 7.5 = 36.7\ \text{s} \quad(\text{full solution: } 38.0\ \text{s}), $$
+$$ \Delta T_m \approx \frac{677}{2.718 \times \pi \times (0.008)^2 \times 2.345\times10^{6}} = \frac{677}{1282} = 0.528\ ^\circ\text{C} \quad(\text{full solution: } 0.522\ ^\circ\text{C}). $$
+
+<h3 id="sec-7-3">7.3 What if the needles were 6 or 10 mm apart?</h3>
+<p><b>By hand.</b> Only \(r\) changes. \(r^2/(4\alpha)\) becomes 16.5 s at 6 mm and 45.7 s at 10 mm, so \(t_m \approx\) 24.0 s and 53.2 s (full solution: 26.0 s and 54.0 s). At 6 mm the time rule is 8% low, because the 15 s pulse is nearly as long as \(r^2/(4\alpha)\). The peak scales with \(1/r^2\): \(677/(2.718\,\pi \times 0.006^2 \times 2.345\times10^6) = 0.939\) °C at 6 mm and 0.338 °C at 10 mm (full solution: 0.909 and 0.336 °C).</p>
+<p><b>What changes.</b></p>
+<ul>
+<li><b>Signal:</b> 6 mm gives about 1.7 times today's peak, 10 mm about 0.64 times.</li>
+<li><b>Sensitivity to spacing error:</b> since \(C \propto 1/r^2\), a 0.1 mm error costs \(1-(r/(r+0.1))^2\): 3.3% at 6 mm, 2.5% at 8 mm, 2.0% at 10 mm. Closer needles need tighter spacing tolerance.</li>
+<li><b>Model error:</b> with the heater unchanged, a wider gap makes the heater "shorter" relative to the distance heat must travel, so the end effect grows: at 10 mm the fitted \(\lambda\) is +0.8% to +1.6% and \(C\) +0.4% to +0.6%; at 6 mm both stay within 0.1%.</li>
+<li><b>Not in this model:</b> the needles themselves (2.77 mm outside diameter for 12 gauge) take up a larger share of a 6 mm gap, so the effects of needle radius and heat capacity that the ideal model ignores (Knight et al. 2012) become more important as the gap shrinks. Our 12-gauge needles are already thicker than the roughly 1.3 mm needles of typical research probes, so those effects are likely larger here than in most published sensors.</li>
+</ul>
+
+<h3 id="sec-7-4">7.4 What if we heat for 8, 15 or 60 seconds?</h3>
+<p>The Kansas readings in this chapter were taken with a KD2 Pro SH-1, which heats for 60 s (Section 6.4). Today's dual-probe sensors typically heat for 8–15 s; ours defaults to 15 s, and 60 s remains available only as a setting.</p>
+<p><b>By hand.</b> The power per meter stays 45.11 W m⁻¹, so the energy is \(Q' = 45.11 \times t_0\): 361, 677 and 2706 J m⁻¹. For 8 s: \(t_m \approx 29.2 + 4 = 33.2\) s and \(\Delta T_m \approx 361/1282 = 0.282\) °C (full solution: 33.6 s and 0.281 °C). For 60 s the rules give 59.2 s and 2.11 °C, but the full solution gives 74.3 s and 1.867 °C: <b>the rules of thumb fail</b>. The time rule even puts the peak before the heater switches off at 60 s. A 60 s pulse lasts longer than the 29 s the heat needs to reach the thermistor, so it no longer behaves like a single burst. Use the full equations of Section 5.4.</p>
+<p><b>What changes.</b></p>
+<ul>
+<li><b>Signal:</b> grows with the energy, a little less than proportionally for long pulses: 8 s gives 44 ADC steps in the medium soil, 15 s gives 83, and 60 s (four times the energy of 15 s) gives 295, 3.6 times as many.</li>
+<li><b>Heating of the soil next to the needle:</b> the soil touching the heater needle warms much more than the soil at the thermistors. Beside a resistor (between resistors it is about 10% less, and the model ignores the needle wall, which would even this out): in the medium soil 5.2 °C (8 s), 6.8 °C (15 s) and 10.5 °C (60 s); in the dry soil 14.4, 21.3 and 39.5 °C. Strong local heating can push water away from the heater, which changes the very property being measured; this model does not include it, so large local rises are a warning sign, not a computed error.</li>
+<li><b>Model error:</b> small for 8 and 15 s. For 60 s it grows in high-diffusivity soil (+5.7% in \(\lambda\), −0.1% in \(C\) for the wet sandy soil), because by the time of the peak the heat has spread well past the ends of the heater.</li>
+<li><b>Time and battery:</b> the energy drawn from the battery is proportional to \(t_0\), and a longer pulse delays the peak and the end of the measurement.</li>
+</ul>
+
+<h3 id="sec-7-5">7.5 What if the needles were 3 inches long?</h3>
+<p>A 3-inch (76 mm) needle has room for a 65 mm heater: 25 resistors at 2.6 mm, heater midpoint about 40 mm below the board (the side thermistors would move there too). The catch is the 12 V supply: 25 × 3.3 Ω = 82.5 Ω would cut the power to about 1.4 W. Keeping about 2 W needs about the same total resistance as now, so 25 × 2.2 Ω = 55 Ω. By Ohm's law (Section 2.2) that gives 2.03 W average, spread over 65 mm: \(q' = 31.27\) W m⁻¹, 31% less than now.</p>
+<ul>
+<li><b>Signal:</b> the peak falls from 0.522 to 0.362 °C in the medium soil (83 to 57 ADC steps). Heating 22 s instead of 15 s would restore it.</li>
+<li><b>Model error:</b> essentially zero in all three soils. But with the effective length and a fit to 1.5 times the peak time, today's 44 mm heater is already within +0.5% in \(\lambda\) and +0.1% in \(C\) (worst of the three soils), so the gain is about half a percent.</li>
+<li><b>Bending:</b> a needle held at one end bends in proportion to its free length cubed for a sideways force at the tip (to the fourth power for a force spread along it). The side needles, which set the spacing, now end about 32 mm below the board; moving the thermistors to the new heater midpoint would make them about 1.3–1.5 times longer, so they would bend roughly 2–4 times more for the same force during insertion. Because a 0.1 mm change in spacing already costs 2.5% in \(C\), this is likely to cost more accuracy than the longer heater gains.</li>
+</ul>
+
+<h3 id="sec-7-6">7.6 What if we fit more, or less, of the curve?</h3>
+<p>This question matters more than the needle length. The peak's height and timing carry most of the information: the height mainly sets \(C\), the timing sets \(\alpha\). The tail is where the ideal line and the real sensor agree least. For the finite heater, the curve matches the ideal line through the peak and departs from it only late in the tail (Figure 11, right). The effects the model leaves out, such as the needles' own heat capacity, imperfect contact, heat left from a previous pulse and the soil's natural temperature drift, also show up mostly in the tail. So the further past the peak we fit, the more the fit is pulled by the part of the curve the ideal line gets wrong. This agrees with advice from G. J. Kluitenberg (personal communication, May 2026): fitting the tail, the part of least agreement, is a common mistake, and the fit should end just past the peak.</p>
+<p><b>Without noise.</b> Errors of the fitted \(\lambda\) / \(C\) for today's heater (8 mm, 15 s), by how far the fit runs:</p>
+<table><tr><th>Soil</th><th class="num">Peak time</th><th class="num">to 1.5 \(t_m\)</th><th class="num">to 2 \(t_m\)</th><th class="num">to 3 \(t_m\)</th><th class="num">fixed 105 s</th><th class="num">fixed 300 s</th></tr><tr><td>Dry</td><td class="num">96.3 s</td><td class="num">+0.1% / ±0.0%</td><td class="num">+0.3% / +0.1%</td><td class="num">+1.2% / +0.4%</td><td class="num">±0.0% / ±0.0%</td><td class="num">+1.4% / +0.4%</td></tr><tr><td>Medium</td><td class="num">37.9 s</td><td class="num">+0.2% / +0.1%</td><td class="num">+0.6% / +0.2%</td><td class="num">+1.8% / +0.4%</td><td class="num">+1.5% / +0.4%</td><td class="num">+7.9% / +1.0%</td></tr><tr><td>Wet sandy</td><td class="num">24.2 s</td><td class="num">+0.5% / +0.1%</td><td class="num">+1.2% / +0.3%</td><td class="num">+3.2% / +0.5%</td><td class="num">+5.7% / +0.6%</td><td class="num">+13.9% / +0.4%</td></tr></table>
+<p><b>With noise.</b> The one argument for fitting further is that more points average out noise. To test it, we added independent random noise of 5 mK to each one-second reading (about one ADC step; the background is the mean of ten noisy readings), repeated each fit 200 times, and report the mean error ± the standard deviation of \(\lambda\):</p>
+<table><tr><th>Soil (peak time)</th><th class="num">to 1.1 \(t_m\)</th><th class="num">to 1.25 \(t_m\)</th><th class="num">to 1.5 \(t_m\)</th><th class="num">to 2 \(t_m\)</th><th class="num">to 3 \(t_m\)</th></tr><tr><td>Dry (96 s)</td><td class="num">0.0 ± 0.2%</td><td class="num">0.0 ± 0.2%</td><td class="num">0.1 ± 0.2%</td><td class="num">0.4 ± 0.2%</td><td class="num">0.4 ± 0.2%</td></tr><tr><td>Medium (38 s)</td><td class="num">0.1 ± 0.7%</td><td class="num">0.1 ± 0.5%</td><td class="num">0.2 ± 0.4%</td><td class="num">0.5 ± 0.4%</td><td class="num">1.8 ± 0.4%</td></tr><tr><td>Wet sandy (24 s)</td><td class="num">0.1 ± 1.0%</td><td class="num">0.3 ± 0.7%</td><td class="num">0.5 ± 0.5%</td><td class="num">1.2 ± 0.4%</td><td class="num">3.1 ± 0.4%</td></tr></table>
+<ul>
+<li><b>The error grows with the window, and the scatter shrinks only a little.</b> Going from 2 to 3 times the peak time buys almost no precision but more than doubles the error in the medium and wet soils.</li>
+<li><b>The best balance is about 1.25–1.5 times the peak time.</b> Ending right at the peak (1.1 times) lets the scatter grow in wet soil, because the peak time itself becomes uncertain.</li>
+<li><b>\(C\) hardly depends on the window</b> (mean errors 0.0–0.5%, scatter ±0.1–0.4% in every case). The window matters for \(\lambda\) and \(\alpha\), which the tail drags upward.</li>
+</ul>
+<p>The website and the planned firmware therefore fit from heater-on to <b>1.5 times the measured peak time</b>. Readings recorded after that are kept, for plotting and quality checks, but not fitted. These tests assume independent noise and an ideal soil; the best window should be confirmed with bench data.</p>
+
+<h3 id="sec-7-7" style="break-before: page">7.7 All cases in two tables</h3>
+<p><b>Table A. Signal.</b> Peak rise at the thermistor and the maximum rise of the soil touching the heater needle (at its 1.385 mm outer radius, beside the middle resistor; point-source model, needle wall ignored).</p>
+<table><tr><th>Case</th><th>Soil</th><th class="num">\(q'\) (W m⁻¹)</th><th class="num">\(Q'\) (J m⁻¹)</th><th class="num">Peak rise (°C)</th><th class="num">ADC steps</th><th class="num">Peak time (s)</th><th class="num">Soil next to heater, max rise (°C)</th></tr><tr><td rowspan="3">Now: 44 mm heater, 8 mm, 15 s</td><td>Dry</td><td class="num">45.1</td><td class="num">677</td><td class="num">0.916</td><td class="num">145</td><td class="num">96.3</td><td class="num">21.3</td></tr><tr><td>Medium</td><td class="num">45.1</td><td class="num">677</td><td class="num">0.522</td><td class="num">83</td><td class="num">37.9</td><td class="num">6.8</td></tr><tr><td>Wet sandy</td><td class="num">45.1</td><td class="num">677</td><td class="num">0.611</td><td class="num">97</td><td class="num">24.2</td><td class="num">5.1</td></tr><tr><td rowspan="3">Spacing 6 mm</td><td>Dry</td><td class="num">45.1</td><td class="num">677</td><td class="num">1.625</td><td class="num">257</td><td class="num">58.0</td><td class="num">21.3</td></tr><tr><td>Medium</td><td class="num">45.1</td><td class="num">677</td><td class="num">0.909</td><td class="num">144</td><td class="num">26.1</td><td class="num">6.8</td></tr><tr><td>Wet sandy</td><td class="num">45.1</td><td class="num">677</td><td class="num">1.019</td><td class="num">161</td><td class="num">19.2</td><td class="num">5.1</td></tr><tr><td rowspan="3">Spacing 10 mm</td><td>Dry</td><td class="num">45.1</td><td class="num">677</td><td class="num">0.586</td><td class="num">93</td><td class="num">144.8</td><td class="num">21.3</td></tr><tr><td>Medium</td><td class="num">45.1</td><td class="num">677</td><td class="num">0.336</td><td class="num">53</td><td class="num">53.6</td><td class="num">6.8</td></tr><tr><td>Wet sandy</td><td class="num">45.1</td><td class="num">677</td><td class="num">0.399</td><td class="num">63</td><td class="num">31.4</td><td class="num">5.1</td></tr><tr><td rowspan="3">Heat 8 s</td><td>Dry</td><td class="num">45.1</td><td class="num">361</td><td class="num">0.489</td><td class="num">77</td><td class="num">92.5</td><td class="num">14.4</td></tr><tr><td>Medium</td><td class="num">45.1</td><td class="num">361</td><td class="num">0.281</td><td class="num">44</td><td class="num">33.6</td><td class="num">5.2</td></tr><tr><td>Wet sandy</td><td class="num">45.1</td><td class="num">361</td><td class="num">0.335</td><td class="num">53</td><td class="num">19.1</td><td class="num">4.1</td></tr><tr><td rowspan="3">Heat 60 s</td><td>Dry</td><td class="num">45.1</td><td class="num">2706</td><td class="num">3.604</td><td class="num">571</td><td class="num">124.8</td><td class="num">39.5</td></tr><tr><td>Medium</td><td class="num">45.1</td><td class="num">2706</td><td class="num">1.861</td><td class="num">295</td><td class="num">74.1</td><td class="num">10.5</td></tr><tr><td>Wet sandy</td><td class="num">45.1</td><td class="num">2706</td><td class="num">1.840</td><td class="num">291</td><td class="num">65.0</td><td class="num">7.4</td></tr><tr><td rowspan="3">3-inch needle, 65 mm heater</td><td>Dry</td><td class="num">31.3</td><td class="num">469</td><td class="num">0.635</td><td class="num">101</td><td class="num">96.4</td><td class="num">14.8</td></tr><tr><td>Medium</td><td class="num">31.3</td><td class="num">469</td><td class="num">0.362</td><td class="num">57</td><td class="num">38.0</td><td class="num">4.7</td></tr><tr><td>Wet sandy</td><td class="num">31.3</td><td class="num">469</td><td class="num">0.424</td><td class="num">67</td><td class="num">24.3</td><td class="num">3.6</td></tr></table>
+<p><b>Table B. What the analysis reports</b> (fitted value, with the error relative to the true soil value in parentheses; fit from heater-on to 1.5 times the peak time).</p>
+<table><tr><th>Case</th><th>Soil</th><th class="num">\(\lambda\) fitted (W m⁻¹ K⁻¹)</th><th class="num">\(C\) fitted (MJ m⁻³ K⁻¹)</th><th class="num">\(\alpha\) fitted (mm² s⁻¹)</th><th class="num">Record fitted (s)</th></tr><tr><td rowspan="3">Now: 44 mm heater, 8 mm, 15 s</td><td>Dry</td><td class="num">0.244 (+0.1%)</td><td class="num">1.350 (±0.0%)</td><td class="num">0.181 (+0.1%)</td><td class="num">144</td></tr><tr><td>Medium</td><td class="num">1.285 (+0.2%)</td><td class="num">2.346 (+0.1%)</td><td class="num">0.548 (+0.1%)</td><td class="num">56</td></tr><tr><td>Wet sandy</td><td class="num">2.169 (+0.5%)</td><td class="num">1.947 (+0.1%)</td><td class="num">1.114 (+0.3%)</td><td class="num">36</td></tr><tr><td rowspan="3">Spacing 6 mm</td><td>Dry</td><td class="num">0.244 (±0.0%)</td><td class="num">1.349 (±0.0%)</td><td class="num">0.181 (±0.0%)</td><td class="num">86</td></tr><tr><td>Medium</td><td class="num">1.283 (±0.0%)</td><td class="num">2.345 (±0.0%)</td><td class="num">0.547 (±0.0%)</td><td class="num">39</td></tr><tr><td>Wet sandy</td><td class="num">2.161 (+0.1%)</td><td class="num">1.944 (±0.0%)</td><td class="num">1.112 (+0.1%)</td><td class="num">28</td></tr><tr><td rowspan="3">Spacing 10 mm</td><td>Dry</td><td class="num">0.246 (+0.8%)</td><td class="num">1.354 (+0.4%)</td><td class="num">0.182 (+0.4%)</td><td class="num">217</td></tr><tr><td>Medium</td><td class="num">1.296 (+1.0%)</td><td class="num">2.355 (+0.4%)</td><td class="num">0.550 (+0.6%)</td><td class="num">80</td></tr><tr><td>Wet sandy</td><td class="num">2.193 (+1.6%)</td><td class="num">1.956 (+0.6%)</td><td class="num">1.121 (+1.0%)</td><td class="num">47</td></tr><tr><td rowspan="3">Heat 8 s</td><td>Dry</td><td class="num">0.244 (+0.1%)</td><td class="num">1.349 (±0.0%)</td><td class="num">0.181 (±0.0%)</td><td class="num">138</td></tr><tr><td>Medium</td><td class="num">1.284 (+0.1%)</td><td class="num">2.346 (±0.0%)</td><td class="num">0.547 (+0.1%)</td><td class="num">50</td></tr><tr><td>Wet sandy</td><td class="num">2.163 (+0.2%)</td><td class="num">1.945 (+0.1%)</td><td class="num">1.112 (+0.1%)</td><td class="num">28</td></tr><tr><td rowspan="3">Heat 60 s</td><td>Dry</td><td class="num">0.245 (+0.2%)</td><td class="num">1.350 (+0.1%)</td><td class="num">0.181 (+0.1%)</td><td class="num">187</td></tr><tr><td>Medium</td><td class="num">1.304 (+1.6%)</td><td class="num">2.352 (+0.3%)</td><td class="num">0.554 (+1.3%)</td><td class="num">111</td></tr><tr><td>Wet sandy</td><td class="num">2.282 (+5.7%)</td><td class="num">1.943 (−0.1%)</td><td class="num">1.174 (+5.7%)</td><td class="num">97</td></tr><tr><td rowspan="3">3-inch needle, 65 mm heater</td><td>Dry</td><td class="num">0.244 (±0.0%)</td><td class="num">1.349 (±0.0%)</td><td class="num">0.181 (±0.0%)</td><td class="num">144</td></tr><tr><td>Medium</td><td class="num">1.283 (±0.0%)</td><td class="num">2.345 (±0.0%)</td><td class="num">0.547 (±0.0%)</td><td class="num">56</td></tr><tr><td>Wet sandy</td><td class="num">2.159 (±0.0%)</td><td class="num">1.944 (±0.0%)</td><td class="num">1.111 (±0.0%)</td><td class="num">36</td></tr></table>
+<div class="box"><b class="tag">What the tables say.</b>
+<ul style="margin:4px 0 0 0">
+<li>With the effective heated length and a fit to 1.5 times the peak time, the present design's <b>finite-length model error is 0.5% or less in \(\lambda\) and 0.1% or less in \(C\)</b> across dry to wet sandy soil. Needle size, contact and noise come on top of this.</li>
+<li><b>Needle spacing is the biggest practical lever:</b> every 0.1 mm of spacing error costs about 2.5% in \(C\), more than any model error above. Measuring or calibrating each sensor's effective spacing matters more than lengthening the needles.</li>
+<li><b>Longer needles</b> remove the remaining model error but reduce the signal by about 30% and bend more.</li>
+<li><b>Longer pulses</b> buy signal at the cost of strong heating next to the needle; 15 s is a reasonable middle.</li>
+</ul></div>
+
+<h3 id="sec-7-8">7.8 Choosing settings: defaults and when to change them</h3>
+<p>Every setting below can be changed on the website and, in the planned firmware, on the sensor itself. The defaults are chosen to work reasonably in most soils with the present needles (8 mm spacing, 44 mm heater); change them when you know in advance what conditions you will measure.</p>
+<table>
+<tr><th>Setting</th><th>Default</th><th>Why</th></tr>
+<tr><td>Background</td><td>10 s</td><td>Ten one-second readings to average for the starting temperature.</td></tr>
+<tr><td>Heating</td><td>15 s at 85% duty (about 2.0 W, 677 J m⁻¹)</td><td>A peak of 0.41–1.05 °C (5th to 95th percentile of the 1,448 Kansas soil states), or about 65–165 ADC steps, while the soil touching the needle warms by 5–18 °C.</td></tr>
+<tr><td>Cooling</td><td>150 s (165 s of record after heater-on)</td><td>The median peak comes 39 s after heater-on and the latest, in an oven-dry core, at 98 s. The record covers 1.5 times the peak time in every state, with room to spare for locating the peak.</td></tr>
+<tr><td>Analysis</td><td>\(q'\) over 44.2 mm; fit from heater-on to 1.5 times the measured peak time</td><td>Finite-length model error 0.3% or less for \(\lambda\) and 0.1% or less for \(C\) (5th to 95th percentile of the Kansas states). The website warns if the record ends before the peak.</td></tr>
+</table>
+<div class="box"><b class="tag">Why can the peak come 96 s after a 15 s pulse?</b> The heating time only shifts the peak by about half the pulse (Section 7.2). The peak time is set mainly by \(r^2/(4\alpha)\): how long heat needs to cross the gap. Oven-dried soil has the lowest diffusivity in the Kansas data (\(\alpha \approx 0.18\) mm² s⁻¹, because air-filled pores conduct heat poorly), so heat needs \(0.008^2/(4 \times 0.18\times10^{-6}) \approx 88\) s to cross 8 mm, and the peak arrives near 96 s. Oven-dried cores are the extreme; field soils are rarely that dry, and most peaks come within 30–65 s.</div>
+<p><b>When to change them</b> (numbers from the same ideal model; confirm on the bench):</p>
+<ul>
+<li><b>Wet or sandy soils (high diffusivity).</b> The peak comes early (about 20–25 s), so a shorter cooling phase (60–90 s) is enough. Wet soils give the smallest peaks, so a longer pulse helps the signal; in the wet sandy soil 20 s gives a 0.79 °C peak with +0.8% in \(\lambda\), and 30 s gives 1.12 °C with +1.7% (Section 7.4). Averaging repeated measurements is the other way to beat noise.</li>
+<li><b>Dry soils (low diffusivity).</b> The peak comes late (90–100 s in oven-dry soil), so keep the 150 s cooling phase. The signal is large, but the soil next to the heater gets hot: about 21 °C at 15 s in the oven-dry example. Lowering the duty to 50% keeps a 0.54 °C peak and brings that down to about 12.5 °C; do not lengthen the pulse.</li>
+<li><b>How often to measure.</b> Each pulse leaves heat behind that fades slowly, and the analysis subtracts a flat background. If the next measurement starts while the needles are still cooling, the falling background biases the result. Assuming identical pulses and no natural temperature drift, the added error in \(\lambda\) / \(C\) is:
+<table>
+<tr><th>Interval</th><th class="num">Dry</th><th class="num">Medium</th><th class="num">Wet sandy</th></tr>
+<tr><td>5 min</td><td class="num">+19% / +17%</td><td class="num">+4.0% / +3.6%</td><td class="num">+1.8% / +1.4%</td></tr>
+<tr><td>15 min</td><td class="num">+3.3% / +2.7%</td><td class="num">+0.6% / +0.4%</td><td class="num">+0.6% / +0.2%</td></tr>
+<tr><td>30 min</td><td class="num">+0.9% / +0.7%</td><td class="num">+0.3% / +0.1%</td><td class="num">+0.5% / +0.2%</td></tr>
+<tr><td>60 min</td><td class="num">+0.3% / +0.2%</td><td class="num">+0.2% / +0.1%</td><td class="num">+0.5% / +0.1%</td></tr>
+<tr><td>no previous pulse</td><td class="num">+0.1% / ±0.0%</td><td class="num">+0.2% / +0.1%</td><td class="num">+0.5% / +0.1%</td></tr>
+</table>
+Every 15 minutes is fine in moist soil; dry soil needs about 30 minutes, and hourly measurements are clean in every soil. Fitting a sloped background, rather than a flat one, would reduce this error and also handle the soil's natural daily temperature swing.</li>
+<li><b>Very dry soil or wider needles.</b> If the website reports that the record ended before the peak, lengthen the cooling phase.</li>
+</ul>
+
+<h2 id="sec-8">8. The whole chain in one table</h2>
+<p>For the Hodgeman soil (true values \(\alpha = 0.547\) mm² s⁻¹, \(\lambda = 1.283\), \(C = 2.345\)), as the website computes it: effective heated length, 14-bit readings once per second, fit to 1.5 times the peak time.</p>
+<table>
+<tr><th>#</th><th>Quantity</th><th>How we get it</th><th class="num">Example</th></tr>
+<tr><td>1</td><td>Heater current</td><td>Ohm's law around the loop</td><td class="num">0.2045 A</td></tr>
+<tr><td>2</td><td>Heater power, average</td><td>\(I^2R\) × duty</td><td class="num">1.994 W</td></tr>
+<tr><td>3</td><td>Power per meter \(q'\)</td><td>power ÷ 44.2 mm (17 × 2.6 mm)</td><td class="num">45.11 W m⁻¹</td></tr>
+<tr><td>4</td><td>Thermistor code</td><td>divider + 14-bit ADC, VREF cancels</td><td class="num">8663 at 22 °C</td></tr>
+<tr><td>5</td><td>Thermistor resistance</td><td>\(R_\text{ref}\,\text{code}/(16384-\text{code})\)</td><td class="num">11.22 kΩ</td></tr>
+<tr><td>6</td><td>Temperature</td><td>beta equation</td><td class="num">22.00 °C</td></tr>
+<tr><td>7</td><td>Rise at the side needle</td><td>temperature − background average</td><td class="num">peak ≈ 0.52 °C at 38 s</td></tr>
+<tr><td>8</td><td>\(\alpha\), \(\lambda\), \(C\)</td><td>fit the pulsed line source up to 1.5 times the peak time</td><td class="num">0.548 mm² s⁻¹, 1.285, 2.344</td></tr>
+<tr><td>9</td><td>Water content</td><td>de Vries: \((C - \rho_b c_s)/C_w\)</td><td class="num">≈ 0.32 m³ m⁻³</td></tr>
+</table>
+
+<h2 id="sec-9">9. Glossary</h2>
+<table>
+<tr><td><b>ADC</b></td><td>Analog-to-digital converter: turns a voltage into a whole number (code).</td></tr>
+<tr><td><b>AREF / VREF</b></td><td>The ADC's reference voltage (its ruler). Here both are the same node, which makes the measurement ratiometric.</td></tr>
+<tr><td><b>Capacitor</b></td><td>A part that stores charge; smooths voltages and, with a resistor, sets a time constant.</td></tr>
+<tr><td><b>Duty cycle</b></td><td>Fraction of time a switch is on during PWM.</td></tr>
+<tr><td><b>GND</b></td><td>Ground, the 0 V reference point.</td></tr>
+<tr><td><b>MOSFET</b></td><td>An electronic switch (Q1) that a processor pin can open and close.</td></tr>
+<tr><td><b>NTC thermistor</b></td><td>Resistor whose resistance falls as temperature rises.</td></tr>
+<tr><td><b>PWM</b></td><td>Pulse-width modulation: fast on/off switching to set an average power.</td></tr>
+<tr><td><b>Ratiometric</b></td><td>A measurement taken as a ratio, so a common supply voltage cancels.</td></tr>
+<tr><td><b>Self-heating</b></td><td>A sensor warmed by the very current used to read it.</td></tr>
+<tr><td><b>Superposition</b></td><td>Adding solutions of a linear equation; used to switch the heater off.</td></tr>
+<tr><td><b>Time constant \(\tau\)</b></td><td>\(R \times C\): time to reach 63% of a step change.</td></tr>
+<tr><td><b>\(q'\)</b></td><td>Heater power per meter of heated length (W m⁻¹).</td></tr>
+<tr><td><b>\(\lambda,\ C,\ \alpha\)</b></td><td>Thermal conductivity, volumetric heat capacity, thermal diffusivity (\(\alpha = \lambda/C\)).</td></tr>
+</table>
+
+<h2 id="sec-10">10. References</h2>
+<ol class="refs">
+<li>Blackwell, J. H. (1954). A transient-flow method for determination of thermal constants of insulating materials in bulk. Part I—Theory. <i>Journal of Applied Physics</i>, 25, 137–144. doi:10.1063/1.1721592</li>
+<li>Bristow, K. L., Bilskie, J. R., Kluitenberg, G. J., &amp; Horton, R. (1995). Comparison of techniques for extracting soil thermal properties from dual-probe heat-pulse data. <i>Soil Science</i>, 160, 1–7. doi:10.1097/00010694-199507000-00001</li>
+<li>Bristow, K. L., Kluitenberg, G. J., &amp; Horton, R. (1994). Measurement of soil thermal properties with a dual-probe heat-pulse technique. <i>Soil Science Society of America Journal</i>, 58, 1288–1294. doi:10.2136/sssaj1994.03615995005800050002x</li>
+<li>Campbell, G. S., Calissendorff, C., &amp; Williams, J. H. (1991). Probe for measuring soil specific heat using a heat-pulse method. <i>Soil Science Society of America Journal</i>, 55, 291–293. doi:10.2136/sssaj1991.03615995005500010052x</li>
+<li>Carslaw, H. S., &amp; Jaeger, J. C. (1959). <i>Conduction of heat in solids</i> (2nd ed.). Oxford University Press.</li>
+<li>de Vries, D. A. (1963). Thermal properties of soils. In W. R. van Wijk (Ed.), <i>Physics of plant environment</i> (pp. 210–235). North-Holland.</li>
+<li>Kluitenberg, G. J., Bristow, K. L., &amp; Das, B. S. (1995). Error analysis of heat pulse method for measuring soil heat capacity, diffusivity, and conductivity. <i>Soil Science Society of America Journal</i>, 59, 719–726. doi:10.2136/sssaj1995.03615995005900030013x</li>
+<li>Kluitenberg, G. J., Ham, J. M., &amp; Bristow, K. L. (1993). Error analysis of the heat pulse method for measuring soil volumetric heat capacity. <i>Soil Science Society of America Journal</i>, 57, 1444–1451. doi:10.2136/sssaj1993.03615995005700060008x</li>
+<li>Knight, J. H., &amp; Kluitenberg, G. J. (2004). Simplified computational approach for dual-probe heat-pulse method. <i>Soil Science Society of America Journal</i>, 68, 447–449. doi:10.2136/sssaj2004.4470</li>
+<li>Knight, J. H., Kluitenberg, G. J., Kamai, T., &amp; Hopmans, J. W. (2012). Semianalytical solution for dual-probe heat-pulse applications that accounts for probe radius and heat capacity. <i>Vadose Zone Journal</i>, 11(2). doi:10.2136/vzj2011.0112</li>
+<li>Parker, N., Kluitenberg, G. J., Redmond, C., &amp; Patrignani, A. (2022). A database of soil physical properties for the Kansas Mesonet. <i>Soil Science Society of America Journal</i>, 86, 1495–1508. doi:10.1002/saj2.20465</li>
+</ol>
+<p class="small">Numbers in this chapter come from the HP-SDI12-NANO design files and the digital twin (docs/sensor-model.js, docs/engine.js) as of September 29, 2026. Self-heating depends on how the thermistor is potted and is an estimate, not a measurement.</p>
+
+<section class="appendix">
+<h2 id="appendix-a">Appendix A. Parts list (HP-SDI12-NANO)</h2>
+<p class="small">68 fitted parts in 27 lines, all on the top face (release BOM flat-nano/fab/HP-SDI12-NANO_BOM.csv, which also gives LCSC numbers). † No substitutes: sets accuracy or heater rating. J1 (cable) and J2 (programming clip) are bare plated holes, not parts.</p>
+<table class="parts">
+<colgroup><col style="width:13%"><col style="width:26%"><col style="width:19%"><col style="width:15%"><col style="width:27%"></colgroup>
+<tr><th>Refs (qty)</th><th>Function</th><th>Manufacturer</th><th>Part number</th><th>Specifications</th></tr>
+<tr><td>C1</td><td>Buck input capacitor</td><td>Samsung Electro-Mechanics</td><td class="mono">CL21A475KBQNNNE</td><td>MLCC 4.7 µF 50 V X5R, 0805</td></tr><tr><td>C2, C3 (2)</td><td>Buck output (C2); heater bulk reservoir (C3)</td><td>Samsung Electro-Mechanics</td><td class="mono">CL31A226KAHNNNE</td><td>MLCC 22 µF 25 V X5R, 1206</td></tr><tr><td>C4</td><td>SDI-12 line filter</td><td>Yageo</td><td class="mono">CC0402KRX7R9BB332</td><td>MLCC 3.3 nF 50 V X7R, 0402</td></tr><tr><td>C7–C9, C11, C12, C19, C21–C24 (10)</td><td>Bypass, reset, bootstrap, thermistor nodes</td><td>Samsung Electro-Mechanics</td><td class="mono">CL05B104KO5NNNC</td><td>MLCC 100 nF 16 V X7R, 0402</td></tr><tr><td>C10, C16 (2)</td><td>Processor core regulator (C10); USB regulator (C16)</td><td>Samsung Electro-Mechanics</td><td class="mono">CL10A475KO8NNNC</td><td>MLCC 4.7 µF 16 V X5R, 0603</td></tr><tr><td>C13, C20 (2)</td><td>VREF reservoir (C13); buck internal supply (C20)</td><td>Samsung Electro-Mechanics</td><td class="mono">CL05A105KA5NQNC</td><td>MLCC 1 µF 25 V X5R, 0402</td></tr><tr><td>C17</td><td>Logic-rail capacitor</td><td>Samsung Electro-Mechanics</td><td class="mono">CL21A106KAYNNNE</td><td>MLCC 10 µF 25 V X5R, 0805</td></tr><tr><td>C18</td><td>Buck input bypass</td><td>Samsung Electro-Mechanics</td><td class="mono">CL05B104KB54PNC</td><td>MLCC 100 nF 50 V X7R, 0402</td></tr><tr><td>D1, D5, D7 (3)</td><td>Reverse polarity (D1); isolation (D5, D7)</td><td>JSCJ (Jiangsu Changjing)</td><td class="mono">B5819WS</td><td>Schottky 1 A 40 V, SOD-323</td></tr><tr><td>D2</td><td>Input transient suppressor</td><td>MDD (Microdiode Semiconductor)</td><td class="mono">SMF16CA</td><td>TVS 16 V standoff, bidirectional, SOD-123FL</td></tr><tr><td>D4</td><td>Data-line transient suppressor</td><td>Nexperia</td><td class="mono">PESD5V0S1BA,115</td><td>ESD diode, bidirectional 5 V, SOD-323</td></tr><tr><td>L1</td><td>Buck inductor</td><td>Sunlord</td><td class="mono">SWPA4020S220MT</td><td>Inductor 22 µH ±20 %, 0.62 A sat., 4 × 4 mm</td></tr><tr><td>Q1</td><td>Heater switch</td><td>Alpha & Omega Semiconductor</td><td class="mono">AO3400A</td><td>N-MOSFET 30 V, logic-level gate, SOT-23</td></tr><tr><td>R1, R2, R16 (3)</td><td>Reset, boot-mode pull-ups; USB detect (R16)</td><td>UNI-ROYAL</td><td class="mono">0402WGF1002TCE</td><td>10 kΩ 1 %, 0402</td></tr><tr><td>R3</td><td>SDI-12 series resistor</td><td>UNI-ROYAL</td><td class="mono">0603WAF1501T5E</td><td>1.5 kΩ 1 %, 0603</td></tr><tr><td>R4</td><td>SDI-12 idle resistor</td><td>UNI-ROYAL</td><td class="mono">0402WGF2203TCE</td><td>220 kΩ 1 %, 0402</td></tr><tr><td>R5</td><td>Heater current shunt</td><td>Vishay</td><td class="mono">WSL0805R1000FEA</td><td>0.1 Ω 1 % current sense, 0805 †</td></tr><tr><td>R6, R7 (2)</td><td>I²C pull-ups (SDA, SCL)</td><td>UNI-ROYAL</td><td class="mono">0402WGF4701TCE</td><td>4.7 kΩ 1 %, 0402</td></tr><tr><td>R9, R11 (2)</td><td>Heater gate resistor (R9); thermistor excitation (R11)</td><td>UNI-ROYAL</td><td class="mono">0402WGF1501TCE</td><td>1.5 kΩ 1 %, 0402</td></tr><tr><td>R10</td><td>Heater gate pull-down</td><td>UNI-ROYAL</td><td class="mono">0402WGF1003TCE</td><td>100 kΩ 1 %, 0402</td></tr><tr><td>R14, R15 (2)</td><td>NMI pull-up (R14); USB detect (R15)</td><td>UNI-ROYAL</td><td class="mono">0402WGF5101TCE</td><td>5.1 kΩ 1 %, 0402</td></tr><tr><td>R21–R24 (4)</td><td>Reference resistors of the thermistor dividers</td><td>SIE</td><td class="mono">CRF0603Q103BN</td><td>10 kΩ 0.1 %, 25 ppm/°C, 0603 †</td></tr><tr><td>RH1–RH17 (17)</td><td>Heater, in series on the center needle</td><td>Vishay</td><td class="mono">CRCW06033R30FKEAHP</td><td>3.3 Ω 1 %, 0.33 W at 70 °C, high-power 0603 †</td></tr><tr><td>TH1–TH4 (4)</td><td>TH1 right needle, TH2 heater tip, TH3 left needle, TH4 board</td><td>Murata</td><td class="mono">NCP15XH103F03RC</td><td>NTC 10 kΩ 1 %, β = 3380 K, 0402 †</td></tr><tr><td>U1</td><td>Processor</td><td>Renesas</td><td class="mono">R7FA4M1AB3CFM#AA0</td><td>Arm Cortex-M4, 48 MHz, 256 KB flash, 14-bit ADC, LQFP-64</td></tr><tr><td>U3</td><td>5 V buck regulator</td><td>Texas Instruments</td><td class="mono">LMR36503R5RPER</td><td>Sync. buck, 5 V out, 3–65 V in, 0.3 A, VQFN-HR 2 × 2 mm</td></tr><tr><td>U4</td><td>Power monitor</td><td>Texas Instruments</td><td class="mono">INA226AIDGSR</td><td>Power monitor, 16-bit, I²C, 0–36 V bus, VSSOP-10</td></tr>
+</table>
+</section>
+</body>
+</html>
