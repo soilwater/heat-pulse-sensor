@@ -51,9 +51,9 @@ part("J1", "Connector_Generic:Conn_01x03", "Hand-soldered cable (3 wires)", "hp_
      Note="1 = 12V, 2 = SDI-12 data, 3 = GND; solder after assembly and provide cable strain relief")
 two("D2", "Device:D_TVS", "SMF15CA 15V bidir TVS", "Diode_SMD:D_SOD-123F", X + 40, Y, "VIN", "GND")
 two("D1", "Device:D_Schottky", "1A 40V Schottky (SOD-323)", "Diode_SMD:D_SOD-323", X + 75, Y, "VIN_P", "VIN", Note="reverse-polarity protection")
-two("C1", "Device:C", "4.7u 50V", FP["C0805"], X + 100, Y, "VIN_P", "GND")
+two("C1", "Device:C", "10u 50V", FP["C0805"], X + 100, Y, "VIN_P", "GND")
 two("C3", "Device:C", "22u 25V", "Capacitor_SMD:C_1206_3216Metric", X + 100, Y + 20, "VIN_P", "GND", Note="bulk: supplies the heater switching edges locally")
-two("C17", "Device:C", "10u 25V", FP["C0805"], X + 125, Y, "+5V", "GND")
+two("C17", "Device:C", "10u 50V", FP["C0805"], X + 125, Y, "+5V", "GND")
 two("R18", "Device:R", "22", FP["R0603"], X + 150, Y, "VIN_P", "NANO_VIN", Note="input filter resistor; not overvoltage protection (Nano VIN operating range 6-21 V)")
 for i, net in enumerate(["VIN", "VIN_P", "GND", "+5V"]):
     flag(i + 1, net, X + 40 + 25 * i, Y + 35)

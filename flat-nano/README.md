@@ -15,7 +15,7 @@ These changes answer an electrical-engineering review of the previous layout. Th
 - **Balanced, thermally symmetric layout:** every part that dissipates more than 2 mW (MCU, buck regulator and its inductor, input diode, 5 V OR-ing diode, shunt, heater MOSFET) sits on the board's center line. The three needles are exact mirror images, and both side-needle wires enter the body the same way. On every copper layer, the body's copper left and right of the center line must agree within 10 % (release check). This board: top 3.7 %, inner 0.9 % and 1.5 %, bottom 0.1 %.
 - **Hand-planned copper, no auto-router:** every trace and via of the body is drawn deliberately by `kicad/preroute.py`. Signals run straight or at 45°. A signal changes layer only to cross the center line or another signal, and then runs at least 3 mm on the bottom layer. Every via connects copper on two layers.
 - **Thermistor pin map** (same on flat-nano and the hat): A2 = TH1 right needle, A1 = TH2 heater-needle tip, A0 = TH3 left needle, A3 = TH4 board body. Left and right are as seen on the top face with the cable end up and the needles pointing down, the way the website draws the board.
-- D1, D5 and D7 are JSCJ (Jiangsu Changjing) B5819WS 1 A 40 V Schottky diodes (SOD-323, JLC C22624).
+- D1, D5 and D7 are Guangdong Hottech 1N5819WS 1 A 40 V Schottky diodes (SOD-323, JLC C191023, a Basic part).
 
 **Use the complete upload set in `fab/`: `HP-SDI12-NANO_gerbers.zip`, `HP-SDI12-NANO_BOM.csv`, and `HP-SDI12-NANO_CPL.csv`. Upload all three together.**
 

@@ -28,7 +28,7 @@
    "Note": "reverse-polarity protection"
   },
   "C1": {
-   "value": "4.7u 50V",
+   "value": "10u 50V",
    "footprint": "Capacitor_SMD:C_0805_2012Metric",
    "pins": {
     "1": "VIN_P",
@@ -45,7 +45,7 @@
    "Note": "bulk: supplies the heater switching edges locally"
   },
   "C17": {
-   "value": "10u 25V",
+   "value": "10u 50V",
    "footprint": "Capacitor_SMD:C_0805_2012Metric",
    "pins": {
     "1": "+5V",

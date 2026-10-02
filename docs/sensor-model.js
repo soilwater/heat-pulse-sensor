@@ -8,7 +8,7 @@
  * PWM uses weighted ON/OFF states, not a switching-transient simulation.
  * Constant electrical resistance and diode drop are assumptions, not calibration.
  * 5 V supply: U3, TI LMR36503R5 fixed 5 V synchronous buck (TI data sheet SNVSBB4B,
- * https://www.ti.com/lit/ds/symlink/lmr36503.pdf), then D7 (B5819WS) to the +5V logic rail.
+ * https://www.ti.com/lit/ds/symlink/lmr36503.pdf), then D7 (1N5819WS) to the +5V logic rail.
  */
 (function (root) {
   'use strict';

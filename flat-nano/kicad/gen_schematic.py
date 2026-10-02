@@ -51,9 +51,9 @@ part("J1", "Connector_Generic:Conn_01x03", "Hand-soldered cable (3 wires)", "hp_
      Note="1 = 12V (center hole, square), 2 = SDI-12 data, 3 = GND; hand-solder after assembly, add cable strain relief")
 two("D2", "Device:D_TVS", "SMF16CA 16V bidir TVS", "Diode_SMD:D_SOD-123F", X + 40, Y, "VIN", "GND")
 two("D1", "Device:D_Schottky", "1A 40V Schottky (SOD-323)", "Diode_SMD:D_SOD-323", X + 75, Y, "VIN_P", "VIN", Note="reverse-polarity protection")
-two("C1", "Device:C", "4.7u 50V", FP["C0805"], X + 100, Y, "VIN_P", "GND", Note="buck input capacitor (datasheet minimum 4.7 uF)")
+two("C1", "Device:C", "10u 50V", FP["C0805"], X + 100, Y, "VIN_P", "GND", Note="buck input capacitor (datasheet minimum 4.7 uF)")
 two("C3", "Device:C", "22u 25V", "Capacitor_SMD:C_1206_3216Metric", X + 100, Y + 20, "VIN_P", "GND", Note="bulk: supplies the heater switching edges locally")
-two("C18", "Device:C", "100n 50V", FP["C0402"], X + 115, Y + 20, "VIN_P", "GND", Note="high-frequency input bypass at U3 VIN/GND")
+two("C18", "Device:C", "100n", FP["C0402"], X + 115, Y + 20, "VIN_P", "GND", Note="high-frequency input bypass at U3 VIN/GND")
 part("U3", "hp_sensor:LMR36503R5", "LMR36503R5RPER", "hp_sensor:TI_RPE0009A_VQFN-HR-9_2x2mm", X + 135, Y + 5,
      {1: "GND", 2: None, 3: "VIN_P", 4: "VIN_P", 5: "SW", 6: "BOOT", 7: "VCC_BUCK", 8: "5V_BUCK", 9: "GND"},
      Note="5 V fixed buck; RT to GND = 2.2 MHz; EN tied to VIN; PGOOD unused")
@@ -62,7 +62,7 @@ two("C20", "Device:C", "1u", FP["C0402"], X + 165, Y + 20, "VCC_BUCK", "GND", No
 two("L1", "Device:L", "22uH", "Inductor_SMD:L_Sunlord_SWPA4020S", X + 180, Y - 10, "SW", "5V_BUCK", Note="Sunlord SWPA4020S220MT, 0.62 A saturation")
 two("C2", "Device:C", "22u 25V", "Capacitor_SMD:C_1206_3216Metric", X + 180, Y + 20, "5V_BUCK", "GND", Note="buck output capacitor (22 uF rated)")
 two("D7", "Device:D_Schottky", "1A 40V Schottky (SOD-323)", "Diode_SMD:D_SOD-323", X + 228, Y, "+5V", "5V_BUCK", Note="keeps USB power out of the regulator (as on the Nano R4)")
-two("C17", "Device:C", "10u 25V", FP["C0805"], X + 252, Y, "+5V", "GND")
+two("C17", "Device:C", "10u 50V", FP["C0805"], X + 252, Y, "+5V", "GND")
 two("D5", "Device:D_Schottky", "1A 40V Schottky (SOD-323)", "Diode_SMD:D_SOD-323", X + 195, Y, "+5V", "VUSB", Note="bench power from the USB pads")
 for i, net in enumerate(["VIN", "VIN_P", "GND", "VUSB", "+5V"]):
     flag(i + 1, net, X + 40 + 25 * i, Y + 35)

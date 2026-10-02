@@ -1,4 +1,4 @@
-HP-SDI12-NANO released 2026-09-29 01:57 by release.py.
+HP-SDI12-NANO released 2026-10-01 21:56 by release.py.
 Every order file was staged from the checked routed board, then published over the previous package.
 ERC 0 | DRC 0 violations, 0 unconnected (all severities) | schematic parity OK | physical Kelvin OK (3 sense pins) | exterior solder openings clear of via holes | layout quality gate passed (heater/battery copper >= 0.5 mm outer, >= 1.2 mm inner; mirrored needles; left/right copper within 10% on every layer; heat sources on the axis; routing style; USB pair) | four-layer stackup verified
 USB lengths: D- 9.61 mm, D+ 10.44 mm, difference 0.83 mm; BALANCE F.Cu body: north 273.8 mm2, south 284.4 mm2 (+3.7%); BALANCE In1.Cu body: north 340.7 mm2, south 343.7 mm2 (+0.9%); BALANCE In2.Cu body: north 328.3 mm2, south 333.4 mm2 (+1.5%); BALANCE B.Cu body: north 322.9 mm2, south 323.4 mm2 (+0.1%)
@@ -6,20 +6,20 @@ USB lengths: D- 9.61 mm, D+ 10.44 mm, difference 0.83 mm; BALANCE F.Cu body: nor
 Manufacturing checks do not constitute physical thermal-response or firmware validation.
 
 SHA-256 (paths relative to flat-nano/)
-d7a371d50fe745c21ab1d17acb8e27a4c048e25b108502d849a261b02f9fb243  kicad/hp_sensor_routed.kicad_pcb
-6ec6c2db83d2baa6860138d059ae3cc88e32860b364a8e10c09d3c5c3d7b0f93  kicad/hp_sensor.kicad_sch
-1be9c124153fc3ed3d197f73c7280116fd0048d9abb688ab5fdb777fac315d1d  kicad/hp_sensor.net
-82a3a034948d6a45305e81234fbde9054cd7ab92d54f0020e1d52476807369c3  kicad/netlist.json
+3aced936ae2fbcb664441780527baac5b5814d093fb8630ac7b9e833c6382673  kicad/hp_sensor_routed.kicad_pcb
+7a4d9d3f245c75361b617db157c9bf5096cf8fe23893f83ff0e7f0c0b6f326e4  kicad/hp_sensor.kicad_sch
+47ce36738782eaa9ca99c2ec07702ef977410dc37b2fd9dc4f312a2560a06022  kicad/hp_sensor.net
+e01bfec5454183c73ef9de4cbe8cfbbe8bc90c620fe55eadb19c01d5a463dd15  kicad/netlist.json
 9f49dc6afab96ae20ccb5f0929365e6f7eb4efc71fbc87ae807d43876fd77027  kicad/hp_sensor_routed.kicad_pro
 d64d74feec90cda757a94045b354e6c552d2b6933ddf88700b54c5177b622b02  kicad/hp_sensor.kicad_pro
 1a7b0470b8d2ec5d051e98cdcb0d5db551486bcfeebb619549909ab959756c85  kicad/check_kelvin.py
 c3f11996ba8911c253c3570ae110d2ee5c37d8152166281ee79cfdbe540826a6  kicad/check_parity.py
 bf16a5eeeae0763982f7c0c9fe42827185447076e84c5fc60e52f62f4929eb68  kicad/configure_fabrication.py
-8fc4eb00ebb625903abd3091d9153a6e00a9800d620c2b017df7aaa47d845971  kicad/export_fab.py
+4d0bc451bcaf0ce2b58562f099c54720a216367c8c9abc121fc05c14efd008bc  kicad/export_fab.py
 97af14068834484443799d8f1a8678b53eef060066672b577f667777adc8308b  kicad/export_view.py
 87285b8f7e22c786011405ac0e92df1d1b7db2bb446b3b6a7739754cef9d526f  kicad/finalize_copper.py
 b1992454f3593c9a5477a0fe3651315beefeea3f2d82ecf0f4793f4c9309096f  kicad/gen_pcb.py
-9cd7a9da4c0560a59acbe29288bb57f8a1e41a7fef35193ace9c051aa00131b6  kicad/gen_schematic.py
+45bc6e5bf65dd39379f01868636a17a298f3fb716d56865a48dab767d70e0f79  kicad/gen_schematic.py
 20e543b98e22dbfe60c4c5a3fb6b07430faf8fba7a4424aead0b5a08ec156cb9  kicad/make_lib.py
 720ac1f4aeed5d3506069a6d436a2db021e51c67c1d1b49796c891cfca18aa21  kicad/patch_flare.py
 6fd661e36242d41326a625d3802da41419bff1aefcee1170075abba64a4247d9  kicad/plot_view.py
@@ -35,24 +35,24 @@ ab989603cef7ac91fcae6fc0352a902f430af6c6dda9996732d554fbb313426c  kicad/hp_senso
 f7689492bcbadb23c191488325e3385ca54be5562b2176e1adc98b70a7d700a4  checks/check_solder_vias.py
 9ad68ee5b86a74682c2f5352662d3a25bab3358f67276608518f79e06afac208  checks/fabrication_helpers.py
 577f772f6aafb4552e1664c9c6e4febdfb84d16acf8cd574fd30fa5150832dcf  HEATER.md
-4caaccf57f1426ce16f9c2e00c3b44c241de72df67e036d40b393e9a41f4882a  kicad/erc.rpt
-47e1db4ccfe4abb7a1cefa4158d2f731a1b9541ade24aab59af990c9eb2ed474  kicad/drc_routed.rpt
-18531f85de690cc7a6a2fcd5d4300dced2abf9e6c52c721c00a94fe03f18d59e  fab/HP-SDI12-NANO_BOM.csv
+f5c1e4706cf7f82ac7922ba51cef06313d475ce25448ed72cb5e35d74f49a08c  kicad/erc.rpt
+88b9fd029215a567f99d19821035987d1c22373d9d2a42a41db38021633b1d28  kicad/drc_routed.rpt
+dff5637102eb28f517c63b21035d6c5850c82f616b033f392658d423dfa955ad  fab/HP-SDI12-NANO_BOM.csv
 db0d39b4d97f2a99e90131d49bbefd657d8d78001c453fde571d333e758c3ab3  fab/HP-SDI12-NANO_CPL.csv
-85b49c9804f81278b1faddf08653bb80b78be763eb8ebdb19184432c95da3d89  fab/HP-SDI12-NANO_gerbers.zip
-aead35ebec5a3971925a19b363030de91aeef67a60e117ff9a8b42fd653932d3  fab/HP-SDI12-NANO_schematic.pdf
+d77fd44e2de5fc99c5f3463f9d396021ffbd804699624d3db0a4092f786d04da  fab/HP-SDI12-NANO_gerbers.zip
+2d82c861aca9408964525b2c2a3e94afe0c82bd1cf4d67bf83d811e4e4bf8bbd  fab/HP-SDI12-NANO_schematic.pdf
 64f00df6ad601da59b9c77e9bd1ed8c9f06b2fde68ba8c0e1e3292f3272934ae  fab/render_bottom.png
 45cc610075668f0ef23764873705f7eb38bce320f3135c5fd59f038e6278d5bb  fab/render_top.png
-95606dba6b5bce5b97674e4038d9d8950780e96d5e4e2153744251bd7fcb9e6b  fab/gerbers/hp_sensor_routed-B_Cu.gbl
-7cb332662faf8be5e77239ff181b393cf57d2a44fa02028ed10dae9bbeb6a17d  fab/gerbers/hp_sensor_routed-B_Mask.gbs
-f84b2ba9bbf3fefbf5a6a4d454399f35a40c0714615f16ca7f7180b87513570c  fab/gerbers/hp_sensor_routed-B_Silkscreen.gbo
-a9b8064e98d8fc5da40d612dc7a0f96200ddddffce79b29c495cd3dca81c02e6  fab/gerbers/hp_sensor_routed-Edge_Cuts.gm1
-520f3621d9a161855299a48842e6ad4905cf404e37d704635357d6ac02d496ee  fab/gerbers/hp_sensor_routed-F_Cu.gtl
-6d0aced4a022a057720ac9290c3ac9db2108e405372b0a26c000b694ccbe78f1  fab/gerbers/hp_sensor_routed-F_Mask.gts
-b8c4a4b08e94800fb25802563422d9a6e59895d75fe50ddba8885dfead6916f1  fab/gerbers/hp_sensor_routed-F_Paste.gtp
-8609009a4d9628958078b8d47cc1cbcf84204c4a43b231054975d899c307acfb  fab/gerbers/hp_sensor_routed-F_Silkscreen.gto
-218a3ba0871c504c9406ce4eab4d212267cf031141c9f247364e78801b6d3830  fab/gerbers/hp_sensor_routed-In1_Cu.g1
-c4980e93ee0ac73e58a5d5f13e8a0f9e976473ff38d96ccf1cbdf2b939c7fd7d  fab/gerbers/hp_sensor_routed-In2_Cu.g2
-dfeb1180a6cfb4c43395c8d1090dffd3add8f9eb4431a50a259ccf4e9cdeadcb  fab/gerbers/hp_sensor_routed-NPTH.drl
-104fbbb3c1f22bcbd3c5688f175e6f8143a0977461d8826e81c357230712e7e2  fab/gerbers/hp_sensor_routed-PTH.drl
-a9b596daa201b0033b72299998870a08f4d6496d84d47ff2f33cb96c536c5d45  fab/gerbers/hp_sensor_routed-job.gbrjob
+46224f8ce8868883c6ace959a481cce44ce26e68e1c7043a1f14d71331025654  fab/gerbers/hp_sensor_routed-B_Cu.gbl
+d13e728c20ce17006df3ced105597332d56f5b5982e71004062529be8675d5c6  fab/gerbers/hp_sensor_routed-B_Mask.gbs
+9a94e498fdeca9b835a4dd182cf44ba75022d9c5b9e760d1f10e5fdfe43e039f  fab/gerbers/hp_sensor_routed-B_Silkscreen.gbo
+be7d429b0c8f77f2ab743c9f23a7230df08387741fcafebe130b84255315255f  fab/gerbers/hp_sensor_routed-Edge_Cuts.gm1
+fd837bfeaf902a7d8a53ca2385d43a5bc2245573e0ec32e4cd4361bc3b39f0e6  fab/gerbers/hp_sensor_routed-F_Cu.gtl
+cbb0a41df3e55b3246eac408b20129867a7bf455647d2bc4fe72aac8800c4214  fab/gerbers/hp_sensor_routed-F_Mask.gts
+6542b0a2a06f201ff586acb01e6ae08f72078033e9efb7241a29f8fb8b2becae  fab/gerbers/hp_sensor_routed-F_Paste.gtp
+9abc6bece2d3ff5848266379da1ace499733c5efcb08cb7add8e1e4853980850  fab/gerbers/hp_sensor_routed-F_Silkscreen.gto
+9b643b83427b4c87bdf98283f6c307c67d92e68203fa05659f089314f4a60279  fab/gerbers/hp_sensor_routed-In1_Cu.g1
+925c4ba41949059509346727534ba2f7efae3fc81bffbcfa264d6e1a6b2196da  fab/gerbers/hp_sensor_routed-In2_Cu.g2
+147cf755531960ed6ef312d264ee9cb05ac358ba79299b4544289f40fdaee0f1  fab/gerbers/hp_sensor_routed-NPTH.drl
+b8a633c57cb4b2e2bf05a76565e1f33d346ab8102ee9e5d4861062dd0e4b790d  fab/gerbers/hp_sensor_routed-PTH.drl
+730f42c8966cc5837d02dce51a46fe79e31ccf6b30031cfb98129483d28827d1  fab/gerbers/hp_sensor_routed-job.gbrjob

@@ -300,9 +300,9 @@ class Audit:
         for ref in sorted(set(rows) & set(reference) - {"D2"}):
             for key in ("LCSC Part #", "Manufacturer Part Number", "Footprint"):
                 self.check(rows[ref].get(key) == reference[ref].get(key), f"{ref}: BOM {key} differs from flat-nano")
-        self.check("D2" in rows and rows["D2"].get("LCSC Part #") == "C123803" and
+        self.check("D2" in rows and rows["D2"].get("LCSC Part #") == "C19077510" and
                    rows["D2"].get("Manufacturer Part Number") == "SMF15CA",
-                   "Hat BOM D2 must use the explicitly selected SMF15CA / C123803")
+                   "Hat BOM D2 must use the explicitly selected SMF15CA / C19077510")
         self.details["bom"] = str(path)
         self.details["bom_sha256"] = digest(path)
 

@@ -32,7 +32,7 @@
     R14: ['NMI pull-up', 'Holds the non-maskable interrupt input high through 5.1 kΩ. This gives the otherwise unused input a defined level.'],
     R15: ['USB-detect upper resistor', 'Connects VUSB to VBUS_SENSE through 5.1 kΩ. Together with R16 it signals USB presence to U1 pin 16. It is fed from the programming clip only, so it draws no battery current in the field.'],
     R16: ['USB-detect lower resistor', 'Connects VBUS_SENSE to ground through 10 kΩ. Together with R15 it divides the USB supply and holds the detect input low when USB is absent.'],
-    C1: ['Buck input capacitor', 'Connects VIN_P to ground through 4.7 µF, 50 V, at U3’s input (the datasheet minimum). It supplies the regulator’s switching current locally. C3 supplies the heater’s sudden current steps locally and C18 bypasses the highest frequencies; none of them is an overvoltage cutoff.'],
+    C1: ['Buck input capacitor', 'Connects VIN_P to ground through 10 µF, 50 V, at U3’s input (the datasheet asks for at least 4.7 µF). It supplies the regulator’s switching current locally. C3 supplies the heater’s sudden current steps locally and C18 bypasses the highest frequencies; none of them is an overvoltage cutoff.'],
     C2: ['Buck output capacitor', 'Connects 5V_BUCK to ground through 22 µF, 25 V. With L1 it filters U3’s switching ripple (up to 2.2 MHz) and keeps the regulator loop stable, and it supplies brief load changes before D7.'],
     C3: ['Bulk input capacitor', 'Connects VIN_P to ground through 22 µF, 25 V, near the cable holes. Each time the 100 Hz PWM switches the heater, its current changes by about 0.2 A almost instantly. C3 supplies or absorbs that sudden change locally, so the current in the long cable changes gently; a sharp current step through a long cable makes the supply voltage overshoot and ring.'],
     C4: ['SDI-12 line filter', 'Connects the data line to ground through 3.3 nF. With R3 (1.5 kΩ) and the cable’s resistance it rounds off each voltage switch over a few microseconds (R3 × C4 ≈ 5 µs). On a long cable, sharp switches overshoot and ring, and brief spikes picked up by the cable could be mistaken for data bits; the rounding damps both. Each SDI-12 bit lasts 833 µs (1200 baud), so the data is unaffected. The selected BOM part uses an X7R dielectric.'],
@@ -88,14 +88,14 @@
     [/^CL(05|10|21|31)/, 'Samsung Electro-Mechanics'], [/^CRCW|^WSL/, 'Vishay'],
     [/^0(402|603)W[AG]F/, 'UNI-ROYAL'], [/^CC0402/, 'Yageo'],
     [/^(INA226|LMR3)/, 'Texas Instruments'], [/^AO3400/, 'Alpha & Omega Semiconductor'],
-    [/^NCP15XH/, 'Murata'], [/^R7FA4M1/, 'Renesas'], [/^SWPA/, 'Sunlord'],
+    [/^(NCP15XH|GRM)/, 'Murata'], [/^R7FA4M1/, 'Renesas'], [/^SWPA/, 'Sunlord'],
     [/^PESD5V0/, 'Nexperia']
   ];
   // Generic part numbers made by several companies: the maker is taken from the exact LCSC
   // listing instead (checked on LCSC for each code below).
   const MANUFACTURERS_BY_LCSC = {
-    C22624: 'JSCJ (Jiangsu Changjing)',          // B5819WS Schottky diodes D1, D5, D7
-    C123805: 'MDD (Microdiode Semiconductor)',  // SMF16CA input TVS D2
+    C191023: 'Hottech (Guangdong Hottech)',      // 1N5819WS Schottky diodes D1, D5, D7
+    C19077511: 'HJC (Hongjiacheng)',            // SMF16CA input TVS D2
     C54973934: 'SIE',                           // CRF0603Q103BN 0.1% reference resistors R21-R24
   };
   function manufacturerOf(mpn, lcsc) {
